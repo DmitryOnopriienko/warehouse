@@ -1,11 +1,13 @@
-DROP SCHEMA IF EXISTS warehouse;
-
 DROP TABLE IF EXISTS waybill_has_products;
 DROP TABLE IF EXISTS waybill;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS customer;
 
+DROP SCHEMA IF EXISTS warehouse;
+
 CREATE SCHEMA IF NOT EXISTS warehouse;
+
+USE warehouse;
 
 CREATE TABLE IF NOT EXISTS customer (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,3 +43,6 @@ CREATE TABLE IF NOT EXISTS waybill_has_products (
     FOREIGN KEY (product_id) REFERENCES customer(id),
     PRIMARY KEY (waybill_id, product_id)
 );
+
+-- INSERT INTO customer(`first_name`, surname, email)
+-- VALUES ('Ihor', 'Ihorev', 'ihorevihor@ihoho.hor'), ('Vitaliy', 'Vitaliev', 'vitaliy.v@vfor.vendetta');
