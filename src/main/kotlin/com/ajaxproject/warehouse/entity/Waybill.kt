@@ -1,6 +1,5 @@
 package com.ajaxproject.warehouse.entity
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -18,7 +17,6 @@ class Waybill(
     var id: Int,
 
     @ManyToOne
-//    @JsonBackReference
     @JoinColumn(name = "customer_id")
     var customer: Customer,
     var date: Date,
