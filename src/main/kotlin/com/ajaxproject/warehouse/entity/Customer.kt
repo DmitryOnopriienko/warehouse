@@ -24,4 +24,5 @@ class Customer(
     @Column(name = "phone_number")
     var phoneNumber: String?,
     var birthday: Date?,
-    var comment: String?)
+    var comment: String?
+)

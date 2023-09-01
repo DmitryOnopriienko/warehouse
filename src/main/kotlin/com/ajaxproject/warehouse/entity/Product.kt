@@ -15,4 +15,5 @@ class Product(
     var title: String,
     var price: Double,
     var amount: Int,
-    var about: String?)
+    var about: String?
+)

@@ -17,4 +17,5 @@ class WaybillProduct(
     @ManyToOne
     @JoinColumn(name = "product_id")
     var product: Product,
-    var amount: Int)
+    var amount: Int
+)
