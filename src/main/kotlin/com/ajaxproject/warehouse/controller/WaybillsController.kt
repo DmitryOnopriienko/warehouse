@@ -1,6 +1,5 @@
 package com.ajaxproject.warehouse.controller
 
-import com.ajaxproject.warehouse.entity.Waybill
 import com.ajaxproject.warehouse.service.WaybillService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
