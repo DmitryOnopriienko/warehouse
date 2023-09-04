@@ -1,3 +1,8 @@
 package com.ajaxproject.warehouse.service
 
-interface CustomerService {}
+import com.ajaxproject.warehouse.entity.Customer
+
+interface CustomerService {
+    fun findAllCustomers(): List<Customer>
+    fun findById(id: Int): Customer
+}
