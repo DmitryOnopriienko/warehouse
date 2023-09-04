@@ -44,5 +44,15 @@ CREATE TABLE IF NOT EXISTS waybill_has_products (
     PRIMARY KEY (waybill_id, product_id)
 );
 
--- INSERT INTO customer(`first_name`, surname, email)
--- VALUES ('Ihor', 'Ihorev', 'ihorevihor@ihoho.hor'), ('Vitaliy', 'Vitaliev', 'vitaliy.v@vfor.vendetta');
+INSERT INTO customer(`first_name`, surname, email)
+VALUES ('Ihor', 'Ihorev', 'ihorevihor@ihoho.hor'), ('Vitaliy', 'Vitaliev', 'vitaliy.v@vfor.vendetta');
+
+INSERT INTO product(title, price, amount)
+VALUES ('Foo', 99.99, 100), ('Bar', 999.99, 5);
+
+INSERT INTO waybill(customer_id)
+VALUES (1), (2);
+
+INSERT INTO waybill_has_products(waybill_id, product_id, amount)
+VALUES (1, 1, 5), (1, 2, 1),
+       (2, 1, 10), (2, 2, 2);
