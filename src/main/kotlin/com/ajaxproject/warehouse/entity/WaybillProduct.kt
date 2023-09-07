@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -18,6 +19,7 @@ class WaybillProduct(
 
     @ManyToOne
     @JoinColumn(name = "waybill_id", insertable = false, updatable = false)
+    @JsonBackReference
     var waybill: Waybill,
 
     @ManyToOne
