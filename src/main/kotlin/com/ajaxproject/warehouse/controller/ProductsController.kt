@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProductsController(val productService: ProductService) {
 
     @GetMapping
-    fun findAllProducts() = productService.findAllProducts() // TODO fix Failed to convert value of type 'java.lang.String' to required type 'int'; For input string: "products"
+    fun findAllProducts() = productService.findAllProducts()
 
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Int) = productService.findById(id)
