@@ -1,8 +1,9 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.entity.Product
+import com.ajaxproject.warehouse.dto.ProductDataDto
+import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 
 interface ProductService {
-    fun findAll() : List<Product>
-    fun findById(id: Int) : Product
+    fun findAllProducts() : List<ProductDataLiteDto>
+    fun findById(id: Int) : ProductDataDto
 }
