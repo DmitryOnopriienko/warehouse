@@ -29,7 +29,7 @@ class WaybillServiceImpl(
         id = id,
         customer = customer,
         date = date,
-        totalPrice = countTotalPrice()
+        totalPrice = findListOfProductsAndCountTotalPrice().second
     )
 
     fun Waybill.mapToDataDto(): WaybillDataDto {
@@ -42,11 +42,6 @@ class WaybillServiceImpl(
             totalPrice = totalPrice
         )
     }
-
-    fun Waybill.countTotalPrice(): Double = waybillProductRepository.findByWaybill(this)
-            .asSequence()
-            .map { it.product.price * it.amount }
-            .sum()
 
     fun Waybill.findListOfProductsAndCountTotalPrice(): Pair<List<WaybillProduct>, Double> {
         val productList = waybillProductRepository.findByWaybill(this)
