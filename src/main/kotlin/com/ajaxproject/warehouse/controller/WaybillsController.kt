@@ -1,5 +1,7 @@
 package com.ajaxproject.warehouse.controller
 
+import com.ajaxproject.warehouse.dto.WaybillDataDto
+import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.service.WaybillService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -11,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 class WaybillsController(val waybillService: WaybillService) {
 
     @GetMapping
-    fun findAll() = waybillService.findAll()
+    fun findAll(): List<WaybillDataLiteDto> = waybillService.findAll()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Int) = waybillService.findById(id)
+    fun findById(@PathVariable id: Int): WaybillDataDto = waybillService.findById(id)
 }
