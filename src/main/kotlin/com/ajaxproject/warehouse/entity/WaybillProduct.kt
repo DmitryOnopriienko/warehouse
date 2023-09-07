@@ -8,6 +8,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.io.Serial
 import java.io.Serializable
 
 @Entity
@@ -35,5 +36,10 @@ class WaybillProduct(
 
         @Column(name = "product_id")
         var productId: Int
-    ) : Serializable
+    ) : Serializable {
+        companion object {
+            @Serial
+            private const val serialVersionUID: Long = 8260166636452691036L
+        }
+    }
 }
