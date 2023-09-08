@@ -11,7 +11,7 @@ import jakarta.persistence.Table
 class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
     var title: String,
     var price: Double,
     var amount: Int,
