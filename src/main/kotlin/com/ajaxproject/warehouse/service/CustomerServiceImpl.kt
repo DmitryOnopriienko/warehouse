@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.dto.CustomerCreateDto
 import com.ajaxproject.warehouse.dto.CustomerDataDto
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.entity.Customer
@@ -25,6 +26,10 @@ class CustomerServiceImpl(
             .mapToDataDto()
     }
 
+    override fun createCustomer(createDto: CustomerCreateDto) {
+        customerRepository.save(createDto.mapToEntity())
+    }
+
     fun Customer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
         id = id,
         firstName = firstName,
@@ -44,5 +49,16 @@ class CustomerServiceImpl(
         birthday = birthday,
         comment = comment,
         waybills = waybillRepository.findByCustomer(this)
+    )
+
+    fun CustomerCreateDto.mapToEntity(): Customer = Customer(
+        id = null,
+        firstName = firstName,
+        surname = surname,
+        patronymic = patronymic,
+        email = email,
+        phoneNumber = phoneNumber,
+        birthday = birthday,
+        comment = comment
     )
 }
