@@ -14,7 +14,7 @@ import java.time.LocalDate
 class Customer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @Column(name = "first_name")
     var firstName: String,
