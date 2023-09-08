@@ -7,7 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import java.util.Date
+import java.time.LocalDate
 
 @Entity
 @Table(name = "waybill")
@@ -19,6 +19,6 @@ class Waybill(
     @ManyToOne
     @JoinColumn(name = "customer_id")
     var customer: Customer,
-    var date: Date,
+    var date: LocalDate,
 )
 //    TODO implement total price (maybe on service layer)

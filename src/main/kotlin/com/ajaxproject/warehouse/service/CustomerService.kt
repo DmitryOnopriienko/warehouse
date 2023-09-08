@@ -1,3 +1,9 @@
 package com.ajaxproject.warehouse.service
 
-interface CustomerService {}
+import com.ajaxproject.warehouse.dto.CustomerDataDto
+import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
+
+interface CustomerService {
+    fun findAllCustomers(): List<CustomerDataLiteDto>
+    fun findById(id: Int): CustomerDataDto
+}

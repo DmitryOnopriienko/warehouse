@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.util.Date
+import java.time.LocalDate
 
 @Entity
 @Table(name = "customer")
@@ -23,6 +23,6 @@ class Customer(
 
     @Column(name = "phone_number")
     var phoneNumber: String?,
-    var birthday: Date?,
+    var birthday: LocalDate?,
     var comment: String?
 )

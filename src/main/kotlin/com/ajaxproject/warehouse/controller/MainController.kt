@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.controller
 
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -7,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController
 class MainController {
 
     @GetMapping("/index")
-    fun index() = "Hello, World!"
+    fun index(httpServletResponse: HttpServletResponse) = httpServletResponse.sendRedirect("/customers")
 }
