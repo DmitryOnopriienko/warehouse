@@ -10,6 +10,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "customer")
+@Suppress("LongParameterList")
 class Customer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
