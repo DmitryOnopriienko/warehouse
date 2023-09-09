@@ -14,7 +14,7 @@ import java.time.LocalDate
 class Waybill(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

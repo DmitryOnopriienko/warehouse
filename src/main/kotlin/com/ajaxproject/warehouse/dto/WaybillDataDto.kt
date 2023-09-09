@@ -5,7 +5,7 @@ import com.ajaxproject.warehouse.entity.WaybillProduct
 import java.time.LocalDate
 
 data class WaybillDataDto(
-    val id: Int,
+    val id: Int?,
     val customer: Customer,
     val date: LocalDate?,
     val productList: List<WaybillProduct>,
