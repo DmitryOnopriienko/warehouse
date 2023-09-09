@@ -21,4 +21,3 @@ class Waybill(
     var customer: Customer,
     var date: LocalDate,
 )
-//    TODO implement total price (maybe on service layer)
