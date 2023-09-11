@@ -37,10 +37,14 @@ class WaybillServiceImpl(
         if (createDto.products != null) {
             val errorList: MutableList<String> = mutableListOf()
             for (productDto in createDto.products) {
-                productRepository.findById(productDto.id as Int).ifPresentOrElse(   // TODO read about with, let, apply, also, run
+                productRepository.findById(productDto.id as Int).ifPresentOrElse(
+                    // TODO read about with, let, apply, also, run
                     { product ->    // TODO simplify or divide in several functions
                         waybillProductRepository.save(WaybillProduct(
-                            id = WaybillProduct.WaybillProductPK(waybillId = waybill.id as Int, productId = product.id as Int),
+                            id = WaybillProduct.WaybillProductPK(
+                                waybillId = waybill.id as Int,
+                                productId = product.id as Int
+                            ),
                             product = product,
                             waybill = waybill,
                             amount = productDto.amount as Int
