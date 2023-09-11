@@ -7,5 +7,5 @@ import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 interface ProductService {
     fun findAllProducts() : List<ProductDataLiteDto>
     fun findById(id: Int) : ProductDataDto
-    fun createProduct(createDto: ProductCreateDto)
+    fun createProduct(createDto: ProductCreateDto): ProductDataDto
 }

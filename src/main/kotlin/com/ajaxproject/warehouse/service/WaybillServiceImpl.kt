@@ -31,7 +31,7 @@ class WaybillServiceImpl(
             .mapToDataDto()
     }
 
-    override fun createWaybill(createDto: WaybillCreateDto) {
+    override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
         val waybill = createDto.mapToEntity()
         waybillRepository.save(waybill)
         if (createDto.products != null) {
@@ -60,6 +60,7 @@ class WaybillServiceImpl(
                 throw NotFoundException(errorList)
             }
         }
+        return waybill.mapToDataDto()
     }
 
     fun Waybill.mapToLiteDto(): WaybillDataLiteDto = WaybillDataLiteDto(
