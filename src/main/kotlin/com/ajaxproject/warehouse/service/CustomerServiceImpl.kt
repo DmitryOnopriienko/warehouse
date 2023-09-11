@@ -30,6 +30,10 @@ class CustomerServiceImpl(
         customerRepository.save(createDto.mapToEntity())
     }
 
+    override fun deleteById(id: Int) {
+        customerRepository.deleteById(id)
+    }
+
     fun Customer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
         id = id,
         firstName = firstName,
