@@ -10,4 +10,6 @@ interface WaybillService {
     fun findById(id: Int): WaybillDataDto
 
     fun createWaybill(createDto: WaybillCreateDto)
+
+    fun deleteById(id: Int)
 }
