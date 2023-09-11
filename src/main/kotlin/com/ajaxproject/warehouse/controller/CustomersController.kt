@@ -26,5 +26,6 @@ class CustomersController(val customerService: CustomerService) {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomer(@RequestBody @Valid createDto: CustomerCreateDto): CustomerDataDto = customerService.createCustomer(createDto)
+    fun createCustomer(@RequestBody @Valid createDto: CustomerCreateDto): CustomerDataDto =
+        customerService.createCustomer(createDto)
 }
