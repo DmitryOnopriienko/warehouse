@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS product (
 CREATE TABLE IF NOT EXISTS waybill (
     id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
-    `date` DATE,
+    `date` DATE NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
@@ -50,8 +50,8 @@ VALUES ('Ihor', 'Ihorev', 'ihorevihor@ihoho.hor'), ('Vitaliy', 'Vitaliev', 'vita
 INSERT INTO product(title, price, amount)
 VALUES ('Foo', 99.99, 100), ('Bar', 999.99, 5);
 
-INSERT INTO waybill(customer_id)
-VALUES (1), (2);
+INSERT INTO waybill(customer_id, `date`)
+VALUES (1, '2023-09-10'), (2, '2023-09-01');
 
 INSERT INTO waybill_has_products(waybill_id, product_id, amount)
 VALUES (1, 1, 5), (1, 2, 1),
