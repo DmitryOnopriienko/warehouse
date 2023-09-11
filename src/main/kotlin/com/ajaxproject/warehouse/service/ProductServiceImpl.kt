@@ -24,6 +24,10 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         productRepository.save(createDto.mapToEntity())
     }
 
+    override fun deleteById(id: Int) {
+        productRepository.deleteById(id)
+    }
+
     fun Product.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id,
         title = title,
