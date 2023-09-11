@@ -55,6 +55,7 @@ class WaybillServiceImpl(
                     { errorList.add("Product with id ${productDto.id} not found") }
                 )
             }
+            // TODO add validation before saving
             if (errorList.isNotEmpty()) {
                 throw NotFoundException(errorList)
             }
@@ -83,7 +84,7 @@ class WaybillServiceImpl(
         id = null,
         customer = customerRepository.findById(customerId as Int)
                 .orElseThrow { NotFoundException("Customer with id $customerId not found") },
-        date = date as LocalDate    // TODO ask if this is OK
+        date = date as LocalDate
     )
 
     fun Waybill.findListOfProductsAndCountTotalPrice(): Pair<List<WaybillProduct>, Double> {
