@@ -30,5 +30,5 @@ class WaybillsController(val waybillService: WaybillService) {
     fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto) = waybillService.createWaybill(createDto)
 
     @DeleteMapping("/{id}")
-    fun deleteWaybill(@PathVariable id: Int) = waybillService.deleteById(id)
+    fun deleteWaybill(@PathVariable id: Int): Unit = waybillService.deleteById(id)
 }
