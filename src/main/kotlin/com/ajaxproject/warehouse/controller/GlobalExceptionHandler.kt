@@ -17,8 +17,9 @@ class GlobalExceptionHandler {
     @ResponseBody
     fun handleNotFound(notFoundException: NotFoundException): ErrorResponse {
         return ErrorResponse(status = HttpStatus.NOT_FOUND.value(),
-            error = HttpStatus.NOT_FOUND.reasonPhrase,
-            message = notFoundException.message)
+            message = HttpStatus.NOT_FOUND.reasonPhrase,
+            error = notFoundException.message,
+            errorList = notFoundException.errorList)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
