@@ -1,18 +1,24 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.entity.Waybill
 import com.ajaxproject.warehouse.entity.WaybillProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
+import com.ajaxproject.warehouse.repository.CustomerRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import com.ajaxproject.warehouse.repository.WaybillProductRepository
 import com.ajaxproject.warehouse.repository.WaybillRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class WaybillServiceImpl(
     val waybillRepository: WaybillRepository,
-    val waybillProductRepository: WaybillProductRepository
+    val customerRepository: CustomerRepository,
+    val waybillProductRepository: WaybillProductRepository,
+    val productRepository: ProductRepository
 ) : WaybillService {
 
     override fun findAll(): List<WaybillDataLiteDto> {
@@ -23,6 +29,32 @@ class WaybillServiceImpl(
         return waybillRepository.findById(id)
             .orElseThrow { NotFoundException("Waybill with id $id not found") }
             .mapToDataDto()
+    }
+
+    override fun createWaybill(createDto: WaybillCreateDto) {
+        val waybill = createDto.mapToEntity()
+        waybillRepository.save(waybill)
+        if (createDto.products != null) {
+            val errorList: MutableList<String> = mutableListOf()
+            for (productDto in createDto.products) {
+                productRepository.findById(productDto.id as Int).ifPresentOrElse(   // TODO read about with, let, apply, also, run
+                    { product ->    // TODO simplify or divide in several functions
+                        waybillProductRepository.save(WaybillProduct(
+                            id = WaybillProduct.WaybillProductPK(waybillId = waybill.id as Int, productId = product.id as Int),
+                            product = product,
+                            waybill = waybill,
+                            amount = productDto.amount as Int
+                        ))
+                        product.amount -= productDto.amount
+                        productRepository.save(product)
+                    },
+                    { errorList.add("Product with id ${productDto.id} not found") }
+                )
+            }
+            if (errorList.isNotEmpty()) {
+                throw NotFoundException(errorList)
+            }
+        }
     }
 
     fun Waybill.mapToLiteDto(): WaybillDataLiteDto = WaybillDataLiteDto(
@@ -42,6 +74,13 @@ class WaybillServiceImpl(
             totalPrice = totalPrice
         )
     }
+
+    fun WaybillCreateDto.mapToEntity(): Waybill = Waybill(
+        id = null,
+        customer = customerRepository.findById(customerId as Int)
+                .orElseThrow { NotFoundException("Customer with id $customerId not found") },
+        date = date as LocalDate    // TODO ask if this is OK
+    )
 
     fun Waybill.findListOfProductsAndCountTotalPrice(): Pair<List<WaybillProduct>, Double> {
         val productList = waybillProductRepository.findByWaybill(this)
