@@ -10,7 +10,7 @@ data class WaybillCreateDto(
     @field:Min(1, message = "id must be valid")
     val customerId: Int?,
     @field:NotNull(message = "date must be provided")
-    val date: LocalDate?,    // TODO waybill date to non-null in the whole project
+    val date: LocalDate?,
     @field:Valid
     val products: List<WaybillProductCreateDto>? = null
 ) {
