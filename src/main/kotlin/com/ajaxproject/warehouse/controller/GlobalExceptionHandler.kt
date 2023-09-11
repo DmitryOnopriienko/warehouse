@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.sql.SQLIntegrityConstraintViolationException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -34,6 +35,17 @@ class GlobalExceptionHandler {
             status = HttpStatus.BAD_REQUEST.value(),
             message = HttpStatus.BAD_REQUEST.reasonPhrase,
             errorList = errors
+        )
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    fun handleSQLIntegrityConstraintViolationException(e: SQLIntegrityConstraintViolationException): ErrorResponse {
+        return ErrorResponse(
+            status = HttpStatus.CONFLICT.value(),
+            message = HttpStatus.CONFLICT.reasonPhrase,
+            error = e.message
         )
     }
 
