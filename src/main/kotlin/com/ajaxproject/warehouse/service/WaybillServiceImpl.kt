@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
+@Suppress("TooManyFunctions")
 class WaybillServiceImpl(
     val waybillRepository: WaybillRepository,
     val customerRepository: CustomerRepository,
