@@ -14,11 +14,10 @@ import java.time.LocalDate
 class Waybill(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     var customer: Customer,
     var date: LocalDate,
 )
-//    TODO implement total price (maybe on service layer)

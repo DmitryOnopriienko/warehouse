@@ -4,7 +4,7 @@ import com.ajaxproject.warehouse.entity.Waybill
 import java.time.LocalDate
 
 data class CustomerDataDto(
-    val id: Int,
+    val id: Int?,
     val firstName: String,
     val surname: String,
     val patronymic: String?,

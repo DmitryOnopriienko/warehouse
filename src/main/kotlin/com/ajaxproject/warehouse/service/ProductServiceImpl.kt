@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.entity.Product
@@ -19,6 +20,15 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
             .mapToDataDto()
     }
 
+    override fun createProduct(createDto: ProductCreateDto): ProductDataDto {
+        val product = productRepository.save(createDto.mapToEntity())
+        return product.mapToDataDto()
+    }
+
+    override fun deleteById(id: Int) {
+        productRepository.deleteById(id)
+    }
+
     fun Product.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id,
         title = title,
@@ -28,6 +38,14 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
 
     fun Product.mapToDataDto(): ProductDataDto = ProductDataDto(
         id = id,
+        title = title,
+        price = price,
+        amount = amount,
+        about = about
+    )
+
+    fun ProductCreateDto.mapToEntity(): Product = Product(
+        id = null,
         title = title,
         price = price,
         amount = amount,
