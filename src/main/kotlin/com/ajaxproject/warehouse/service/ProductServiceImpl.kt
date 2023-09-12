@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.service
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.entity.Product
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.ProductRepository
@@ -22,6 +23,15 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
 
     override fun createProduct(createDto: ProductCreateDto): ProductDataDto {
         val product = productRepository.save(createDto.mapToEntity())
+        return product.mapToDataDto()
+    }
+
+    override fun updateProduct(updateDto: ProductUpdateDto, id: Int): ProductDataDto {
+        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
+        val product: Product = productRepository.findById(id)
+            .orElseThrow { NotFoundException("Product with id $id not found") }
+        product.setUpdatedData(updateDto)
+        productRepository.save(product)
         return product.mapToDataDto()
     }
 
@@ -51,4 +61,11 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         amount = amount,
         about = about
     )
+
+    private fun Product.setUpdatedData(updateDto: ProductUpdateDto) {
+        title = updateDto.title as String
+        price = updateDto.price as Double
+        amount = updateDto.amount as Int
+        about = updateDto.about
+    }
 }
