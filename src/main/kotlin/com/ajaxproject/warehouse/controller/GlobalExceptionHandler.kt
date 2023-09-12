@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.lang.IllegalArgumentException
 import java.sql.SQLIntegrityConstraintViolationException
 
 @RestControllerAdvice
@@ -45,6 +46,17 @@ class GlobalExceptionHandler {
         return ErrorResponse(
             status = HttpStatus.CONFLICT.value(),
             message = HttpStatus.CONFLICT.reasonPhrase,
+            error = e.message
+        )
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponse {
+        return ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            message = HttpStatus.BAD_REQUEST.reasonPhrase,
             error = e.message
         )
     }

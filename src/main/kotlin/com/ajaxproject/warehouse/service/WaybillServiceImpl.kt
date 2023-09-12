@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.service
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
+import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
 import com.ajaxproject.warehouse.entity.Product
 import com.ajaxproject.warehouse.entity.Waybill
 import com.ajaxproject.warehouse.entity.WaybillProduct
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
+@Suppress("TooManyFunctions")
 class WaybillServiceImpl(
     val waybillRepository: WaybillRepository,
     val customerRepository: CustomerRepository,
@@ -74,6 +76,15 @@ class WaybillServiceImpl(
         productRepository.save(product)
     }
 
+    override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: Int): WaybillDataLiteDto {
+        require(id == infoUpdateDto.id) { "Mapping id is not equal to request body id" }
+        val waybill = waybillRepository.findById(id)
+            .orElseThrow { NotFoundException("Waybill with id $id not found") }
+        waybill.setUpdatedInfo(infoUpdateDto)
+        waybillRepository.save(waybill)
+        return waybill.mapToLiteDto()
+    }
+
     override fun deleteById(id: Int) {
         waybillRepository.deleteById(id)
     }
@@ -109,5 +120,11 @@ class WaybillServiceImpl(
             .map { it.product.price * it.amount }
             .sum()
         return productList to totalPrice
+    }
+
+    private fun Waybill.setUpdatedInfo(infoUpdateDto: WaybillInfoUpdateDto) {
+        customer = customerRepository.findById(infoUpdateDto.customerId as Int)
+            .orElseThrow { NotFoundException("Customer with id ${infoUpdateDto.customerId} not found") }
+        date = infoUpdateDto.date as LocalDate
     }
 }
