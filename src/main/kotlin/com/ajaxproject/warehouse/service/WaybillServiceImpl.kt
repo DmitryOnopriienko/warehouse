@@ -55,9 +55,11 @@ class WaybillServiceImpl(
         return waybill.mapToDataDto()
     }
 
-    fun WaybillProductRepository.saveProductAndChangeAmount(waybill: Waybill,
-                                                            product: Product,
-                                                            amount: Int) {
+    private fun WaybillProductRepository.saveProductAndChangeAmount(
+        waybill: Waybill,
+        product: Product,
+        amount: Int
+    ) {
         val waybillProduct = WaybillProduct(
             id = WaybillProduct.WaybillProductPK(
                 waybillId = waybill.id as Int,
