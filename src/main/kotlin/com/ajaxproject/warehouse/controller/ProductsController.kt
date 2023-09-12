@@ -6,6 +6,7 @@ import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,4 +29,8 @@ class ProductsController(val productService: ProductService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun createProduct(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
         productService.createProduct(createDto)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteProduct(@PathVariable id: Int): Unit = productService.deleteById(id)
 }

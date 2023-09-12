@@ -74,6 +74,10 @@ class WaybillServiceImpl(
         productRepository.save(product)
     }
 
+    override fun deleteById(id: Int) {
+        waybillRepository.deleteById(id)
+    }
+
     fun Waybill.mapToLiteDto(): WaybillDataLiteDto = WaybillDataLiteDto(
         id = id,
         customer = customer,

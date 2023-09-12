@@ -6,6 +6,7 @@ import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.service.WaybillService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,4 +29,8 @@ class WaybillsController(val waybillService: WaybillService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
         waybillService.createWaybill(createDto)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteWaybill(@PathVariable id: Int): Unit = waybillService.deleteById(id)
 }

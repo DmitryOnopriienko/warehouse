@@ -31,6 +31,10 @@ class CustomerServiceImpl(
         return customer.mapToDataDto()
     }
 
+    override fun deleteById(id: Int) {
+        customerRepository.deleteById(id)
+    }
+
     fun Customer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
         id = id,
         firstName = firstName,

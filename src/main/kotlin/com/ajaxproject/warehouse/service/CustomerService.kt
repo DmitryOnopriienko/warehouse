@@ -8,4 +8,5 @@ interface CustomerService {
     fun findAllCustomers(): List<CustomerDataLiteDto>
     fun findById(id: Int): CustomerDataDto
     fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto
+    fun deleteById(id: Int)
 }

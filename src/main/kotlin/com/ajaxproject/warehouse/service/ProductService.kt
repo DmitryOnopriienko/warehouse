@@ -8,4 +8,5 @@ interface ProductService {
     fun findAllProducts() : List<ProductDataLiteDto>
     fun findById(id: Int) : ProductDataDto
     fun createProduct(createDto: ProductCreateDto): ProductDataDto
+    fun deleteById(id: Int)
 }
