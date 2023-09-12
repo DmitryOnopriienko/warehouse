@@ -26,8 +26,9 @@ class CustomerServiceImpl(
             .mapToDataDto()
     }
 
-    override fun createCustomer(createDto: CustomerCreateDto) {
-        customerRepository.save(createDto.mapToEntity())
+    override fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto {
+        val customer = customerRepository.save(createDto.mapToEntity())
+        return customer.mapToDataDto()
     }
 
     override fun deleteById(id: Int) {

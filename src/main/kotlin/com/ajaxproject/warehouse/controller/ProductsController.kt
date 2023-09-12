@@ -27,7 +27,8 @@ class ProductsController(val productService: ProductService) {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProduct(@RequestBody @Valid createDto: ProductCreateDto) = productService.createProduct(createDto)
+    fun createProduct(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
+        productService.createProduct(createDto)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

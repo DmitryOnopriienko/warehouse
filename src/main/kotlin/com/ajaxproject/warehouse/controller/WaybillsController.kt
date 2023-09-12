@@ -27,7 +27,8 @@ class WaybillsController(val waybillService: WaybillService) {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto) = waybillService.createWaybill(createDto)
+    fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
+        waybillService.createWaybill(createDto)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

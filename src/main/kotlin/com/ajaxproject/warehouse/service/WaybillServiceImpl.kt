@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.service
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
+import com.ajaxproject.warehouse.entity.Product
 import com.ajaxproject.warehouse.entity.Waybill
 import com.ajaxproject.warehouse.entity.WaybillProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
@@ -31,34 +32,46 @@ class WaybillServiceImpl(
             .mapToDataDto()
     }
 
-    override fun createWaybill(createDto: WaybillCreateDto) {
+    override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
         val waybill = createDto.mapToEntity()
-        waybillRepository.save(waybill)
-        if (createDto.products != null) {
-            val errorList: MutableList<String> = mutableListOf()
-            for (productDto in createDto.products) {
-                productRepository.findById(productDto.id as Int).ifPresentOrElse(
-                    // TODO read about with, let, apply, also, run
-                    { product ->    // TODO simplify or divide in several functions
-                        waybillProductRepository.save(WaybillProduct(
-                            id = WaybillProduct.WaybillProductPK(
-                                waybillId = waybill.id as Int,
-                                productId = product.id as Int
-                            ),
-                            product = product,
-                            waybill = waybill,
-                            amount = productDto.amount as Int
-                        ))
-                        product.amount -= productDto.amount
-                        productRepository.save(product)
-                    },
-                    { errorList.add("Product with id ${productDto.id} not found") }
-                )
-            }
-            if (errorList.isNotEmpty()) {
-                throw NotFoundException(errorList)
-            }
+        if (createDto.products == null) {
+            return waybillRepository.save(waybill).mapToDataDto()
         }
+        val errorList: MutableList<String> = mutableListOf()
+        val products: MutableList<Pair<Product, Int>> = mutableListOf()
+        for (productDto in createDto.products) {
+            productRepository.findById(productDto.id as Int).ifPresentOrElse(
+                { products.add(it to productDto.amount as Int) },
+                { errorList.add("Product with id ${productDto.id} not found") }
+            )
+        }
+        if (errorList.isNotEmpty()) {
+            throw NotFoundException(errorList)
+        }
+        waybillRepository.save(waybill)
+        products.forEach { (product, amount) ->
+            waybillProductRepository.saveProductAndChangeAmount(waybill, product, amount)
+        }
+        return waybill.mapToDataDto()
+    }
+
+    private fun WaybillProductRepository.saveProductAndChangeAmount(
+        waybill: Waybill,
+        product: Product,
+        amount: Int
+    ) {
+        val waybillProduct = WaybillProduct(
+            id = WaybillProduct.WaybillProductPK(
+                waybillId = waybill.id as Int,
+                productId = product.id as Int
+            ),
+            product = product,
+            waybill = waybill,
+            amount = amount
+        )
+        save(waybillProduct)
+        product.amount -= amount
+        productRepository.save(product)
     }
 
     override fun deleteById(id: Int) {
