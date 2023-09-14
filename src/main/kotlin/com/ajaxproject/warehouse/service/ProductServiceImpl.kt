@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.annotation.RequestLimit
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
@@ -15,7 +16,12 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         return productRepository.findAll().map { it.mapToLiteDto() }
     }
 
+    @RequestLimit
     override fun findById(id: Int): ProductDataDto {
+        for (i in 0..REPEAT) { // TODO remove it (it is for postman test)
+            Thread.sleep(TIMEOUT)
+            println("LOG: looking for product with id $id $i times...")
+        }
         return productRepository.findById(id)
             .orElseThrow { NotFoundException("Product with id $id not found") }
             .mapToDataDto()
@@ -67,5 +73,11 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         price = updateDto.price as Double
         amount = updateDto.amount as Int
         about = updateDto.about
+    }
+
+    companion object {
+        private const val TIMEOUT: Long = 10000L
+
+        private const val REPEAT: Int = 100
     }
 }

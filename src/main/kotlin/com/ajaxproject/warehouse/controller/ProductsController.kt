@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.controller
 
+import com.ajaxproject.warehouse.annotation.RequestLimit
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
