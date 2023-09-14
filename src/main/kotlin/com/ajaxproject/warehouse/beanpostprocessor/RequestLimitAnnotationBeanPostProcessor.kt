@@ -2,17 +2,13 @@ package com.ajaxproject.warehouse.beanpostprocessor
 
 import com.ajaxproject.warehouse.annotation.RequestLimit
 import com.ajaxproject.warehouse.exception.MethodRequestLimitExceededException
-import com.ajaxproject.warehouse.service.ProductService
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.cglib.proxy.InvocationHandler
 import org.springframework.cglib.proxy.Proxy
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Controller
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RestController
 import java.lang.reflect.Method
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.reflect.KClass
 
 @Component
 class RequestLimitAnnotationBeanPostProcessor : BeanPostProcessor {
