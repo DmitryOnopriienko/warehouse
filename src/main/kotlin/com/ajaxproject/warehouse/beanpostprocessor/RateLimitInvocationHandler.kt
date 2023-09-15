@@ -22,10 +22,9 @@ class RateLimitInvocationHandler(
         val methodName: String = method.name
         // TODO make limit settable, smth like: (val value: Int = 10)
 
-        val containsAnnotation: Boolean = beanClass.methods.asSequence()
-            .filter { it.name == methodName }
-            .filter { it.isAnnotationPresent(RateLimit::class.java) }
-            .any()
+        val containsAnnotation: Boolean = beanClass.methods.any {
+            it.name == methodName && it.isAnnotationPresent(RateLimit::class.java)
+        }
 
         if (!containsAnnotation) {
             return method.invoke(bean, *methodArguments)
