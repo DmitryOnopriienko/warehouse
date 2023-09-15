@@ -18,10 +18,6 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
 
     @RateLimit
     override fun findById(id: Int): ProductDataDto {
-        for (i in 0..REPEAT) { // TODO remove it (it is for postman test)
-            Thread.sleep(TIMEOUT)
-            println("LOG: looking for product with id $id $i times...")
-        }
         return productRepository.findById(id)
             .orElseThrow { NotFoundException("Product with id $id not found") }
             .mapToDataDto()
@@ -58,7 +54,7 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         price = price,
         amount = amount,
         about = about
-    )   // TODO Qualifier, Primary
+    )
 
     fun ProductCreateDto.mapToEntity(): Product = Product(
         id = null,
