@@ -8,13 +8,23 @@ import org.springframework.stereotype.Component
 @Component
 class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor {
 
-    val annotatedBeansMap: HashMap<String, Class<Any>> = HashMap()
+    val annotatedBeansMap: MutableMap<String, Class<Any>> = mutableMapOf()
+
+    val beanAnnotatedMethods: MutableMap<String, Map<String, Int>> = mutableMapOf()
 
     override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
         val beanClass = bean.javaClass
-        if (beanClass.methods.any { it.isAnnotationPresent(RateLimit::class.java) }) {
+
+        val annotatedMethods: Map<String, Int> = beanClass.methods.asSequence()
+            .filter { it.isAnnotationPresent(RateLimit::class.java) }
+            .map { it.name to it.getAnnotation(RateLimit::class.java).value }
+            .toMap()
+
+        if (annotatedMethods.isNotEmpty()) {
             annotatedBeansMap[beanName] = beanClass
+            beanAnnotatedMethods[beanName] = annotatedMethods
         }
+
         return bean
     }
 
@@ -24,7 +34,10 @@ class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor {
         return Proxy.newProxyInstance(
             beanClass.classLoader,
             beanClass.interfaces,
-            RateLimitInvocationHandler(bean, beanClass)
+            RateLimitInvocationHandler(
+                bean,
+                beanAnnotatedMethods[beanName] ?: mapOf()
+            )
         )
     }
 }
