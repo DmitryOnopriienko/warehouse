@@ -4,6 +4,7 @@ import com.ajaxproject.warehouse.annotation.RateLimit
 import com.ajaxproject.warehouse.exception.MethodRateLimitExceededException
 import org.springframework.cglib.proxy.InvocationHandler
 import java.lang.reflect.Method
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class RateLimitInvocationHandler(
@@ -11,7 +12,7 @@ class RateLimitInvocationHandler(
     private val beanClass: Class<Any>
 ) : InvocationHandler {
 
-    private val methodRequests: MutableMap<String, AtomicInteger> = mutableMapOf()
+    private val methodRequests: ConcurrentHashMap<String, AtomicInteger> = ConcurrentHashMap()
 
     @Suppress("SpreadOperator")
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any {
