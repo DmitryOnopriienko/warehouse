@@ -13,10 +13,8 @@ class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor { // todo
 
     override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
         val beanClass = bean.javaClass
-        if (beanClass.isAnnotationPresent(Service::class.java)) {   // TODO ask about interfaces and other
-            if (beanClass.methods.any { it.isAnnotationPresent(RateLimit::class.java) }) { //to
-                annotatedBeansMap[beanName] = beanClass
-            }
+        if (beanClass.methods.any { it.isAnnotationPresent(RateLimit::class.java) }) {
+            annotatedBeansMap[beanName] = beanClass
         }
         return bean
     }
