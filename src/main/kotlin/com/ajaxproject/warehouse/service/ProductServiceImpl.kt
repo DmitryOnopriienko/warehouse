@@ -70,10 +70,4 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         amount = updateDto.amount as Int
         about = updateDto.about
     }
-
-    companion object {
-        private const val TIMEOUT: Long = 10000L
-
-        private const val REPEAT: Int = 100
-    }
 }
