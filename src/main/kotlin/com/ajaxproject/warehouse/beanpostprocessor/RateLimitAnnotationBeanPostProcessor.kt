@@ -6,7 +6,7 @@ import org.springframework.cglib.proxy.Proxy
 import org.springframework.stereotype.Component
 
 @Component
-class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor { // todo
+class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor {
 
     val annotatedBeansMap: HashMap<String, Class<Any>> = HashMap()
 
