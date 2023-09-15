@@ -1,6 +1,6 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.annotation.RequestLimit
+import com.ajaxproject.warehouse.annotation.RateLimit
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
@@ -16,7 +16,7 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         return productRepository.findAll().map { it.mapToLiteDto() }
     }
 
-    @RequestLimit
+    @RateLimit
     override fun findById(id: Int): ProductDataDto {
         for (i in 0..REPEAT) { // TODO remove it (it is for postman test)
             Thread.sleep(TIMEOUT)
@@ -58,7 +58,7 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         price = price,
         amount = amount,
         about = about
-    )
+    )   // TODO Qualifier, Primary
 
     fun ProductCreateDto.mapToEntity(): Product = Product(
         id = null,

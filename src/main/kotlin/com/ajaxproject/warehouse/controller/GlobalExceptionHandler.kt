@@ -1,6 +1,6 @@
 package com.ajaxproject.warehouse.controller
 
-import com.ajaxproject.warehouse.exception.MethodRequestLimitExceededException
+import com.ajaxproject.warehouse.exception.MethodRateLimitExceededException
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.fasterxml.jackson.annotation.JsonInclude
 import org.springframework.http.HttpStatus
@@ -62,10 +62,10 @@ class GlobalExceptionHandler {
         )
     }
 
-    @ExceptionHandler(MethodRequestLimitExceededException::class)
+    @ExceptionHandler(MethodRateLimitExceededException::class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
     @ResponseBody
-    fun handleMethodRequestLimitExceededException(e: MethodRequestLimitExceededException): ErrorResponse {
+    fun handleMethodRateLimitExceededException(e: MethodRateLimitExceededException): ErrorResponse {
         return ErrorResponse(
             status = HttpStatus.TOO_MANY_REQUESTS.value(),
             message = HttpStatus.TOO_MANY_REQUESTS.reasonPhrase,
