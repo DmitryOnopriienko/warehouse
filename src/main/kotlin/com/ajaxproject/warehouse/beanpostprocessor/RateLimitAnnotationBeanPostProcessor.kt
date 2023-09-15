@@ -4,7 +4,6 @@ import com.ajaxproject.warehouse.annotation.RateLimit
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.cglib.proxy.Proxy
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 
 @Component
 class RateLimitAnnotationBeanPostProcessor : BeanPostProcessor { // todo
