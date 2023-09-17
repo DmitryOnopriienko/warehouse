@@ -21,20 +21,19 @@ class RateLimitInvocationHandler(
         val limit: Int = annotatedMethods[methodName]
             ?: return method.invoke(bean, *methodArguments)
 
-        var methodRequestCounter: AtomicInteger? = methodRequests[methodName]
-        if (methodRequestCounter == null) {
-            methodRequestCounter = AtomicInteger(0)
-            methodRequests[methodName] = methodRequestCounter
+        val methodRequestCounter: AtomicInteger = methodRequests.computeIfAbsent(methodName) {
+            AtomicInteger(0)
         }
 
         if (methodRequestCounter.get() >= limit) {
             throw MethodRateLimitExceededException("Method $methodName is too busy now")
         }
 
-        methodRequestCounter.incrementAndGet()
-        val returnValue = method.invoke(bean, *methodArguments)
-        methodRequestCounter.decrementAndGet()
-
-        return returnValue
+        return try {
+            methodRequestCounter.incrementAndGet()
+            method.invoke(bean, *methodArguments)
+        } finally {
+            methodRequestCounter.decrementAndGet()
+        }
     }
 }
