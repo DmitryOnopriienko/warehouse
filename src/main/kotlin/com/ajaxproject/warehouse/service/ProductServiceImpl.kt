@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.annotation.RateLimit
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
@@ -15,6 +16,7 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
         return productRepository.findAll().map { it.mapToLiteDto() }
     }
 
+    @RateLimit
     override fun findById(id: Int): ProductDataDto {
         return productRepository.findById(id)
             .orElseThrow { NotFoundException("Product with id $id not found") }
