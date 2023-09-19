@@ -1,10 +1,26 @@
-version: "3"
+version: "3.5"
+
 services:
+
   mysql:
     image: mysql:latest
     container_name: mysql
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=toor
       - MYSQL_DATABASE=warehouse
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy

@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/warehouse
+    url: jdbc:mysql://mysql:3306/warehouse  # for dockerized startup
     username: root
     password: toor
   jpa:
