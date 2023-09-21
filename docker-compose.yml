@@ -15,6 +15,23 @@ services:
       timeout: 5s
       retries: 10
 
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - ROOT_USER=root
+      - ROOT_PASSWORD=toor
+      - DB_NAME=warehouse
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=toor
+      - MONGO_INITDB_DATABASE=test
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      timeout: 5s
+      retries: 10
+
   app:
     build:
       dockerfile: Dockerfile
@@ -23,4 +40,6 @@ services:
       - "8080:8080"
     depends_on:
       mysql:
+        condition: service_healthy
+      mongo:
         condition: service_healthy
