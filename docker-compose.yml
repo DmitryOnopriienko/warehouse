@@ -21,12 +21,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-      - ROOT_USER=root
-      - ROOT_PASSWORD=toor
-      - DB_NAME=warehouse
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=toor
-      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_DATABASE=warehouse
     healthcheck:
       test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
       timeout: 5s

@@ -1,11 +1,10 @@
+# for dockerized startup
 spring:
   data.mongodb:
-    uri: mongodb://mongo:27017/warehouse  # for dockerized startup
-    username: root
-    password: toor
+    uri: mongodb://root:toor@mongo:27017/warehouse?authSource=admin
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/warehouse  # for dockerized startup
+    url: jdbc:mysql://mysql:3306/warehouse
     username: root
     password: toor
   jpa:
