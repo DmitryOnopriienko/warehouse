@@ -9,12 +9,12 @@ import java.time.LocalDate
 @Document("waybill")
 data class MongoWaybill(
     @Id
-    var id: ObjectId? = null,
-    var date: LocalDate,
+    val id: ObjectId? = null,
+    val date: LocalDate,
 
     @Field("customer_id")
-    var customerId: ObjectId,
+    val customerId: ObjectId,
 
     @Field("product_ids")
-    var productIds: List<ObjectId> = mutableListOf()
+    val productIds: List<ObjectId> = mutableListOf()
 )

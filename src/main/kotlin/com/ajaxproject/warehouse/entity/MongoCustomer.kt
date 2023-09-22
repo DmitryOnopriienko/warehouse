@@ -9,16 +9,16 @@ import java.time.LocalDate
 @Document("customer")
 data class MongoCustomer(
     @Id
-    var id: ObjectId? = null,
+    val id: ObjectId? = null,
 
     @Field(name = "first_name")
-    var firstName: String,
-    var surname: String,
-    var patronymic: String? = null,
-    var email: String,
+    val firstName: String,
+    val surname: String,
+    val patronymic: String? = null,
+    val email: String,
 
     @Field(name = "phone_number")
-    var phoneNumber: String? = null,
-    var birthday: LocalDate? = null,
-    var comment: String? = null
+    val phoneNumber: String? = null,
+    val birthday: LocalDate? = null,
+    val comment: String? = null
 )
