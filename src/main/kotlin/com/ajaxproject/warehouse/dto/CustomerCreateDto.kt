@@ -5,12 +5,12 @@ import java.time.LocalDate
 
 data class CustomerCreateDto(
     @field:NotEmpty(message = "first name must be not empty")
-    val firstName: String,
+    val firstName: String?,
     @field:NotEmpty(message = "surname must be provided")
-    val surname: String,
+    val surname: String?,
     val patronymic: String?,
     @field:NotEmpty(message = "email must be provided")
-    val email: String,
+    val email: String?,
     val phoneNumber: String?,
     val birthday: LocalDate?,
     val comment: String?

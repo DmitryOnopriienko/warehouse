@@ -68,10 +68,10 @@ class CustomerServiceImpl(
 
     fun CustomerCreateDto.mapToEntity(): Customer = Customer(
         id = null,
-        firstName = firstName,
-        surname = surname,
+        firstName = firstName as String,
+        surname = surname as String,
         patronymic = patronymic,
-        email = email,
+        email = email as String,
         phoneNumber = phoneNumber,
         birthday = birthday,
         comment = comment

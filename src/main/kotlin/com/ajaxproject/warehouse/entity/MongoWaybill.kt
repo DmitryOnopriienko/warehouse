@@ -10,11 +10,10 @@ import java.time.LocalDate
 data class MongoWaybill(
     @Id
     val id: ObjectId? = null,
-    val date: LocalDate,
 
     @Field("customer_id")
     val customerId: ObjectId,
-
+    val date: LocalDate,
     val products: List<MongoWaybillProduct> = listOf()
 ) {
     @Document("products")
