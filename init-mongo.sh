@@ -53,43 +53,51 @@ db.product.insertMany([
                         }
                       ]);
 
-var products = db.product.find();
-var customers = db.customer.find();
+var product_ids = [];
+var customer_ids = [];
+
+db.product.find({}, { _id: 1 }).forEach(function(product) {
+    product_ids.push(product._id);
+});
+
+db.customer.find({}, { _id: 1 }).forEach(function(customer) {
+    customer_ids.push(customer._id);
+});
 
 function getRandomElementFromArray(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-var product1 = getRandomElementFromArray(products);
-var product2 = getRandomElementFromArray(products);
+var product1_id = getRandomElementFromArray(product_ids);
+var product2_id = getRandomElementFromArray(product_ids);
 
-var customer = getRandomElementFromArray(customers);
+var customer_id = getRandomElementFromArray(customer_ids);
 
 db.waybill.insertMany([
                         {
                           "date": ISODate("2020-12-23"),
-                          "customer_id": customer._id,
+                          "customer_id": customer_id,
                           "product_ids": [
                             {
-                              "id": product1._id,
+                              "id": product1_id,
                               "amount": 2
                             },
                             {
-                              "id": product2._id,
+                              "id": product2_id,
                               "amount": 4
                             }
                           ]
                         },
                         {
                           "date": ISODate("2021-12-23"),
-                          "customer_id": customer._id,
+                          "customer_id": customer_id,
                           "product_ids": [
                             {
-                              "id": product1._id,
+                              "id": product1_id,
                               "amount": 6
                             },
                             {
-                              "id": product2._id,
+                              "id": product2_id,
                               "amount": 8
                             }
                           ]
