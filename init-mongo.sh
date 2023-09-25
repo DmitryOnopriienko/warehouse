@@ -77,13 +77,13 @@ db.waybill.insertMany([
                         {
                           "date": ISODate("2020-12-23"),
                           "customer_id": customer_id,
-                          "product_ids": [
+                          "products": [
                             {
-                              "id": product1_id,
+                              "product_id": product1_id,
                               "amount": 2
                             },
                             {
-                              "id": product2_id,
+                              "product_id": product2_id,
                               "amount": 4
                             }
                           ]
@@ -91,13 +91,13 @@ db.waybill.insertMany([
                         {
                           "date": ISODate("2021-12-23"),
                           "customer_id": customer_id,
-                          "product_ids": [
+                          "products": [
                             {
-                              "id": product1_id,
+                              "product_id": product1_id,
                               "amount": 6
                             },
                             {
-                              "id": product2_id,
+                              "product_id": product2_id,
                               "amount": 8
                             }
                           ]

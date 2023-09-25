@@ -29,7 +29,7 @@ services:
       - MONGO_INITDB_DATABASE=warehouse
     healthcheck:
       test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-      interval: 1s
+      interval: 10s
       timeout: 1s
       retries: 10
 

@@ -15,6 +15,12 @@ data class MongoWaybill(
     @Field("customer_id")
     val customerId: ObjectId,
 
-    @Field("product_ids")
-    val productIds: List<ObjectId> = mutableListOf()
-)
+    val products: List<MongoWaybillProduct> = listOf()
+) {
+    @Document("products")
+    data class MongoWaybillProduct(
+        @Field("product_id")
+        val id: ObjectId,
+        val amount: Int
+    )
+}
