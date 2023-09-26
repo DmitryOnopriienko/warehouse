@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service
 class CustomerServiceMongoImpl(
     val mongoCustomerRepository: MongoCustomerRepository
 ) : CustomerServiceMongo {
-    override fun findAllCustomers(): List<MongoCustomerDataLiteDto> {
-        return mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
-    }
+
+    override fun findAllCustomers(): List<MongoCustomerDataLiteDto> =
+        mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): MongoCustomerDataDto {
         val mongoCustomer: MongoCustomer = mongoCustomerRepository.getById(ObjectId(id))

@@ -14,21 +14,16 @@ class MongoProductRepositoryImpl(
 
     private val productType = MongoProduct::class.java
 
-    override fun findAll(): List<MongoProduct> {
-        return mongoTemplate.findAll(productType, MongoProduct.COLLECTION_NAME)
-    }
+    override fun findAll(): List<MongoProduct> = mongoTemplate.findAll(productType, MongoProduct.COLLECTION_NAME)
 
-    override fun getById(id: ObjectId): MongoProduct? {
-        return mongoTemplate.findById(id, productType, MongoProduct.COLLECTION_NAME)
-    }
+    override fun getById(id: ObjectId): MongoProduct? =
+        mongoTemplate.findById(id, productType, MongoProduct.COLLECTION_NAME)
 
-    override fun createProduct(mongoProduct: MongoProduct): MongoProduct {
-        return mongoTemplate.insert(mongoProduct, MongoProduct.COLLECTION_NAME)
-    }
+    override fun createProduct(mongoProduct: MongoProduct): MongoProduct =
+        mongoTemplate.insert(mongoProduct, MongoProduct.COLLECTION_NAME)
 
-    override fun save(mongoProduct: MongoProduct): MongoProduct {
-        return mongoTemplate.save(mongoProduct, MongoProduct.COLLECTION_NAME)
-    }
+    override fun save(mongoProduct: MongoProduct): MongoProduct =
+        mongoTemplate.save(mongoProduct, MongoProduct.COLLECTION_NAME)
 
     override fun deleteById(id: ObjectId) {
         mongoTemplate.findAndRemove(

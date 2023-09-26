@@ -32,7 +32,7 @@ class ProductsController(
     fun findAllProducts(): List<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/mongo")
-    fun findAllProductsMongo(): List<MongoProductDataLiteDto> = productServiceMongo.findAll()
+    fun findAllProductsMongo(): List<MongoProductDataLiteDto> = productServiceMongo.findAllProducts()
 
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Int): ProductDataDto = productService.findById(id)

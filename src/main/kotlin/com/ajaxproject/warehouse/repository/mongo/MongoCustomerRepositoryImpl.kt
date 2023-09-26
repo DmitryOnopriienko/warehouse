@@ -17,25 +17,16 @@ class MongoCustomerRepositoryImpl(
 
     private val waybillType = MongoWaybill::class.java
 
-    override fun findAll(): List<MongoCustomer> {
-        return mongoTemplate.findAll(customerType, MongoCustomer.COLLECTION_NAME)
-    }
+    override fun findAll(): List<MongoCustomer> = mongoTemplate.findAll(customerType, MongoCustomer.COLLECTION_NAME)
 
-    override fun getById(id: ObjectId): MongoCustomer? {
-        return mongoTemplate.findById(
-            id,
-            customerType,
-            MongoCustomer.COLLECTION_NAME
-        )
-    }
+    override fun getById(id: ObjectId): MongoCustomer? =
+        mongoTemplate.findById(id, customerType, MongoCustomer.COLLECTION_NAME)
 
-    override fun createCustomer(mongoCustomer: MongoCustomer): MongoCustomer {
-        return mongoTemplate.insert(mongoCustomer, MongoCustomer.COLLECTION_NAME)
-    }
+    override fun createCustomer(mongoCustomer: MongoCustomer): MongoCustomer =
+        mongoTemplate.insert(mongoCustomer, MongoCustomer.COLLECTION_NAME)
 
-    override fun save(mongoCustomer: MongoCustomer): MongoCustomer {
-        return mongoTemplate.save(mongoCustomer, MongoCustomer.COLLECTION_NAME)
-    }
+    override fun save(mongoCustomer: MongoCustomer): MongoCustomer =
+        mongoTemplate.save(mongoCustomer, MongoCustomer.COLLECTION_NAME)
 
     override fun deleteById(id: ObjectId) {
         mongoTemplate.findAndRemove(
@@ -45,11 +36,10 @@ class MongoCustomerRepositoryImpl(
         )
     }
 
-    override fun findCustomerWaybills(id: ObjectId?): List<MongoWaybill> {
-        return mongoTemplate.find(
+    override fun findCustomerWaybills(id: ObjectId?): List<MongoWaybill> =
+        mongoTemplate.find(
             Query(Criteria.where("customer_id").`is`(id)),
             waybillType,
             MongoWaybill.COLLECTION_NAME
         )
-    }
 }

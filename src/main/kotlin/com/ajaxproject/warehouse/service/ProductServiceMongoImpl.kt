@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service
 class ProductServiceMongoImpl(
     val mongoProductRepository: MongoProductRepository
 ) : ProductServiceMongo {
-    override fun findAll(): List<MongoProductDataLiteDto> {
-        return mongoProductRepository.findAll().map { it.mapToLiteDto() }
-    }
+
+    override fun findAllProducts(): List<MongoProductDataLiteDto> =
+        mongoProductRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): MongoProductDataDto {
         val mongoProduct: MongoProduct = mongoProductRepository.getById(ObjectId(id))
