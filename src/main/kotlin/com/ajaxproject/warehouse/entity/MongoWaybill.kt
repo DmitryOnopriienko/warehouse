@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import java.time.LocalDate
 
-@Document("waybill")
+@Document(MongoWaybill.COLLECTION_NAME)
 data class MongoWaybill(
     @Id
     val id: ObjectId? = null,
@@ -22,4 +22,8 @@ data class MongoWaybill(
         val id: ObjectId,
         val amount: Int
     )
+
+    companion object {
+        const val COLLECTION_NAME = "waybill"
+    }
 }

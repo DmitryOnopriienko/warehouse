@@ -27,7 +27,7 @@ class ProductServiceMongoImpl(
     }
 
     override fun createProduct(createDto: ProductCreateDto): MongoProductDataDto {
-        val product = mongoTemplate.insert(createDto.mapToEntity(), "product")
+        val product = mongoTemplate.insert(createDto.mapToEntity(), MongoProduct.COLLECTION_NAME)
         return product.mapToDataDto()
     }
 
@@ -36,11 +36,11 @@ class ProductServiceMongoImpl(
         var product: MongoProduct = mongoTemplate.findById(
             ObjectId(id),
             MongoProduct::class.java,
-            "product"
+            MongoProduct.COLLECTION_NAME
         ) ?: throw NotFoundException("Product with id $id not found")
 
         product = product.setUpdatedData(updateDto)
-        product = mongoTemplate.save(product, "product")
+        product = mongoTemplate.save(product, MongoProduct.COLLECTION_NAME)
         return product.mapToDataDto()
     }
 
@@ -48,7 +48,7 @@ class ProductServiceMongoImpl(
         mongoTemplate.findAndRemove(
             Query(Criteria.where("_id").`is`(ObjectId(id))),
             MongoProduct::class.java,
-            "product"
+            MongoProduct.COLLECTION_NAME
         )
     }
 

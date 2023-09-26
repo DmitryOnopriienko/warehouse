@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import java.time.LocalDate
 
-@Document("customer")
+@Document(MongoCustomer.COLLECTION_NAME)
 data class MongoCustomer(
     @Id
     val id: ObjectId? = null,
@@ -21,4 +21,8 @@ data class MongoCustomer(
     val phoneNumber: String? = null,
     val birthday: LocalDate? = null,
     val comment: String? = null
-)
+) {
+    companion object {
+        const val COLLECTION_NAME = "customer"
+    }
+}

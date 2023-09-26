@@ -25,7 +25,7 @@ class CustomerServiceMongoImpl(
         val mongoCustomer: MongoCustomer = mongoTemplate.findById(
             ObjectId(id),
             MongoCustomer::class.java,
-            "customer"
+            MongoCustomer.COLLECTION_NAME
         ) ?: throw NotFoundException("Customer with id $id not found")
 
         return mongoCustomer.mapToDataDto()
@@ -41,7 +41,7 @@ class CustomerServiceMongoImpl(
         var customer: MongoCustomer = mongoTemplate.findById(
             ObjectId(id),
             MongoCustomer::class.java,
-            "customer"
+            MongoCustomer.COLLECTION_NAME
         ) ?: throw NotFoundException("Customer with id $id not found")
         customer = customer.setUpdatedData(updateDto)
         mongoTemplate.save(customer)
@@ -52,7 +52,7 @@ class CustomerServiceMongoImpl(
         mongoTemplate.findAndRemove(
             Query(Criteria.where("_id").`is`(ObjectId(id))),
             MongoCustomer::class.java,
-            "customer"
+            MongoCustomer.COLLECTION_NAME
         )
     }
 
@@ -69,7 +69,7 @@ class CustomerServiceMongoImpl(
         val waybills: List<MongoWaybill> = mongoTemplate.find(
             Query(Criteria.where("customer_id").`is`(id)),
             MongoWaybill::class.java,
-            "waybill"
+            MongoWaybill.COLLECTION_NAME
         )
         return MongoCustomerDataDto(
             id = id.toString(),
