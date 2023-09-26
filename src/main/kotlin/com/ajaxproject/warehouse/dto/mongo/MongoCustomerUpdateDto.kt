@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 data class MongoCustomerUpdateDto(
     @field:NotNull(message = "id must be provided")
-    val id: ObjectId?,
+    val id: String?,
     @field:NotNull(message = "firstName must be provided")
     @field:NotEmpty(message = "firstName must be not empty")
     val firstName: String?,

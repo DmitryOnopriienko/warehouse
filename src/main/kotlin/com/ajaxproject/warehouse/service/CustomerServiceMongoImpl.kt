@@ -37,13 +37,12 @@ class CustomerServiceMongoImpl(
     }
 
     override fun updateCustomer(updateDto: MongoCustomerUpdateDto, id: String): MongoCustomerDataDto {
-        val objectId = ObjectId(id)
-        require(objectId == updateDto.id) { "Mapping id is not equal to request body id" }
+        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
         var customer: MongoCustomer = mongoTemplate.findById(
-            objectId,
+            ObjectId(id),
             MongoCustomer::class.java,
             "customer"
-        ) ?: throw NotFoundException("Customer with id $objectId not found")
+        ) ?: throw NotFoundException("Customer with id $id not found")
         customer = customer.setUpdatedData(updateDto)
         mongoTemplate.save(customer)
         return customer.mapToDataDto()
@@ -98,7 +97,7 @@ class CustomerServiceMongoImpl(
 
     fun MongoCustomer.setUpdatedData(updateDto: MongoCustomerUpdateDto): MongoCustomer {
         return this.copy(
-            id = updateDto.id,
+            id = ObjectId(updateDto.id),
             firstName = updateDto.firstName as String,
             surname = updateDto.surname as String,
             patronymic = updateDto.patronymic,

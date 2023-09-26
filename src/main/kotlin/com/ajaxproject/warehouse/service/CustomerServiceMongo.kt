@@ -4,7 +4,6 @@ import com.ajaxproject.warehouse.dto.CustomerCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
-import org.bson.types.ObjectId
 
 interface CustomerServiceMongo {
     fun findAllCustomers(): List<MongoCustomerDataLiteDto>
