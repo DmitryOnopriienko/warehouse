@@ -6,6 +6,7 @@ import com.ajaxproject.warehouse.dto.mongo.MongoProductDataLiteDto
 import com.ajaxproject.warehouse.dto.mongo.MongoProductUpdateDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
+import com.ajaxproject.warehouse.repository.mongo.MongoProductRepository
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
@@ -14,42 +15,34 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductServiceMongoImpl(
-    val mongoTemplate: MongoTemplate
+    val mongoProductRepository: MongoProductRepository
 ) : ProductServiceMongo {
     override fun findAll(): List<MongoProductDataLiteDto> {
-        return mongoTemplate.findAll(MongoProduct::class.java).map { it.mapToLiteDto() }
+        return mongoProductRepository.findAll().map { it.mapToLiteDto() }
     }
 
     override fun getById(id: String): MongoProductDataDto {
-        val mongoProduct = mongoTemplate.findById(ObjectId(id), MongoProduct::class.java)
+        val mongoProduct: MongoProduct = mongoProductRepository.getById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         return mongoProduct.mapToDataDto()
     }
 
     override fun createProduct(createDto: ProductCreateDto): MongoProductDataDto {
-        val product = mongoTemplate.insert(createDto.mapToEntity(), MongoProduct.COLLECTION_NAME)
+        val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
 
     override fun updateProduct(updateDto: MongoProductUpdateDto, id: String): MongoProductDataDto {
         require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        var product: MongoProduct = mongoTemplate.findById(
-            ObjectId(id),
-            MongoProduct::class.java,
-            MongoProduct.COLLECTION_NAME
-        ) ?: throw NotFoundException("Product with id $id not found")
-
+        var product: MongoProduct = mongoProductRepository.getById(ObjectId(id))
+            ?: throw NotFoundException("Product with id $id not found")
         product = product.setUpdatedData(updateDto)
-        product = mongoTemplate.save(product, MongoProduct.COLLECTION_NAME)
+        product = mongoProductRepository.save(product)
         return product.mapToDataDto()
     }
 
     override fun deleteById(id: String) {
-        mongoTemplate.findAndRemove(
-            Query(Criteria.where("_id").`is`(ObjectId(id))),
-            MongoProduct::class.java,
-            MongoProduct.COLLECTION_NAME
-        )
+        mongoProductRepository.deleteById(ObjectId(id))
     }
 
     fun MongoProduct.mapToLiteDto(): MongoProductDataLiteDto = MongoProductDataLiteDto(

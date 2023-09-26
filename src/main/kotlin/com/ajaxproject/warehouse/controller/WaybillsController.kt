@@ -4,7 +4,9 @@ import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
+import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
 import com.ajaxproject.warehouse.service.WaybillService
+import com.ajaxproject.warehouse.service.WaybillServiceMongo
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,10 +21,16 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/waybills")
-class WaybillsController(val waybillService: WaybillService) {
+class WaybillsController(
+    val waybillService: WaybillService,
+    val waybillServiceMongo: WaybillServiceMongo
+) {
 
     @GetMapping
     fun findAll(): List<WaybillDataLiteDto> = waybillService.findAll()
+
+    @GetMapping("/mongo")
+    fun findAllWaybillsMongo(): List<MongoWaybillDataLiteDto> = waybillServiceMongo.findAllWaybills()
 
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Int): WaybillDataDto = waybillService.findById(id)

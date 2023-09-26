@@ -7,53 +7,41 @@ import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
+import com.ajaxproject.warehouse.repository.mongo.MongoCustomerRepository
 import org.bson.types.ObjectId
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 @Service
 class CustomerServiceMongoImpl(
-    val mongoTemplate: MongoTemplate
+    val mongoCustomerRepository: MongoCustomerRepository
 ) : CustomerServiceMongo {
     override fun findAllCustomers(): List<MongoCustomerDataLiteDto> {
-        return mongoTemplate.findAll(MongoCustomer::class.java).map { it.mapToLiteDto() }
+        return mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
     }
 
     override fun getById(id: String): MongoCustomerDataDto {
-        val mongoCustomer: MongoCustomer = mongoTemplate.findById(
-            ObjectId(id),
-            MongoCustomer::class.java,
-            MongoCustomer.COLLECTION_NAME
-        ) ?: throw NotFoundException("Customer with id $id not found")
-
+        val mongoCustomer: MongoCustomer = mongoCustomerRepository.getById(ObjectId(id))
+            ?: throw NotFoundException("Customer with id $id not found")
         return mongoCustomer.mapToDataDto()
     }
 
     override fun createCustomer(createDto: CustomerCreateDto): MongoCustomerDataDto {
-        val customer = mongoTemplate.insert(createDto.mapToEntity())
+        val customer: MongoCustomer =
+            mongoCustomerRepository.createCustomer(createDto.mapToEntity())
         return customer.mapToDataDto()
     }
 
     override fun updateCustomer(updateDto: MongoCustomerUpdateDto, id: String): MongoCustomerDataDto {
         require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        var customer: MongoCustomer = mongoTemplate.findById(
-            ObjectId(id),
-            MongoCustomer::class.java,
-            MongoCustomer.COLLECTION_NAME
-        ) ?: throw NotFoundException("Customer with id $id not found")
+        var customer: MongoCustomer = mongoCustomerRepository.getById(ObjectId(id))
+            ?: throw NotFoundException("Customer with id $id not found")
         customer = customer.setUpdatedData(updateDto)
-        mongoTemplate.save(customer)
+        mongoCustomerRepository.save(customer)
         return customer.mapToDataDto()
     }
 
     override fun deleteById(id: String) {
-        mongoTemplate.findAndRemove(
-            Query(Criteria.where("_id").`is`(ObjectId(id))),
-            MongoCustomer::class.java,
-            MongoCustomer.COLLECTION_NAME
-        )
+        mongoCustomerRepository.deleteById(ObjectId(id))
     }
 
     fun MongoCustomer.mapToLiteDto(): MongoCustomerDataLiteDto = MongoCustomerDataLiteDto(
@@ -66,11 +54,7 @@ class CustomerServiceMongoImpl(
     )
 
     fun MongoCustomer.mapToDataDto(): MongoCustomerDataDto {
-        val waybills: List<MongoWaybill> = mongoTemplate.find(
-            Query(Criteria.where("customer_id").`is`(id)),
-            MongoWaybill::class.java,
-            MongoWaybill.COLLECTION_NAME
-        )
+        val waybills: List<MongoWaybill> = mongoCustomerRepository.findCustomerWaybills(id)
         return MongoCustomerDataDto(
             id = id.toString(),
             firstName = firstName,

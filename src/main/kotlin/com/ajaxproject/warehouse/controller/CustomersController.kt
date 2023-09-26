@@ -35,7 +35,8 @@ class CustomersController(
     fun findAllMongo(): List<MongoCustomerDataLiteDto> = customerServiceMongo.findAllCustomers()
 
     @GetMapping("/mongo/{id}")
-    fun findByIdMongo(@PathVariable id: String): MongoCustomerDataDto = customerServiceMongo.getById(id)
+    fun findByIdMongo(@PathVariable id: String): MongoCustomerDataDto =
+        customerServiceMongo.getById(id)
 
     @PostMapping("/mongo/create")
     @ResponseStatus(HttpStatus.CREATED)
