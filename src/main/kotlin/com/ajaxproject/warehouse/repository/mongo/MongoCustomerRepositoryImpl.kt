@@ -38,7 +38,7 @@ class MongoCustomerRepositoryImpl(
 
     override fun findCustomerWaybills(id: ObjectId?): List<MongoWaybill> =
         mongoTemplate.find(
-            Query(Criteria.where("customer_id").`is`(id)),
+            Query(Criteria.where("customerId").`is`(id)),
             waybillType,
             MongoWaybill.COLLECTION_NAME
         )

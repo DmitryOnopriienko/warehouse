@@ -18,12 +18,13 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    fun handleNotFound(notFoundException: NotFoundException): ErrorResponse {
-        return ErrorResponse(status = HttpStatus.NOT_FOUND.value(),
+    fun handleNotFound(notFoundException: NotFoundException) =
+        ErrorResponse(
+            status = HttpStatus.NOT_FOUND.value(),
             message = HttpStatus.NOT_FOUND.reasonPhrase,
             error = notFoundException.message,
-            errorList = notFoundException.errorList)
-    }
+            errorList = notFoundException.errorList
+        )
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -43,35 +44,32 @@ class GlobalExceptionHandler {
     @ExceptionHandler(SQLIntegrityConstraintViolationException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    fun handleSQLIntegrityConstraintViolationException(e: SQLIntegrityConstraintViolationException): ErrorResponse {
-        return ErrorResponse(
+    fun handleSQLIntegrityConstraintViolationException(e: SQLIntegrityConstraintViolationException) =
+        ErrorResponse(
             status = HttpStatus.CONFLICT.value(),
             message = HttpStatus.CONFLICT.reasonPhrase,
             error = e.message
         )
-    }
 
     @ExceptionHandler(IllegalArgumentException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponse {
-        return ErrorResponse(
+    fun handleIllegalArgumentException(e: IllegalArgumentException) =
+        ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             message = HttpStatus.BAD_REQUEST.reasonPhrase,
             error = e.message
         )
-    }
 
     @ExceptionHandler(MethodRateLimitExceededException::class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
     @ResponseBody
-    fun handleMethodRateLimitExceededException(e: MethodRateLimitExceededException): ErrorResponse {
-        return ErrorResponse(
+    fun handleMethodRateLimitExceededException(e: MethodRateLimitExceededException) =
+        ErrorResponse(
             status = HttpStatus.TOO_MANY_REQUESTS.value(),
             message = HttpStatus.TOO_MANY_REQUESTS.reasonPhrase,
             error = e.message
         )
-    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     data class ErrorResponse(
