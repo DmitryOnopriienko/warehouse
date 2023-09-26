@@ -8,27 +8,27 @@ db.createCollection("waybill");
 
 db.customer.insertMany([
                 {
-                  "first_name": "Ihor",
+                  "firstName": "Ihor",
                   "surname": "Ihorev",
                   "patronymic": "Ihorevich",
                   "email": "iii@gmail.hhh",
-                  "phone_number": "+38 050 192 83 74",
+                  "phoneNumber": "+38 050 192 83 74",
                   "birthday": "2003-09-09"
                 },
                 {
-                  "first_name": "Alex",
+                  "firstName": "Alex",
                   "surname": "Alexov",
                   "patronymic": "Alexovich",
                   "email": "aaa@gmail.aaa",
-                  "phone_number": "+38 050 192 83 74",
+                  "phoneNumber": "+38 050 192 83 74",
                   "birthday": "2003-09-09"
                 },
                 {
-                  "first_name": "Ivan",
+                  "firstName": "Ivan",
                   "surname": "Ivanov",
                   "patronymic": "Ivanovich",
                   "email": "vvv@gmail.vvv",
-                  "phone_number": "+38 050 192 83 74",
+                  "phoneNumber": "+38 050 192 83 74",
                   "birthday": "2003-09-09"
                 }
               ]);
@@ -76,28 +76,28 @@ var customer_id = getRandomElementFromArray(customer_ids);
 db.waybill.insertMany([
                         {
                           "date": ISODate("2020-12-23"),
-                          "customer_id": customer_id,
+                          "customerId": customer_id,
                           "products": [
                             {
-                              "product_id": product1_id,
+                              "productId": product1_id,
                               "amount": 2
                             },
                             {
-                              "product_id": product2_id,
+                              "productId": product2_id,
                               "amount": 4
                             }
                           ]
                         },
                         {
                           "date": ISODate("2021-12-23"),
-                          "customer_id": customer_id,
+                          "customerId": customer_id,
                           "products": [
                             {
-                              "product_id": product1_id,
+                              "productId": product1_id,
                               "amount": 6
                             },
                             {
-                              "product_id": product2_id,
+                              "productId": product2_id,
                               "amount": 8
                             }
                           ]
