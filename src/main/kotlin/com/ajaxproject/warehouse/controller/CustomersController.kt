@@ -6,6 +6,7 @@ import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
+import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
 import com.ajaxproject.warehouse.service.CustomerService
 import com.ajaxproject.warehouse.service.CustomerServiceMongo
 import jakarta.validation.Valid
@@ -41,6 +42,12 @@ class CustomersController(
     fun createCustomerMongo(
         @RequestBody @Valid createDto: CustomerCreateDto
     ): MongoCustomerDataDto = customerServiceMongo.createCustomer(createDto)
+
+    @PutMapping("/mongo/{id}")
+    fun updateCustomerMongo(
+        @PathVariable id: String,
+        @RequestBody @Valid updateDto: MongoCustomerUpdateDto
+    ): MongoCustomerDataDto = customerServiceMongo.updateCustomer(updateDto, id)
 
     @DeleteMapping("/mongo/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

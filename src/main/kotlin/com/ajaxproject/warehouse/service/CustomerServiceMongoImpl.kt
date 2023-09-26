@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.service
 import com.ajaxproject.warehouse.dto.CustomerCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
+import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
@@ -32,6 +33,19 @@ class CustomerServiceMongoImpl(
 
     override fun createCustomer(createDto: CustomerCreateDto): MongoCustomerDataDto {
         val customer = mongoTemplate.insert(createDto.mapToEntity())
+        return customer.mapToDataDto()
+    }
+
+    override fun updateCustomer(updateDto: MongoCustomerUpdateDto, id: String): MongoCustomerDataDto {
+        val objectId = ObjectId(id)
+        require(objectId == updateDto.id) { "Mapping id is not equal to request body id" }
+        var customer: MongoCustomer = mongoTemplate.findById(
+            objectId,
+            MongoCustomer::class.java,
+            "customer"
+        ) ?: throw NotFoundException("Customer with id $objectId not found")
+        customer = customer.setUpdatedData(updateDto)
+        mongoTemplate.save(customer)
         return customer.mapToDataDto()
     }
 
@@ -71,6 +85,7 @@ class CustomerServiceMongoImpl(
         )
     }
 
+
     fun CustomerCreateDto.mapToEntity(): MongoCustomer = MongoCustomer(
         firstName = firstName as String,
         surname = surname as String,
@@ -80,5 +95,18 @@ class CustomerServiceMongoImpl(
         birthday = birthday,
         comment = comment
     )
+
+    fun MongoCustomer.setUpdatedData(updateDto: MongoCustomerUpdateDto): MongoCustomer {
+        return this.copy(
+            id = updateDto.id,
+            firstName = updateDto.firstName as String,
+            surname = updateDto.surname as String,
+            patronymic = updateDto.patronymic,
+            email = updateDto.email as String,
+            phoneNumber = updateDto.phoneNumber,
+            birthday = updateDto.birthday,
+            comment = updateDto.comment
+        )
+    }
 
 }
