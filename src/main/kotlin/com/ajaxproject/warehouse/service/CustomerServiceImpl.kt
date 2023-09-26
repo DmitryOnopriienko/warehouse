@@ -16,10 +16,7 @@ class CustomerServiceImpl(
     val waybillRepository: WaybillRepository
 ) : CustomerService {
 
-    override fun findAllCustomers(): List<CustomerDataLiteDto> {
-        return customerRepository.findAll()
-            .map { it.mapToLiteDto() }
-    }
+    override fun findAllCustomers(): List<CustomerDataLiteDto> = customerRepository.findAll().map { it.mapToLiteDto() }
 
     override fun findById(id: Int): CustomerDataDto {
         return customerRepository.findById(id)
