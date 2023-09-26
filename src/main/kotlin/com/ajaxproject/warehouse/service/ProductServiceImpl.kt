@@ -58,8 +58,8 @@ class ProductServiceImpl(val productRepository: ProductRepository) : ProductServ
 
     fun ProductCreateDto.mapToEntity(): Product = Product(
         id = null,
-        title = title,
-        price = price,
+        title = title as String,
+        price = price as Double,
         amount = amount,
         about = about
     )

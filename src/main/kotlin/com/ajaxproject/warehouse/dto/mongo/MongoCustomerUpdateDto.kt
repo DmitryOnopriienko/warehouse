@@ -2,7 +2,6 @@ package com.ajaxproject.warehouse.dto.mongo
 
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
-import org.bson.types.ObjectId
 import java.time.LocalDate
 
 data class MongoCustomerUpdateDto(

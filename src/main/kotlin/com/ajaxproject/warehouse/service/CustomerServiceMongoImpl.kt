@@ -97,7 +97,6 @@ class CustomerServiceMongoImpl(
 
     fun MongoCustomer.setUpdatedData(updateDto: MongoCustomerUpdateDto): MongoCustomer {
         return this.copy(
-            id = ObjectId(updateDto.id),
             firstName = updateDto.firstName as String,
             surname = updateDto.surname as String,
             patronymic = updateDto.patronymic,
