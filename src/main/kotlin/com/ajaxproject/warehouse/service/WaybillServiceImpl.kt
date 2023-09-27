@@ -71,7 +71,7 @@ class WaybillServiceImpl(
     }
 
     fun MongoWaybill.mapToDataDto(): WaybillDataDto {
-        val productList: List<WaybillDataDto.MongoWaybillProductDataDto> = getListOfProducts()
+        val productList: List<WaybillDataDto.WaybillProductDataDto> = getListOfProducts()
         val customer: MongoCustomer = mongoCustomerRepository.getById(customerId)
             ?: throw InternalEntityNotFoundException("Customer with id $customerId not found")
         return WaybillDataDto(
@@ -83,7 +83,7 @@ class WaybillServiceImpl(
         )
     }
 
-    fun MongoWaybill.getListOfProducts(): List<WaybillDataDto.MongoWaybillProductDataDto> = products.asSequence()
+    fun MongoWaybill.getListOfProducts(): List<WaybillDataDto.WaybillProductDataDto> = products.asSequence()
         .map {
             val product = mongoProductRepository.getById(it.productId)
             product?.mapToWaybillProductDataDto(it.amount)
@@ -107,7 +107,7 @@ class WaybillServiceImpl(
         )
 
     fun MongoProduct.mapToWaybillProductDataDto(amount: Int) =
-        WaybillDataDto.MongoWaybillProductDataDto(
+        WaybillDataDto.WaybillProductDataDto(
             id = id.toString(),
             title = title,
             price = price,
@@ -121,7 +121,7 @@ class WaybillServiceImpl(
             products = products.map { it.mapToWaybillProduct() }
         )
 
-    fun WaybillCreateDto.MongoWaybillProductCreateDto.mapToWaybillProduct() =
+    fun WaybillCreateDto.WaybillProductCreateDto.mapToWaybillProduct() =
         MongoWaybill.MongoWaybillProduct(
             productId = ObjectId(productId),
             amount = amount as Int

@@ -7,9 +7,9 @@ data class WaybillDataDto(
     val customer: CustomerDataLiteDto,
     val date: LocalDate,
     val totalPrice: Double,
-    val products: List<MongoWaybillProductDataDto>
+    val products: List<WaybillProductDataDto>
 ) {
-    data class MongoWaybillProductDataDto(
+    data class WaybillProductDataDto(
         val id: String,
         val title: String,
         val price: Double,

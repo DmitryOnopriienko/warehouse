@@ -11,9 +11,9 @@ data class WaybillCreateDto(
     @field:NotNull(message = "date must be provided")
     val date: LocalDate?,
     @field:Valid
-    val products: List<MongoWaybillProductCreateDto> = emptyList()
+    val products: List<WaybillProductCreateDto> = emptyList()
 ) {
-    data class MongoWaybillProductCreateDto(
+    data class WaybillProductCreateDto(
         @field:NotEmpty(message = "productId must be provided")
         val productId: String?,
         @field:NotNull(message = "amount must be provided")
