@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController
 class MainController {
 
     @GetMapping("/index")
-    fun index(httpServletResponse: HttpServletResponse) = httpServletResponse.sendRedirect("/customers/mongo")
+    fun index(httpServletResponse: HttpServletResponse) = httpServletResponse.sendRedirect("/customers")
 }

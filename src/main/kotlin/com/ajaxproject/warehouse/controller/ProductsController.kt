@@ -23,25 +23,25 @@ class ProductsController(
     val productServiceMongo: ProductServiceMongo
 ) {
 
-    @GetMapping("/mongo")
+    @GetMapping
     fun findAllProductsMongo(): List<MongoProductDataLiteDto> = productServiceMongo.findAllProducts()
 
-    @GetMapping("/mongo/{id}")
+    @GetMapping("/{id}")
     fun findByIdMongo(@PathVariable id: String): MongoProductDataDto =
         productServiceMongo.getById(id)
 
-    @PostMapping("/mongo/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createProductMongo(@RequestBody @Valid createDto: ProductCreateDto): MongoProductDataDto =
         productServiceMongo.createProduct(createDto)
 
-    @PutMapping("/mongo/{id}")
+    @PutMapping("/{id}")
     fun updateProductMongo(
         @RequestBody @Valid updateDto: MongoProductUpdateDto,
         @PathVariable id: String
     ): MongoProductDataDto = productServiceMongo.updateProduct(updateDto, id)
 
-    @DeleteMapping("/mongo/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProductMongo(@PathVariable id: String): Unit = productServiceMongo.deleteById(id)
 }

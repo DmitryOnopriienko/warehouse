@@ -23,24 +23,24 @@ class WaybillsController(
     val waybillServiceMongo: WaybillServiceMongo
 ) {
 
-    @GetMapping("/mongo")
+    @GetMapping
     fun findAllWaybillsMongo(): List<MongoWaybillDataLiteDto> = waybillServiceMongo.findAllWaybills()
 
-    @GetMapping("/mongo/{id}")
+    @GetMapping("/{id}")
     fun findByIdMongo(@PathVariable id: String): MongoWaybillDataDto = waybillServiceMongo.getById(id)
 
-    @PostMapping("/mongo/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createWaybillMongo(@RequestBody @Valid createDto: MongoWaybillCreateDto): MongoWaybillDataDto =
         waybillServiceMongo.createWaybill(createDto)
 
-    @PutMapping("/mongo/{id}")
+    @PutMapping("/{id}")
     fun updateWaybillInfoMongo(
         @RequestBody @Valid infoUpdateDto: MongoWaybillInfoUpdateDto,
         @PathVariable id: String
     ): MongoWaybillDataDto = waybillServiceMongo.updateWaybillInfo(infoUpdateDto, id)
 
-    @DeleteMapping("/mongo/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteWaybillMongo(@PathVariable id: String): Unit  = waybillServiceMongo.deleteById(id)
 }

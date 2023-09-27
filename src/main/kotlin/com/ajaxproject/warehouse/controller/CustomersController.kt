@@ -23,26 +23,26 @@ class CustomersController(
     val customerServiceMongo: CustomerServiceMongo
 ) {
 
-    @GetMapping("/mongo")
+    @GetMapping
     fun findAllMongo(): List<MongoCustomerDataLiteDto> = customerServiceMongo.findAllCustomers()
 
-    @GetMapping("/mongo/{id}")
+    @GetMapping("/{id}")
     fun findByIdMongo(@PathVariable id: String): MongoCustomerDataDto =
         customerServiceMongo.getById(id)
 
-    @PostMapping("/mongo/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomerMongo(
         @RequestBody @Valid createDto: CustomerCreateDto
     ): MongoCustomerDataDto = customerServiceMongo.createCustomer(createDto)
 
-    @PutMapping("/mongo/{id}")
+    @PutMapping("/{id}")
     fun updateCustomerMongo(
         @PathVariable id: String,
         @RequestBody @Valid updateDto: MongoCustomerUpdateDto
     ): MongoCustomerDataDto = customerServiceMongo.updateCustomer(updateDto, id)
 
-    @DeleteMapping("/mongo/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustomerMongo(@PathVariable id: String): Unit = customerServiceMongo.deleteById(id)
 }
