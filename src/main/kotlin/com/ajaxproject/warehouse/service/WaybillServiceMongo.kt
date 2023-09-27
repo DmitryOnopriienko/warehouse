@@ -8,4 +8,5 @@ interface WaybillServiceMongo {
     fun findAllWaybills(): List<MongoWaybillDataLiteDto>
     fun getById(id: String): MongoWaybillDataDto
     fun createWaybill(createDto: MongoWaybillCreateDto): MongoWaybillDataDto
+    fun deleteById(id: String)
 }

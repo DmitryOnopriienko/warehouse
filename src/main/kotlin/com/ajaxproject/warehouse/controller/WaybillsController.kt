@@ -59,4 +59,8 @@ class WaybillsController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteWaybill(@PathVariable id: Int): Unit = waybillService.deleteById(id)
+
+    @DeleteMapping("/mongo/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteWaybillMongo(@PathVariable id: String): Unit  = waybillServiceMongo.deleteById(id)
 }

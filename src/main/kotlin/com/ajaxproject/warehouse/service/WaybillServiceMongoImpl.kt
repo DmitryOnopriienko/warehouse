@@ -43,6 +43,10 @@ class WaybillServiceMongoImpl(
         return mongoWaybill.mapToDataDto()
     }
 
+    override fun deleteById(id: String) {
+        mongoWaybillRepository.deleteById(ObjectId(id))
+    }
+
     fun MongoWaybill.mapToLiteDto(): MongoWaybillDataLiteDto {
         val totalPrice = products.asSequence()
             .map { mongoProductRepository.getById(it.productId) to it.amount }

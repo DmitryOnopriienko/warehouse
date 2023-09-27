@@ -7,4 +7,5 @@ interface MongoWaybillRepository {
     fun findAll(): List<MongoWaybill>
     fun getById(id: ObjectId): MongoWaybill?
     fun createWaybill(mongoWaybill: MongoWaybill): MongoWaybill
+    fun deleteById(id: ObjectId)
 }
