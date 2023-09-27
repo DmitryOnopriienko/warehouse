@@ -10,9 +10,9 @@ import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.mongo.MongoCustomerRepository
-import com.ajaxproject.warehouse.repository.mongo.MongoProductRepository
-import com.ajaxproject.warehouse.repository.mongo.MongoWaybillRepository
+import com.ajaxproject.warehouse.repository.MongoCustomerRepository
+import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.MongoWaybillRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import java.time.LocalDate

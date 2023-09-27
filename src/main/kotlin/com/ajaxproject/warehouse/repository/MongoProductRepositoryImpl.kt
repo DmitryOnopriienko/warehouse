@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.repository.mongo
+package com.ajaxproject.warehouse.repository
 
 import com.ajaxproject.warehouse.entity.MongoProduct
 import org.bson.types.ObjectId

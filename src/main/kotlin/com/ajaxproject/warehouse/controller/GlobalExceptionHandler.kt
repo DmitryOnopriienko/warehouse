@@ -42,16 +42,6 @@ class GlobalExceptionHandler {
         )
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    fun handleSQLIntegrityConstraintViolationException(e: SQLIntegrityConstraintViolationException) =
-        ErrorResponse(
-            status = HttpStatus.CONFLICT.value(),
-            message = HttpStatus.CONFLICT.reasonPhrase,
-            error = e.message
-        )
-
     @ExceptionHandler(IllegalArgumentException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

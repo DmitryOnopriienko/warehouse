@@ -6,7 +6,7 @@ import com.ajaxproject.warehouse.dto.mongo.MongoProductDataLiteDto
 import com.ajaxproject.warehouse.dto.mongo.MongoProductUpdateDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.mongo.MongoProductRepository
+import com.ajaxproject.warehouse.repository.MongoProductRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 

@@ -7,7 +7,7 @@ import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.mongo.MongoCustomerRepository
+import com.ajaxproject.warehouse.repository.MongoCustomerRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
