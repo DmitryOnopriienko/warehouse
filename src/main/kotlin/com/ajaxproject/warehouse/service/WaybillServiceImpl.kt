@@ -126,5 +126,4 @@ class WaybillServiceImpl(
             productId = ObjectId(productId),
             amount = amount as Int
         )
-
 }

@@ -32,5 +32,4 @@ class MongoProductRepositoryImpl(
             MongoProduct.COLLECTION_NAME
         )
     }
-
 }
