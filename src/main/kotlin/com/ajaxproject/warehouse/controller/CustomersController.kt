@@ -1,9 +1,9 @@
 package com.ajaxproject.warehouse.controller
 
 import com.ajaxproject.warehouse.dto.CustomerCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
+import com.ajaxproject.warehouse.dto.CustomerDataDto
+import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
+import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 import com.ajaxproject.warehouse.service.CustomerServiceMongo
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -24,23 +24,23 @@ class CustomersController(
 ) {
 
     @GetMapping
-    fun findAllMongo(): List<MongoCustomerDataLiteDto> = customerServiceMongo.findAllCustomers()
+    fun findAllMongo(): List<CustomerDataLiteDto> = customerServiceMongo.findAllCustomers()
 
     @GetMapping("/{id}")
-    fun findByIdMongo(@PathVariable id: String): MongoCustomerDataDto =
+    fun findByIdMongo(@PathVariable id: String): CustomerDataDto =
         customerServiceMongo.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomerMongo(
         @RequestBody @Valid createDto: CustomerCreateDto
-    ): MongoCustomerDataDto = customerServiceMongo.createCustomer(createDto)
+    ): CustomerDataDto = customerServiceMongo.createCustomer(createDto)
 
     @PutMapping("/{id}")
     fun updateCustomerMongo(
         @PathVariable id: String,
-        @RequestBody @Valid updateDto: MongoCustomerUpdateDto
-    ): MongoCustomerDataDto = customerServiceMongo.updateCustomer(updateDto, id)
+        @RequestBody @Valid updateDto: CustomerUpdateDto
+    ): CustomerDataDto = customerServiceMongo.updateCustomer(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

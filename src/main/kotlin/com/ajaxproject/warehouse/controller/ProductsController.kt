@@ -1,9 +1,9 @@
 package com.ajaxproject.warehouse.controller
 
 import com.ajaxproject.warehouse.dto.ProductCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductUpdateDto
+import com.ajaxproject.warehouse.dto.ProductDataDto
+import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.service.ProductServiceMongo
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -24,22 +24,22 @@ class ProductsController(
 ) {
 
     @GetMapping
-    fun findAllProductsMongo(): List<MongoProductDataLiteDto> = productServiceMongo.findAllProducts()
+    fun findAllProductsMongo(): List<ProductDataLiteDto> = productServiceMongo.findAllProducts()
 
     @GetMapping("/{id}")
-    fun findByIdMongo(@PathVariable id: String): MongoProductDataDto =
+    fun findByIdMongo(@PathVariable id: String): ProductDataDto =
         productServiceMongo.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProductMongo(@RequestBody @Valid createDto: ProductCreateDto): MongoProductDataDto =
+    fun createProductMongo(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
         productServiceMongo.createProduct(createDto)
 
     @PutMapping("/{id}")
     fun updateProductMongo(
-        @RequestBody @Valid updateDto: MongoProductUpdateDto,
+        @RequestBody @Valid updateDto: ProductUpdateDto,
         @PathVariable id: String
-    ): MongoProductDataDto = productServiceMongo.updateProduct(updateDto, id)
+    ): ProductDataDto = productServiceMongo.updateProduct(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

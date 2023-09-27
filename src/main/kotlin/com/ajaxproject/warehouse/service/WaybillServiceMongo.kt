@@ -1,14 +1,14 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillInfoUpdateDto
+import com.ajaxproject.warehouse.dto.WaybillCreateDto
+import com.ajaxproject.warehouse.dto.WaybillDataDto
+import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
+import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
 
 interface WaybillServiceMongo {
-    fun findAllWaybills(): List<MongoWaybillDataLiteDto>
-    fun getById(id: String): MongoWaybillDataDto
-    fun createWaybill(createDto: MongoWaybillCreateDto): MongoWaybillDataDto
+    fun findAllWaybills(): List<WaybillDataLiteDto>
+    fun getById(id: String): WaybillDataDto
+    fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto
     fun deleteById(id: String)
-    fun updateWaybillInfo(infoUpdateDto: MongoWaybillInfoUpdateDto, id: String): MongoWaybillDataDto
+    fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto
 }

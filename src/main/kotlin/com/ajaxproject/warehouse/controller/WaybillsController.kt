@@ -1,9 +1,9 @@
 package com.ajaxproject.warehouse.controller
 
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoWaybillInfoUpdateDto
+import com.ajaxproject.warehouse.dto.WaybillCreateDto
+import com.ajaxproject.warehouse.dto.WaybillDataDto
+import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
+import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
 import com.ajaxproject.warehouse.service.WaybillServiceMongo
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -24,21 +24,21 @@ class WaybillsController(
 ) {
 
     @GetMapping
-    fun findAllWaybillsMongo(): List<MongoWaybillDataLiteDto> = waybillServiceMongo.findAllWaybills()
+    fun findAllWaybillsMongo(): List<WaybillDataLiteDto> = waybillServiceMongo.findAllWaybills()
 
     @GetMapping("/{id}")
-    fun findByIdMongo(@PathVariable id: String): MongoWaybillDataDto = waybillServiceMongo.getById(id)
+    fun findByIdMongo(@PathVariable id: String): WaybillDataDto = waybillServiceMongo.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createWaybillMongo(@RequestBody @Valid createDto: MongoWaybillCreateDto): MongoWaybillDataDto =
+    fun createWaybillMongo(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
         waybillServiceMongo.createWaybill(createDto)
 
     @PutMapping("/{id}")
     fun updateWaybillInfoMongo(
-        @RequestBody @Valid infoUpdateDto: MongoWaybillInfoUpdateDto,
+        @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
         @PathVariable id: String
-    ): MongoWaybillDataDto = waybillServiceMongo.updateWaybillInfo(infoUpdateDto, id)
+    ): WaybillDataDto = waybillServiceMongo.updateWaybillInfo(infoUpdateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

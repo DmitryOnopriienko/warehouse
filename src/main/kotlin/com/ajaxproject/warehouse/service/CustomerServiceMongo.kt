@@ -1,14 +1,14 @@
 package com.ajaxproject.warehouse.service
 
 import com.ajaxproject.warehouse.dto.CustomerCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoCustomerUpdateDto
+import com.ajaxproject.warehouse.dto.CustomerDataDto
+import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
+import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 
 interface CustomerServiceMongo {
-    fun findAllCustomers(): List<MongoCustomerDataLiteDto>
-    fun getById(id: String): MongoCustomerDataDto
-    fun createCustomer(createDto: CustomerCreateDto): MongoCustomerDataDto
+    fun findAllCustomers(): List<CustomerDataLiteDto>
+    fun getById(id: String): CustomerDataDto
+    fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto
     fun deleteById(id: String)
-    fun updateCustomer(updateDto: MongoCustomerUpdateDto, id: String): MongoCustomerDataDto
+    fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto
 }

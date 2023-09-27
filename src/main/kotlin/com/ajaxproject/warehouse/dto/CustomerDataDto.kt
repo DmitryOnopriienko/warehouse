@@ -1,9 +1,9 @@
-package com.ajaxproject.warehouse.dto.mongo
+package com.ajaxproject.warehouse.dto
 
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import java.time.LocalDate
 
-data class MongoCustomerDataDto(
+data class CustomerDataDto(
     val id: String,
     val firstName: String,
     val surname: String,

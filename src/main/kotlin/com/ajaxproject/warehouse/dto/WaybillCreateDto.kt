@@ -1,11 +1,11 @@
-package com.ajaxproject.warehouse.dto.mongo
+package com.ajaxproject.warehouse.dto
 
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
-data class MongoWaybillCreateDto(
+data class WaybillCreateDto(
     @field:NotEmpty(message = "customerId must be provided")
     val customerId: String?,
     @field:NotNull(message = "date must be provided")

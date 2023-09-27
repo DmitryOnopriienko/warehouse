@@ -1,9 +1,9 @@
 package com.ajaxproject.warehouse.service
 
 import com.ajaxproject.warehouse.dto.ProductCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductUpdateDto
+import com.ajaxproject.warehouse.dto.ProductDataDto
+import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoProductRepository
@@ -15,21 +15,21 @@ class ProductServiceMongoImpl(
     val mongoProductRepository: MongoProductRepository
 ) : ProductServiceMongo {
 
-    override fun findAllProducts(): List<MongoProductDataLiteDto> =
+    override fun findAllProducts(): List<ProductDataLiteDto> =
         mongoProductRepository.findAll().map { it.mapToLiteDto() }
 
-    override fun getById(id: String): MongoProductDataDto {
+    override fun getById(id: String): ProductDataDto {
         val mongoProduct: MongoProduct = mongoProductRepository.getById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         return mongoProduct.mapToDataDto()
     }
 
-    override fun createProduct(createDto: ProductCreateDto): MongoProductDataDto {
+    override fun createProduct(createDto: ProductCreateDto): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
 
-    override fun updateProduct(updateDto: MongoProductUpdateDto, id: String): MongoProductDataDto {
+    override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
         require(id == updateDto.id) { "Mapping id is not equal to request body id" }
         var product: MongoProduct = mongoProductRepository.getById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
@@ -42,14 +42,14 @@ class ProductServiceMongoImpl(
         mongoProductRepository.deleteById(ObjectId(id))
     }
 
-    fun MongoProduct.mapToLiteDto(): MongoProductDataLiteDto = MongoProductDataLiteDto(
+    fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id.toString(),
         title = title,
         price = price,
         amount = amount
     )
 
-    fun MongoProduct.mapToDataDto(): MongoProductDataDto = MongoProductDataDto(
+    fun MongoProduct.mapToDataDto(): ProductDataDto = ProductDataDto(
         id = id.toString(),
         title = title,
         price = price,
@@ -64,7 +64,7 @@ class ProductServiceMongoImpl(
         about = about
     )
 
-    fun MongoProduct.setUpdatedData(updateDto: MongoProductUpdateDto): MongoProduct {
+    fun MongoProduct.setUpdatedData(updateDto: ProductUpdateDto): MongoProduct {
         return this.copy(
             title = updateDto.title as String,
             price = updateDto.price as Double,

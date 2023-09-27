@@ -1,6 +1,6 @@
-package com.ajaxproject.warehouse.dto.mongo
+package com.ajaxproject.warehouse.dto
 
-data class MongoCustomerDataLiteDto(
+data class CustomerDataLiteDto(
     val id: String,
     val firstName: String,
     val surname: String,

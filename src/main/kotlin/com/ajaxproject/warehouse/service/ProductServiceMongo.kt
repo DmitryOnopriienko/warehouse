@@ -1,14 +1,14 @@
 package com.ajaxproject.warehouse.service
 
 import com.ajaxproject.warehouse.dto.ProductCreateDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductDataLiteDto
-import com.ajaxproject.warehouse.dto.mongo.MongoProductUpdateDto
+import com.ajaxproject.warehouse.dto.ProductDataDto
+import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductUpdateDto
 
 interface ProductServiceMongo {
-    fun findAllProducts(): List<MongoProductDataLiteDto>
-    fun getById(id: String): MongoProductDataDto
-    fun createProduct(createDto: ProductCreateDto): MongoProductDataDto
-    fun updateProduct(updateDto: MongoProductUpdateDto, id: String): MongoProductDataDto
+    fun findAllProducts(): List<ProductDataLiteDto>
+    fun getById(id: String): ProductDataDto
+    fun createProduct(createDto: ProductCreateDto): ProductDataDto
+    fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto
     fun deleteById(id: String)
 }
