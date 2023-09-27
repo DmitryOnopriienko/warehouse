@@ -68,7 +68,6 @@ class CustomerServiceMongoImpl(
         )
     }
 
-
     fun CustomerCreateDto.mapToEntity(): MongoCustomer = MongoCustomer(
         firstName = firstName as String,
         surname = surname as String,
