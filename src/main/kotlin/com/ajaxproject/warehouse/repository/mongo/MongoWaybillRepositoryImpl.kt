@@ -15,4 +15,8 @@ class MongoWaybillRepositoryImpl(
 
     override fun getById(id: ObjectId): MongoWaybill? =
         mongoTemplate.findById(id, MongoWaybill::class.java, MongoWaybill.COLLECTION_NAME)
+
+    override fun createWaybill(mongoWaybill: MongoWaybill): MongoWaybill {
+        return mongoTemplate.insert(mongoWaybill, MongoWaybill.COLLECTION_NAME)
+    }
 }

@@ -4,6 +4,7 @@ import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
+import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
 import com.ajaxproject.warehouse.service.WaybillService
@@ -43,6 +44,11 @@ class WaybillsController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
         waybillService.createWaybill(createDto)
+
+    @PostMapping("/mongo/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createWaybillMongo(@RequestBody @Valid createDto: MongoWaybillCreateDto): MongoWaybillDataDto =
+        waybillServiceMongo.createWaybill(createDto)
 
     @PutMapping("/{id}")
     fun updateWaybillData(

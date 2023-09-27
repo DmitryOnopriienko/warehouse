@@ -5,13 +5,16 @@ import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
+import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.entity.MongoWaybill
+import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.mongo.MongoCustomerRepository
 import com.ajaxproject.warehouse.repository.mongo.MongoProductRepository
 import com.ajaxproject.warehouse.repository.mongo.MongoWaybillRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class WaybillServiceMongoImpl(
@@ -27,6 +30,17 @@ class WaybillServiceMongoImpl(
         val waybill: MongoWaybill = mongoWaybillRepository.getById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
         return waybill.mapToDataDto()
+    }
+
+    override fun createWaybill(createDto: MongoWaybillCreateDto): MongoWaybillDataDto {
+        val errorList: MutableList<String> = mutableListOf()
+        mongoCustomerRepository.getById(ObjectId(createDto.customerId))
+            ?: errorList.add("Customer with id ${createDto.customerId} not found")
+        createDto.products.forEach { mongoProductRepository.getById(ObjectId(it.productId))
+            ?: errorList.add("Product with id ${it.productId} not found") }
+        if (errorList.isNotEmpty()) throw NotFoundException(errorList)
+        val mongoWaybill: MongoWaybill = mongoWaybillRepository.createWaybill(createDto.mapToEntity())
+        return mongoWaybill.mapToDataDto()
     }
 
     fun MongoWaybill.mapToLiteDto(): MongoWaybillDataLiteDto {
@@ -45,16 +59,14 @@ class WaybillServiceMongoImpl(
 
     fun MongoWaybill.mapToDataDto(): MongoWaybillDataDto {
         val productList: List<MongoWaybillDataDto.MongoWaybillProductDataDto> = products.asSequence()
-            .map { mongoProductRepository.getById(it.productId) to it.amount }
-            .map { (product, amount) -> MongoWaybillDataDto.MongoWaybillProductDataDto( // TODO
-                id = product?.id.toString(),
-                title = product?.title as String,
-                price = product.price,
-                orderedAmount = amount
-            ) }
+            .map {
+                val product = mongoProductRepository.getById(it.productId)  // TODO ask if I should throw exception
+                product?.mapToWaybillProductDataDto(it.amount)        // TODO or just insert
+            }
+            .filterNotNull()
             .toList()
         val customer: MongoCustomer = mongoCustomerRepository.getById(customerId)
-            ?: throw NotFoundException("Customer with id $customerId not found")
+            ?: throw InternalEntityNotFoundException("Customer with id $customerId not found")
         return MongoWaybillDataDto(
             id = id.toString(),
             date = date,
@@ -62,6 +74,7 @@ class WaybillServiceMongoImpl(
             products = productList
         )
     }
+
 
     fun MongoCustomer.mapToLiteDto() = MongoCustomerDataLiteDto(
         id = id.toString(),
@@ -72,17 +85,25 @@ class WaybillServiceMongoImpl(
         phoneNumber = phoneNumber
     )
 
+    fun MongoProduct.mapToWaybillProductDataDto(amount: Int) =
+        MongoWaybillDataDto.MongoWaybillProductDataDto(
+            id = id.toString(),
+            title = title,
+            price = price,
+            orderedAmount = amount
+        )
+
     fun MongoWaybillCreateDto.mapToEntity() =
         MongoWaybill(
             customerId = ObjectId(customerId),
-            date = date,
-            products = products?.map{ it.mapToWaybillProduct() } ?: listOf()
+            date = date as LocalDate,
+            products = products.map { it.mapToWaybillProduct() }
         )
 
     fun MongoWaybillCreateDto.MongoWaybillProductCreateDto.mapToWaybillProduct() =
         MongoWaybill.MongoWaybillProduct(
             productId = ObjectId(productId),
-            amount = amount
+            amount = amount as Int
         )
 
 }
