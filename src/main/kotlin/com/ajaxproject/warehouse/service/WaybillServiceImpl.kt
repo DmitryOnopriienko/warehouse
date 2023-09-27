@@ -29,16 +29,16 @@ class WaybillServiceImpl(
         mongoWaybillRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): WaybillDataDto {
-        val waybill: MongoWaybill = mongoWaybillRepository.getById(ObjectId(id))
+        val waybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
         return waybill.mapToDataDto()
     }
 
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
         require(infoUpdateDto.id == id) { "Mapping id is not equal to request body id" }
-        var mongoWaybill: MongoWaybill = mongoWaybillRepository.getById(ObjectId(id))
+        var mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
-        mongoCustomerRepository.getById(ObjectId(infoUpdateDto.customerId))
+        mongoCustomerRepository.findById(ObjectId(infoUpdateDto.customerId))
             ?: throw NotFoundException("Customer with id ${infoUpdateDto.customerId} not found")
         mongoWaybill = mongoWaybillRepository.save(mongoWaybill.setUpdatedData(infoUpdateDto))
         return mongoWaybill.mapToDataDto()
@@ -46,9 +46,9 @@ class WaybillServiceImpl(
 
     override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
         val errorList: MutableList<String> = mutableListOf()
-        mongoCustomerRepository.getById(ObjectId(createDto.customerId))
+        mongoCustomerRepository.findById(ObjectId(createDto.customerId))
             ?: errorList.add("Customer with id ${createDto.customerId} not found")
-        createDto.products.forEach { mongoProductRepository.getById(ObjectId(it.productId))
+        createDto.products.forEach { mongoProductRepository.findById(ObjectId(it.productId))
             ?: errorList.add("Product with id ${it.productId} not found") }
         if (errorList.isNotEmpty()) throw NotFoundException(errorList)
         val mongoWaybill: MongoWaybill = mongoWaybillRepository.createWaybill(createDto.mapToEntity())
@@ -72,7 +72,7 @@ class WaybillServiceImpl(
 
     fun MongoWaybill.mapToDataDto(): WaybillDataDto {
         val productList: List<WaybillDataDto.WaybillProductDataDto> = getListOfProducts()
-        val customer: MongoCustomer = mongoCustomerRepository.getById(customerId)
+        val customer: MongoCustomer = mongoCustomerRepository.findById(customerId)
             ?: throw InternalEntityNotFoundException("Customer with id $customerId not found")
         return WaybillDataDto(
             id = id.toString(),
@@ -85,7 +85,7 @@ class WaybillServiceImpl(
 
     fun MongoWaybill.getListOfProducts(): List<WaybillDataDto.WaybillProductDataDto> = products.asSequence()
         .map {
-            val product = mongoProductRepository.getById(it.productId)
+            val product = mongoProductRepository.findById(it.productId)
             product?.mapToWaybillProductDataDto(it.amount)
         }
         .filterNotNull()

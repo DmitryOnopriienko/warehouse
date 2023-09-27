@@ -20,7 +20,7 @@ class CustomerServiceImpl(
         mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): CustomerDataDto {
-        val mongoCustomer: MongoCustomer = mongoCustomerRepository.getById(ObjectId(id))
+        val mongoCustomer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         return mongoCustomer.mapToDataDto()
     }
@@ -33,7 +33,7 @@ class CustomerServiceImpl(
 
     override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
         require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        var customer: MongoCustomer = mongoCustomerRepository.getById(ObjectId(id))
+        var customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         customer = customer.setUpdatedData(updateDto)
         mongoCustomerRepository.save(customer)
@@ -54,7 +54,7 @@ class CustomerServiceImpl(
     )
 
     fun MongoCustomer.mapToDataDto(): CustomerDataDto {
-        val waybills: List<MongoWaybill> = mongoCustomerRepository.findCustomerWaybills(id)
+        val waybills: List<MongoWaybill> = mongoCustomerRepository.findCustomerWaybills(id as ObjectId)
         return CustomerDataDto(
             id = id.toString(),
             firstName = firstName,

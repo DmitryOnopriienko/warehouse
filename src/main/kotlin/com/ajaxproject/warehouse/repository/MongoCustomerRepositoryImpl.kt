@@ -19,7 +19,7 @@ class MongoCustomerRepositoryImpl(
 
     override fun findAll(): List<MongoCustomer> = mongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
 
-    override fun getById(id: ObjectId): MongoCustomer? =
+    override fun findById(id: ObjectId): MongoCustomer? =
         mongoTemplate.findById<MongoCustomer>(id, MongoCustomer.COLLECTION_NAME)
 
     override fun createCustomer(mongoCustomer: MongoCustomer): MongoCustomer =
@@ -35,7 +35,7 @@ class MongoCustomerRepositoryImpl(
         )
     }
 
-    override fun findCustomerWaybills(id: ObjectId?): List<MongoWaybill> =
+    override fun findCustomerWaybills(id: ObjectId): List<MongoWaybill> =
         mongoTemplate.find<MongoWaybill>(
             Query(Criteria.where("customerId").`is`(id)),
             MongoWaybill.COLLECTION_NAME

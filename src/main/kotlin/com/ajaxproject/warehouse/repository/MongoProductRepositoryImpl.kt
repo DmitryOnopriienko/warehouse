@@ -17,7 +17,7 @@ class MongoProductRepositoryImpl(
 
     override fun findAll(): List<MongoProduct> = mongoTemplate.findAll<MongoProduct>(MongoProduct.COLLECTION_NAME)
 
-    override fun getById(id: ObjectId): MongoProduct? =
+    override fun findById(id: ObjectId): MongoProduct? =
         mongoTemplate.findById<MongoProduct>(id, MongoProduct.COLLECTION_NAME)
 
     override fun createProduct(mongoProduct: MongoProduct): MongoProduct =

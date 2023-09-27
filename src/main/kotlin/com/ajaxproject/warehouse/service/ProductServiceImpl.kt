@@ -19,7 +19,7 @@ class ProductServiceImpl(
         mongoProductRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): ProductDataDto {
-        val mongoProduct: MongoProduct = mongoProductRepository.getById(ObjectId(id))
+        val mongoProduct: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         return mongoProduct.mapToDataDto()
     }
@@ -31,7 +31,7 @@ class ProductServiceImpl(
 
     override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
         require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        var product: MongoProduct = mongoProductRepository.getById(ObjectId(id))
+        var product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         product = product.setUpdatedData(updateDto)
         product = mongoProductRepository.save(product)
