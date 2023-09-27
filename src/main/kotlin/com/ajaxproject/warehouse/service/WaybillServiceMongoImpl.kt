@@ -4,6 +4,7 @@ import com.ajaxproject.warehouse.dto.mongo.MongoCustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
+import com.ajaxproject.warehouse.dto.mongo.MongoWaybillInfoUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.entity.MongoWaybill
@@ -31,6 +32,16 @@ class WaybillServiceMongoImpl(
         val waybill: MongoWaybill = mongoWaybillRepository.getById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
         return waybill.mapToDataDto()
+    }
+
+    override fun updateWaybillInfo(infoUpdateDto: MongoWaybillInfoUpdateDto, id: String): MongoWaybillDataDto {
+        require(infoUpdateDto.id == id) { "Mapping id is not equal to request body id" }
+        var mongoWaybill: MongoWaybill = mongoWaybillRepository.getById(ObjectId(id))
+            ?: throw NotFoundException("Waybill with id $id not found")
+        mongoCustomerRepository.getById(ObjectId(infoUpdateDto.customerId))
+            ?: throw NotFoundException("Customer with id ${infoUpdateDto.customerId} not found")
+        mongoWaybill = mongoWaybillRepository.save(mongoWaybill.setUpdatedData(infoUpdateDto))
+        return mongoWaybill.mapToDataDto()
     }
 
     override fun createWaybill(createDto: MongoWaybillCreateDto): MongoWaybillDataDto {
@@ -88,6 +99,13 @@ class WaybillServiceMongoImpl(
         email = email,
         phoneNumber = phoneNumber
     )
+
+    fun MongoWaybill.setUpdatedData(infoUpdateDto: MongoWaybillInfoUpdateDto): MongoWaybill =
+        this.copy(
+            id = ObjectId(infoUpdateDto.id),
+            customerId = ObjectId(infoUpdateDto.customerId),
+            date = infoUpdateDto.date as LocalDate
+        )
 
     fun MongoProduct.mapToWaybillProductDataDto(amount: Int) =
         MongoWaybillDataDto.MongoWaybillProductDataDto(

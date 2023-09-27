@@ -29,4 +29,8 @@ class MongoWaybillRepositoryImpl(
             MongoWaybill.COLLECTION_NAME
         )
     }
+
+    override fun save(mongoWaybill: MongoWaybill): MongoWaybill {
+        return mongoTemplate.save(mongoWaybill, MongoWaybill.COLLECTION_NAME)
+    }
 }
