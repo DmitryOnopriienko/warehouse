@@ -102,7 +102,6 @@ class WaybillServiceMongoImpl(
 
     fun MongoWaybill.setUpdatedData(infoUpdateDto: MongoWaybillInfoUpdateDto): MongoWaybill =
         this.copy(
-            id = ObjectId(infoUpdateDto.id),
             customerId = ObjectId(infoUpdateDto.customerId),
             date = infoUpdateDto.date as LocalDate
         )
