@@ -60,7 +60,7 @@ class WaybillServiceMongoImpl(
     }
 
     fun MongoWaybill.mapToLiteDto(): MongoWaybillDataLiteDto {
-        val totalPrice = getListOfProducts().sumOf { it.price }
+        val totalPrice = getListOfProducts().sumOf { it.price * it.orderedAmount }
 
         return MongoWaybillDataLiteDto(
             id = id.toString(),
@@ -79,7 +79,7 @@ class WaybillServiceMongoImpl(
             date = date,
             customer = customer.mapToLiteDto(),
             products = productList,
-            totalPrice = productList.sumOf { it.price }
+            totalPrice = productList.sumOf { it.price * it.orderedAmount }
         )
     }
 
