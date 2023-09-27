@@ -24,24 +24,24 @@ class ProductsController(
 ) {
 
     @GetMapping
-    fun findAllProductsMongo(): List<ProductDataLiteDto> = productService.findAllProducts()
+    fun findAllProducts(): List<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/{id}")
-    fun findByIdMongo(@PathVariable id: String): ProductDataDto =
+    fun findById(@PathVariable id: String): ProductDataDto =
         productService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProductMongo(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
+    fun createProduct(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
         productService.createProduct(createDto)
 
     @PutMapping("/{id}")
-    fun updateProductMongo(
+    fun updateProduct(
         @RequestBody @Valid updateDto: ProductUpdateDto,
         @PathVariable id: String
     ): ProductDataDto = productService.updateProduct(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProductMongo(@PathVariable id: String): Unit = productService.deleteById(id)
+    fun deleteProduct(@PathVariable id: String): Unit = productService.deleteById(id)
 }
