@@ -1,5 +1,6 @@
 package com.ajaxproject.warehouse.controller
 
+import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.MethodRateLimitExceededException
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -68,6 +69,16 @@ class GlobalExceptionHandler {
         ErrorResponse(
             status = HttpStatus.TOO_MANY_REQUESTS.value(),
             message = HttpStatus.TOO_MANY_REQUESTS.reasonPhrase,
+            error = e.message
+        )
+
+    @ExceptionHandler(InternalEntityNotFoundException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    fun handleInternalEntityNotFoundException(e: InternalEntityNotFoundException) =
+        ErrorResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            message = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
             error = e.message
         )
 
