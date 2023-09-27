@@ -17,10 +17,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
+          distribution: oracle
           java-version: '17' # Specify the Java version you want to use
 
-      - name: Build and Test
-        run: |
-          ./gradlew build
-          ./gradlew test
-          ./gradlew detekt
+      - name: Run detekt
+        run: ./gradlew detekt
