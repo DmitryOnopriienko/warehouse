@@ -85,8 +85,8 @@ class WaybillServiceImpl(
 
     fun MongoWaybill.getListOfProducts(): List<WaybillDataDto.MongoWaybillProductDataDto> = products.asSequence()
         .map {
-            val product = mongoProductRepository.getById(it.productId) // TODO ask if I should throw exception
-            product?.mapToWaybillProductDataDto(it.amount)       // TODO or just insert
+            val product = mongoProductRepository.getById(it.productId)
+            product?.mapToWaybillProductDataDto(it.amount)
         }
         .filterNotNull()
         .toList()
