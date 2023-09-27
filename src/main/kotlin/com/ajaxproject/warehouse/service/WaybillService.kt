@@ -5,7 +5,7 @@ import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
 
-interface WaybillServiceMongo {
+interface WaybillService {
     fun findAllWaybills(): List<WaybillDataLiteDto>
     fun getById(id: String): WaybillDataDto
     fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto

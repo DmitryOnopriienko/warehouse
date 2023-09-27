@@ -5,7 +5,7 @@ import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductUpdateDto
 
-interface ProductServiceMongo {
+interface ProductService {
     fun findAllProducts(): List<ProductDataLiteDto>
     fun getById(id: String): ProductDataDto
     fun createProduct(createDto: ProductCreateDto): ProductDataDto

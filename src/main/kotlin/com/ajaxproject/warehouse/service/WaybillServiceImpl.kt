@@ -19,11 +19,11 @@ import java.time.LocalDate
 
 @Service
 @Suppress("TooManyFunctions")
-class WaybillServiceMongoImpl(
+class WaybillServiceImpl(
     val mongoWaybillRepository: MongoWaybillRepository,
     val mongoProductRepository: MongoProductRepository,
     val mongoCustomerRepository: MongoCustomerRepository
-) : WaybillServiceMongo {
+) : WaybillService {
 
     override fun findAllWaybills(): List<WaybillDataLiteDto> =
         mongoWaybillRepository.findAll().map { it.mapToLiteDto() }

@@ -4,7 +4,7 @@ import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
-import com.ajaxproject.warehouse.service.WaybillServiceMongo
+import com.ajaxproject.warehouse.service.WaybillService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,27 +20,27 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/waybills")
 class WaybillsController(
-    val waybillServiceMongo: WaybillServiceMongo
+    val waybillService: WaybillService
 ) {
 
     @GetMapping
-    fun findAllWaybillsMongo(): List<WaybillDataLiteDto> = waybillServiceMongo.findAllWaybills()
+    fun findAllWaybillsMongo(): List<WaybillDataLiteDto> = waybillService.findAllWaybills()
 
     @GetMapping("/{id}")
-    fun findByIdMongo(@PathVariable id: String): WaybillDataDto = waybillServiceMongo.getById(id)
+    fun findByIdMongo(@PathVariable id: String): WaybillDataDto = waybillService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createWaybillMongo(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
-        waybillServiceMongo.createWaybill(createDto)
+        waybillService.createWaybill(createDto)
 
     @PutMapping("/{id}")
     fun updateWaybillInfoMongo(
         @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
         @PathVariable id: String
-    ): WaybillDataDto = waybillServiceMongo.updateWaybillInfo(infoUpdateDto, id)
+    ): WaybillDataDto = waybillService.updateWaybillInfo(infoUpdateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybillMongo(@PathVariable id: String): Unit  = waybillServiceMongo.deleteById(id)
+    fun deleteWaybillMongo(@PathVariable id: String): Unit  = waybillService.deleteById(id)
 }

@@ -11,9 +11,9 @@ import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
 @Service
-class ProductServiceMongoImpl(
+class ProductServiceImpl(
     val mongoProductRepository: MongoProductRepository
-) : ProductServiceMongo {
+) : ProductService {
 
     override fun findAllProducts(): List<ProductDataLiteDto> =
         mongoProductRepository.findAll().map { it.mapToLiteDto() }

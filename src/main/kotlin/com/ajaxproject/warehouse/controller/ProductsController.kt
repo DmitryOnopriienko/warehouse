@@ -4,7 +4,7 @@ import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductUpdateDto
-import com.ajaxproject.warehouse.service.ProductServiceMongo
+import com.ajaxproject.warehouse.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,28 +20,28 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/products")
 class ProductsController(
-    val productServiceMongo: ProductServiceMongo
+    val productService: ProductService
 ) {
 
     @GetMapping
-    fun findAllProductsMongo(): List<ProductDataLiteDto> = productServiceMongo.findAllProducts()
+    fun findAllProductsMongo(): List<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/{id}")
     fun findByIdMongo(@PathVariable id: String): ProductDataDto =
-        productServiceMongo.getById(id)
+        productService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createProductMongo(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
-        productServiceMongo.createProduct(createDto)
+        productService.createProduct(createDto)
 
     @PutMapping("/{id}")
     fun updateProductMongo(
         @RequestBody @Valid updateDto: ProductUpdateDto,
         @PathVariable id: String
-    ): ProductDataDto = productServiceMongo.updateProduct(updateDto, id)
+    ): ProductDataDto = productService.updateProduct(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProductMongo(@PathVariable id: String): Unit = productServiceMongo.deleteById(id)
+    fun deleteProductMongo(@PathVariable id: String): Unit = productService.deleteById(id)
 }

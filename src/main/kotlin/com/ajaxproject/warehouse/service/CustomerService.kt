@@ -5,7 +5,7 @@ import com.ajaxproject.warehouse.dto.CustomerDataDto
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 
-interface CustomerServiceMongo {
+interface CustomerService {
     fun findAllCustomers(): List<CustomerDataLiteDto>
     fun getById(id: String): CustomerDataDto
     fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto

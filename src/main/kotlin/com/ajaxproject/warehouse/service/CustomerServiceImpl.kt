@@ -12,9 +12,9 @@ import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerServiceMongoImpl(
+class CustomerServiceImpl(
     val mongoCustomerRepository: MongoCustomerRepository
-) : CustomerServiceMongo {
+) : CustomerService {
 
     override fun findAllCustomers(): List<CustomerDataLiteDto> =
         mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
