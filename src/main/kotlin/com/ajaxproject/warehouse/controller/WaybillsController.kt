@@ -7,6 +7,7 @@ import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillCreateDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataDto
 import com.ajaxproject.warehouse.dto.mongo.MongoWaybillDataLiteDto
+import com.ajaxproject.warehouse.dto.mongo.MongoWaybillInfoUpdateDto
 import com.ajaxproject.warehouse.service.WaybillService
 import com.ajaxproject.warehouse.service.WaybillServiceMongo
 import jakarta.validation.Valid
@@ -55,6 +56,12 @@ class WaybillsController(
         @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
         @PathVariable id: Int
     ): WaybillDataLiteDto = waybillService.updateWaybillInfo(infoUpdateDto, id)
+
+    @PutMapping("/mongo/{id}")
+    fun updateWaybillInfoMongo(
+        @RequestBody @Valid infoUpdateDto: MongoWaybillInfoUpdateDto,
+        @PathVariable id: String
+    ): MongoWaybillDataDto = waybillServiceMongo.updateWaybillInfo(infoUpdateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

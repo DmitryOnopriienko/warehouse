@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
+@Suppress("TooManyFunctions")
 class WaybillServiceMongoImpl(
     val mongoWaybillRepository: MongoWaybillRepository,
     val mongoProductRepository: MongoProductRepository,
@@ -48,10 +49,7 @@ class WaybillServiceMongoImpl(
     }
 
     fun MongoWaybill.mapToLiteDto(): MongoWaybillDataLiteDto {
-        val totalPrice = products.asSequence()
-            .map { mongoProductRepository.getById(it.productId) to it.amount }
-            .map { (product, amount) -> (product?.price ?: 0.0) * amount}
-            .sum()
+        val totalPrice = getListOfProducts().sumOf { it.price }
 
         return MongoWaybillDataLiteDto(
             id = id.toString(),
@@ -62,23 +60,25 @@ class WaybillServiceMongoImpl(
     }
 
     fun MongoWaybill.mapToDataDto(): MongoWaybillDataDto {
-        val productList: List<MongoWaybillDataDto.MongoWaybillProductDataDto> = products.asSequence()
-            .map {
-                val product = mongoProductRepository.getById(it.productId)  // TODO ask if I should throw exception
-                product?.mapToWaybillProductDataDto(it.amount)        // TODO or just insert
-            }
-            .filterNotNull()
-            .toList()
+        val productList: List<MongoWaybillDataDto.MongoWaybillProductDataDto> = getListOfProducts()
         val customer: MongoCustomer = mongoCustomerRepository.getById(customerId)
             ?: throw InternalEntityNotFoundException("Customer with id $customerId not found")
         return MongoWaybillDataDto(
             id = id.toString(),
             date = date,
             customer = customer.mapToLiteDto(),
-            products = productList
+            products = productList,
+            totalPrice = productList.sumOf { it.price }
         )
     }
 
+    fun MongoWaybill.getListOfProducts(): List<MongoWaybillDataDto.MongoWaybillProductDataDto> = products.asSequence()
+        .map {
+            val product = mongoProductRepository.getById(it.productId) // TODO ask if I should throw exception
+            product?.mapToWaybillProductDataDto(it.amount)       // TODO or just insert
+        }
+        .filterNotNull()
+        .toList()
 
     fun MongoCustomer.mapToLiteDto() = MongoCustomerDataLiteDto(
         id = id.toString(),

@@ -6,6 +6,7 @@ data class MongoWaybillDataDto(
     val id: String,
     val customer: MongoCustomerDataLiteDto,
     val date: LocalDate,
+    val totalPrice: Double,
     val products: List<MongoWaybillProductDataDto>
 ) {
     data class MongoWaybillProductDataDto(
