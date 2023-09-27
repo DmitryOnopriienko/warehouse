@@ -3,7 +3,7 @@ name: Detekt-Actions
 on:
   push:
     branches:
-      - main # You can specify the branch to trigger the workflow
+      - main
       - 'feature/**'
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: oracle
-          java-version: '17' # Specify the Java version you want to use
+          java-version: '17'
 
       - name: Run detekt
         run: ./gradlew detekt
