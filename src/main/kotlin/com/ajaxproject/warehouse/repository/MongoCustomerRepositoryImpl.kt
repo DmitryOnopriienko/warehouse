@@ -4,6 +4,10 @@ import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.find
+import org.springframework.data.mongodb.core.findAll
+import org.springframework.data.mongodb.core.findAndRemove
+import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
@@ -13,14 +17,10 @@ class MongoCustomerRepositoryImpl(
     val mongoTemplate: MongoTemplate
 ) : MongoCustomerRepository {
 
-    private val customerType = MongoCustomer::class.java
-
-    private val waybillType = MongoWaybill::class.java
-
-    override fun findAll(): List<MongoCustomer> = mongoTemplate.findAll(customerType, MongoCustomer.COLLECTION_NAME)
+    override fun findAll(): List<MongoCustomer> = mongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
 
     override fun getById(id: ObjectId): MongoCustomer? =
-        mongoTemplate.findById(id, customerType, MongoCustomer.COLLECTION_NAME)
+        mongoTemplate.findById<MongoCustomer>(id, MongoCustomer.COLLECTION_NAME)
 
     override fun createCustomer(mongoCustomer: MongoCustomer): MongoCustomer =
         mongoTemplate.insert(mongoCustomer, MongoCustomer.COLLECTION_NAME)
@@ -29,17 +29,15 @@ class MongoCustomerRepositoryImpl(
         mongoTemplate.save(mongoCustomer, MongoCustomer.COLLECTION_NAME)
 
     override fun deleteById(id: ObjectId) {
-        mongoTemplate.findAndRemove(
+        mongoTemplate.findAndRemove<MongoCustomer>(
             Query(Criteria.where("_id").`is`(id)),
-            customerType,
             MongoCustomer.COLLECTION_NAME
         )
     }
 
     override fun findCustomerWaybills(id: ObjectId?): List<MongoWaybill> =
-        mongoTemplate.find(
+        mongoTemplate.find<MongoWaybill>(
             Query(Criteria.where("customerId").`is`(id)),
-            waybillType,
             MongoWaybill.COLLECTION_NAME
         )
 }
