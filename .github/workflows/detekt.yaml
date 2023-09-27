@@ -1,0 +1,26 @@
+name: Detekt-Actions
+
+on:
+  push:
+    branches:
+      - main # You can specify the branch to trigger the workflow
+      - 'feature/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' # Specify the Java version you want to use
+
+      - name: Build and Test
+        run: |
+          ./gradlew build
+          ./gradlew test
+          ./gradlew detekt
