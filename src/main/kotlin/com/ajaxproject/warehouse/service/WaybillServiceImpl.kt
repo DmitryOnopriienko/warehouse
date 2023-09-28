@@ -15,6 +15,7 @@ import com.ajaxproject.warehouse.repository.MongoProductRepository
 import com.ajaxproject.warehouse.repository.MongoWaybillRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
@@ -34,6 +35,7 @@ class WaybillServiceImpl(
         return waybill.mapToDataDto()
     }
 
+    @Transactional
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
         val mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
@@ -43,6 +45,7 @@ class WaybillServiceImpl(
         return mongoWaybillRepository.save(updatedWaybill).mapToDataDto()
     }
 
+    @Transactional
     override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
         val errorList: MutableList<String> = mutableListOf()
         mongoCustomerRepository.findById(ObjectId(createDto.customerId))
