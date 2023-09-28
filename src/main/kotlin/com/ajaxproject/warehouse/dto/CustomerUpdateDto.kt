@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class CustomerUpdateDto(
-    @field:NotNull(message = "id must be provided")
-    val id: String?,
     @field:NotNull(message = "firstName must be provided")
     @field:NotEmpty(message = "firstName must be not empty")
     val firstName: String?,

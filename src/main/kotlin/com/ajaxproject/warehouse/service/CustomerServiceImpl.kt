@@ -32,7 +32,6 @@ class CustomerServiceImpl(
     }
 
     override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
-        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
         var customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         customer = customer.setUpdatedData(updateDto)

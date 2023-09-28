@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 
 data class ProductUpdateDto(
-    @field:NotNull(message = "id must be provided")
-    val id: String?,
     @field:NotEmpty(message = "title must be provided")
     val title: String?,
     @field:NotNull(message = "price must be provided")

@@ -35,7 +35,6 @@ class WaybillServiceImpl(
     }
 
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
-        require(infoUpdateDto.id == id) { "Mapping id is not equal to request body id" }
         var mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
         mongoCustomerRepository.findById(ObjectId(infoUpdateDto.customerId))

@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class WaybillInfoUpdateDto(
-    @field:NotEmpty(message = "id must be provided")
-    val id: String?,
     @field:NotNull(message = "date must be provided")
     val date: LocalDate?,
     @field:NotEmpty(message = "customerId must be provided")

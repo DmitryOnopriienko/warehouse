@@ -30,7 +30,6 @@ class ProductServiceImpl(
     }
 
     override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
-        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
         var product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         product = product.setUpdatedData(updateDto)
