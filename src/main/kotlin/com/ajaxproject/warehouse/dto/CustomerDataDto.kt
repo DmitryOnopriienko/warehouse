@@ -7,10 +7,10 @@ data class CustomerDataDto(
     val id: String,
     val firstName: String,
     val surname: String,
-    val patronymic: String? = null,
+    val patronymic: String?,
     val email: String,
-    val phoneNumber: String? = null,
-    val birthday: LocalDate? = null,
-    val comment: String? = null,
-    val waybills: List<MongoWaybill> = listOf()
+    val phoneNumber: String?,
+    val birthday: LocalDate?,
+    val comment: String?,
+    val waybills: List<MongoWaybill> = emptyList()
 )

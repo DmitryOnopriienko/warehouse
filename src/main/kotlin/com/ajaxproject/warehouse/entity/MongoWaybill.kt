@@ -11,7 +11,7 @@ data class MongoWaybill(
     val id: ObjectId? = null,
     val customerId: ObjectId,
     val date: LocalDate,
-    val products: List<MongoWaybillProduct> = listOf()
+    val products: List<MongoWaybillProduct> = emptyList()
 ) {
     @Document("products")
     data class MongoWaybillProduct(
