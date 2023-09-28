@@ -32,11 +32,10 @@ class CustomerServiceImpl(
     }
 
     override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
-        var customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
+        val customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
-        customer = customer.setUpdatedData(updateDto)
-        mongoCustomerRepository.save(customer)
-        return customer.mapToDataDto()
+        val updatedCustomer = customer.setUpdatedData(updateDto)
+        return mongoCustomerRepository.save(updatedCustomer).mapToDataDto()
     }
 
     override fun deleteById(id: String) {

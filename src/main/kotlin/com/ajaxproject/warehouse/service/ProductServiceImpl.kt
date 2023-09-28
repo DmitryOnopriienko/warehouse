@@ -30,11 +30,10 @@ class ProductServiceImpl(
     }
 
     override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
-        var product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
+        val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
-        product = product.setUpdatedData(updateDto)
-        product = mongoProductRepository.save(product)
-        return product.mapToDataDto()
+        val updatedProduct = product.setUpdatedData(updateDto)
+        return mongoProductRepository.save(updatedProduct).mapToDataDto()
     }
 
     override fun deleteById(id: String) {

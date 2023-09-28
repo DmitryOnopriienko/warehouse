@@ -35,12 +35,12 @@ class WaybillServiceImpl(
     }
 
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
-        var mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
+        val mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Waybill with id $id not found")
         mongoCustomerRepository.findById(ObjectId(infoUpdateDto.customerId))
             ?: throw NotFoundException("Customer with id ${infoUpdateDto.customerId} not found")
-        mongoWaybill = mongoWaybillRepository.save(mongoWaybill.setUpdatedData(infoUpdateDto))
-        return mongoWaybill.mapToDataDto()
+        val updatedWaybill = mongoWaybill.setUpdatedData(infoUpdateDto)
+        return mongoWaybillRepository.save(updatedWaybill).mapToDataDto()
     }
 
     override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
