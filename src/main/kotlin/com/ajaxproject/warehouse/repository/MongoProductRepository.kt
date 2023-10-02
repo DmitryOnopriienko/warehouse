@@ -14,4 +14,6 @@ interface MongoProductRepository {
     fun save(mongoProduct: MongoProduct): MongoProduct
 
     fun deleteById(id: ObjectId)
+
+    fun getValidIds(ids: List<ObjectId>): List<String>
 }

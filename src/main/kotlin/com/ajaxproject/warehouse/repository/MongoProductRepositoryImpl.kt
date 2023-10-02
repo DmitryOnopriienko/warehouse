@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.repository
 import com.ajaxproject.warehouse.entity.MongoProduct
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.findAll
 import org.springframework.data.mongodb.core.findAndRemove
 import org.springframework.data.mongodb.core.findById
@@ -31,5 +32,12 @@ class MongoProductRepositoryImpl(
             Query(Criteria.where("_id").`is`(id)),
             MongoProduct.COLLECTION_NAME
         )
+    }
+
+    override fun getValidIds(ids: List<ObjectId>): List<String> {
+        return mongoTemplate.find<MongoProduct>(
+            Query(Criteria.where("_id").`in`(ids)),
+            MongoProduct.COLLECTION_NAME
+        ).map { it.id.toString() }
     }
 }
