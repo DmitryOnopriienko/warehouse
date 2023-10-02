@@ -10,6 +10,7 @@ import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoCustomerRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CustomerServiceImpl(
@@ -31,8 +32,9 @@ class CustomerServiceImpl(
         return customer.mapToDataDto()
     }
 
-    override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto { // TODO optimize to 1 query
-        val customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))       // TODO in all similar places
+    @Transactional
+    override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
+        val customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         val updatedCustomer = customer.setUpdatedData(updateDto)
         return mongoCustomerRepository.save(updatedCustomer).mapToDataDto()

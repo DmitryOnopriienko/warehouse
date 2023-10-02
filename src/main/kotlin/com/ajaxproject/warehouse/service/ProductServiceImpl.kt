@@ -9,6 +9,7 @@ import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoProductRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProductServiceImpl(
@@ -29,6 +30,7 @@ class ProductServiceImpl(
         return product.mapToDataDto()
     }
 
+    @Transactional
     override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
