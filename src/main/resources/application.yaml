@@ -2,3 +2,6 @@
 spring:
   data.mongodb:
     uri: mongodb://root:toor@mongo:27017/warehouse?authSource=admin
+
+nats:
+  url: nats://nats:4222

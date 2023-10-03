@@ -26,5 +26,13 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      nats:
+        condition: service_started
       mongo:
         condition: service_healthy
+
+  nats:
+    image: nats
+    container_name: nats
+    ports:
+      - "4222:4222"
