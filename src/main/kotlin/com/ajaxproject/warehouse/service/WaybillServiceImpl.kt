@@ -51,11 +51,16 @@ class WaybillServiceImpl(
         mongoCustomerRepository.findById(ObjectId(createDto.customerId))
             ?: errorList.add("Customer with id ${createDto.customerId} not found")
         val validIdList = mongoProductRepository.getValidIds(createDto.products.map { ObjectId(it.productId) })
-        val notValidIds = createDto.products.map { it.productId as String }.minus(validIdList.toSet())
-        errorList += notValidIds.map { "Product with id $it not found" }
-        if (errorList.isNotEmpty()) throw NotFoundException(errorList)
-        val mongoWaybill: MongoWaybill = mongoWaybillRepository.createWaybill(createDto.mapToEntity())
-        return mongoWaybill.mapToDataDto()
+        errorList += createDto.products.asSequence()
+            .map { it.productId as String }
+            .minus(validIdList.toSet())
+            .map { "Product with id $it not found" }
+            .toList()
+        return if (errorList.isNotEmpty()) {
+            throw NotFoundException(errorList)
+        } else {
+            mongoWaybillRepository.createWaybill(createDto.mapToEntity()).mapToDataDto()
+        }
     }
 
     override fun deleteById(id: String) {
