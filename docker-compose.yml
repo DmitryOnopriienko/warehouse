@@ -2,17 +2,21 @@ version: "3.5"
 
 services:
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql
+  mongo:
+    image: mongo:latest
+    container_name: mongo
     ports:
-      - "3306:3306"
+      - "27017:27017"
+    volumes:
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
     environment:
-      - MYSQL_ROOT_PASSWORD=toor
-      - MYSQL_DATABASE=warehouse
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=toor
+      - MONGO_INITDB_DATABASE=warehouse
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 5s
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 1s
       retries: 10
 
   app:
@@ -22,5 +26,5 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
+      mongo:
         condition: service_healthy

@@ -1,130 +1,138 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
 import com.ajaxproject.warehouse.dto.WaybillDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillInfoUpdateDto
-import com.ajaxproject.warehouse.entity.Product
-import com.ajaxproject.warehouse.entity.Waybill
-import com.ajaxproject.warehouse.entity.WaybillProduct
+import com.ajaxproject.warehouse.entity.MongoCustomer
+import com.ajaxproject.warehouse.entity.MongoProduct
+import com.ajaxproject.warehouse.entity.MongoWaybill
+import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.CustomerRepository
-import com.ajaxproject.warehouse.repository.ProductRepository
-import com.ajaxproject.warehouse.repository.WaybillProductRepository
-import com.ajaxproject.warehouse.repository.WaybillRepository
+import com.ajaxproject.warehouse.repository.MongoCustomerRepository
+import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.MongoWaybillRepository
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
 @Suppress("TooManyFunctions")
 class WaybillServiceImpl(
-    val waybillRepository: WaybillRepository,
-    val customerRepository: CustomerRepository,
-    val waybillProductRepository: WaybillProductRepository,
-    val productRepository: ProductRepository
+    val mongoWaybillRepository: MongoWaybillRepository,
+    val mongoProductRepository: MongoProductRepository,
+    val mongoCustomerRepository: MongoCustomerRepository
 ) : WaybillService {
 
-    override fun findAll(): List<WaybillDataLiteDto> {
-        return waybillRepository.findAll().map { it.mapToLiteDto() }
-    }
+    override fun findAllWaybills(): List<WaybillDataLiteDto> =
+        mongoWaybillRepository.findAll().map { it.mapToLiteDto() }
 
-    override fun findById(id: Int): WaybillDataDto {
-        return waybillRepository.findById(id)
-            .orElseThrow { NotFoundException("Waybill with id $id not found") }
-            .mapToDataDto()
-    }
-
-    override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
-        val waybill = createDto.mapToEntity()
-        if (createDto.products == null) {
-            return waybillRepository.save(waybill).mapToDataDto()
-        }
-        val errorList: MutableList<String> = mutableListOf()
-        val products: MutableList<Pair<Product, Int>> = mutableListOf()
-        for (productDto in createDto.products) {
-            productRepository.findById(productDto.id as Int).ifPresentOrElse(
-                { products.add(it to productDto.amount as Int) },
-                { errorList.add("Product with id ${productDto.id} not found") }
-            )
-        }
-        if (errorList.isNotEmpty()) {
-            throw NotFoundException(errorList)
-        }
-        waybillRepository.save(waybill)
-        products.forEach { (product, amount) ->
-            waybillProductRepository.saveProductAndChangeAmount(waybill, product, amount)
-        }
+    override fun getById(id: String): WaybillDataDto {
+        val waybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Waybill with id $id not found")
         return waybill.mapToDataDto()
     }
 
-    private fun WaybillProductRepository.saveProductAndChangeAmount(
-        waybill: Waybill,
-        product: Product,
-        amount: Int
-    ) {
-        val waybillProduct = WaybillProduct(
-            id = WaybillProduct.WaybillProductPK(
-                waybillId = waybill.id as Int,
-                productId = product.id as Int
-            ),
-            product = product,
-            waybill = waybill,
-            amount = amount
-        )
-        save(waybillProduct)
-        product.amount -= amount
-        productRepository.save(product)
+    @Transactional
+    override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
+        val mongoWaybill: MongoWaybill = mongoWaybillRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Waybill with id $id not found")
+        mongoCustomerRepository.findById(ObjectId(infoUpdateDto.customerId))
+            ?: throw NotFoundException("Customer with id ${infoUpdateDto.customerId} not found")
+        val updatedWaybill = mongoWaybill.setUpdatedData(infoUpdateDto)
+        return mongoWaybillRepository.save(updatedWaybill).mapToDataDto()
     }
 
-    override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: Int): WaybillDataLiteDto {
-        require(id == infoUpdateDto.id) { "Mapping id is not equal to request body id" }
-        val waybill = waybillRepository.findById(id)
-            .orElseThrow { NotFoundException("Waybill with id $id not found") }
-        waybill.setUpdatedInfo(infoUpdateDto)
-        waybillRepository.save(waybill)
-        return waybill.mapToLiteDto()
+    @Transactional
+    override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
+        mongoCustomerRepository.findById(ObjectId(createDto.customerId))
+            ?: throw NotFoundException("Customer with id ${createDto.customerId} not found")
+
+        val validIdList = mongoProductRepository.getValidIds(createDto.products.map { ObjectId(it.productId) })
+        createDto.products.asSequence()
+            .map { it.productId as String }
+            .minus(validIdList.toSet())
+            .map { "Product with id $it not found" }
+            .toList()
+            .takeIf { it.isEmpty() }
+            ?.let { throw NotFoundException(it) }
+
+        return mongoWaybillRepository
+            .createWaybill(createDto.mapToEntity())
+            .mapToDataDto()
     }
 
-    override fun deleteById(id: Int) {
-        waybillRepository.deleteById(id)
+    override fun deleteById(id: String) {
+        mongoWaybillRepository.deleteById(ObjectId(id))
     }
 
-    fun Waybill.mapToLiteDto(): WaybillDataLiteDto = WaybillDataLiteDto(
-        id = id,
-        customer = customer,
-        date = date,
-        totalPrice = findListOfProductsAndCountTotalPrice().second
-    )
+    fun MongoWaybill.mapToLiteDto(): WaybillDataLiteDto {
+        val totalPrice = getListOfProducts().sumOf { it.price * it.orderedAmount }
 
-    fun Waybill.mapToDataDto(): WaybillDataDto {
-        val (productList, totalPrice) = this.findListOfProductsAndCountTotalPrice()
-        return WaybillDataDto(
-            id = id,
-            customer = customer,
+        return WaybillDataLiteDto(
+            id = id.toString(),
+            customerId = customerId.toString(),
             date = date,
-            productList = productList,
             totalPrice = totalPrice
         )
     }
 
-    fun WaybillCreateDto.mapToEntity(): Waybill = Waybill(
-        id = null,
-        customer = customerRepository.findById(customerId as Int)
-                .orElseThrow { NotFoundException("Customer with id $customerId not found") },
-        date = date as LocalDate
+    fun MongoWaybill.mapToDataDto(): WaybillDataDto {
+        val productList: List<WaybillDataDto.WaybillProductDataDto> = getListOfProducts()
+        val customer: MongoCustomer = mongoCustomerRepository.findById(customerId)
+            ?: throw InternalEntityNotFoundException("Customer with id $customerId not found")
+        return WaybillDataDto(
+            id = id.toString(),
+            date = date,
+            customer = customer.mapToLiteDto(),
+            products = productList,
+            totalPrice = productList.sumOf { it.price * it.orderedAmount }
+        )
+    }
+
+    fun MongoWaybill.getListOfProducts(): List<WaybillDataDto.WaybillProductDataDto> = products.asSequence()
+        .map {
+            val product = mongoProductRepository.findById(it.productId)
+            product?.mapToWaybillProductDataDto(it.amount)
+        }
+        .filterNotNull()
+        .toList()
+
+    fun MongoCustomer.mapToLiteDto() = CustomerDataLiteDto(
+        id = id.toString(),
+        firstName = firstName,
+        surname = surname,
+        patronymic = patronymic,
+        email = email,
+        phoneNumber = phoneNumber
     )
 
-    fun Waybill.findListOfProductsAndCountTotalPrice(): Pair<List<WaybillProduct>, Double> {
-        val productList = waybillProductRepository.findByWaybill(this)
-        val totalPrice = productList.asSequence()
-            .map { it.product.price * it.amount }
-            .sum()
-        return productList to totalPrice
-    }
+    fun MongoWaybill.setUpdatedData(infoUpdateDto: WaybillInfoUpdateDto): MongoWaybill =
+        this.copy(
+            customerId = ObjectId(infoUpdateDto.customerId),
+            date = infoUpdateDto.date as LocalDate
+        )
 
-    private fun Waybill.setUpdatedInfo(infoUpdateDto: WaybillInfoUpdateDto) {
-        customer = customerRepository.findById(infoUpdateDto.customerId as Int)
-            .orElseThrow { NotFoundException("Customer with id ${infoUpdateDto.customerId} not found") }
-        date = infoUpdateDto.date as LocalDate
-    }
+    fun MongoProduct.mapToWaybillProductDataDto(amount: Int) =
+        WaybillDataDto.WaybillProductDataDto(
+            id = id.toString(),
+            title = title,
+            price = price,
+            orderedAmount = amount
+        )
+
+    fun WaybillCreateDto.mapToEntity() =
+        MongoWaybill(
+            customerId = ObjectId(customerId),
+            date = date as LocalDate,
+            products = products.map { it.mapToWaybillProduct() }
+        )
+
+    fun WaybillCreateDto.WaybillProductCreateDto.mapToWaybillProduct() =
+        MongoWaybill.MongoWaybillProduct(
+            productId = ObjectId(productId),
+            amount = amount as Int
+        )
 }

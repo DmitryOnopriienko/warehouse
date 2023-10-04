@@ -1,10 +1,10 @@
 package com.ajaxproject.warehouse.dto
 
-import com.ajaxproject.warehouse.entity.Waybill
+import com.ajaxproject.warehouse.entity.MongoWaybill
 import java.time.LocalDate
 
 data class CustomerDataDto(
-    val id: Int?,
+    val id: String,
     val firstName: String,
     val surname: String,
     val patronymic: String?,
@@ -12,5 +12,5 @@ data class CustomerDataDto(
     val phoneNumber: String?,
     val birthday: LocalDate?,
     val comment: String?,
-    val waybills: List<Waybill>
+    val waybills: List<MongoWaybill> = emptyList()
 )

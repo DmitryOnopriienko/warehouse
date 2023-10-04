@@ -1,14 +1,4 @@
+# for dockerized startup
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/warehouse  # for dockerized startup
-    username: root
-    password: toor
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-  sql:
-    init:
-      mode: always
+  data.mongodb:
+    uri: mongodb://root:toor@mongo:27017/warehouse?authSource=admin

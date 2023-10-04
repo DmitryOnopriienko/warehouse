@@ -19,13 +19,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/waybills")
-class WaybillsController(val waybillService: WaybillService) {
+class WaybillsController(
+    val waybillService: WaybillService
+) {
 
     @GetMapping
-    fun findAll(): List<WaybillDataLiteDto> = waybillService.findAll()
+    fun findAllWaybills(): List<WaybillDataLiteDto> = waybillService.findAllWaybills()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Int): WaybillDataDto = waybillService.findById(id)
+    fun findById(@PathVariable id: String): WaybillDataDto = waybillService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,12 +35,12 @@ class WaybillsController(val waybillService: WaybillService) {
         waybillService.createWaybill(createDto)
 
     @PutMapping("/{id}")
-    fun updateWaybillData(
+    fun updateWaybillInfo(
         @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
-        @PathVariable id: Int
-    ): WaybillDataLiteDto = waybillService.updateWaybillInfo(infoUpdateDto, id)
+        @PathVariable id: String
+    ): WaybillDataDto = waybillService.updateWaybillInfo(infoUpdateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybill(@PathVariable id: Int): Unit = waybillService.deleteById(id)
+    fun deleteWaybill(@PathVariable id: String): Unit  = waybillService.deleteById(id)
 }

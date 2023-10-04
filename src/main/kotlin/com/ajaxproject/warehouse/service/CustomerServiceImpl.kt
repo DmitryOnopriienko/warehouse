@@ -4,49 +4,48 @@ import com.ajaxproject.warehouse.dto.CustomerCreateDto
 import com.ajaxproject.warehouse.dto.CustomerDataDto
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.CustomerUpdateDto
-import com.ajaxproject.warehouse.entity.Customer
+import com.ajaxproject.warehouse.entity.MongoCustomer
+import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.CustomerRepository
-import com.ajaxproject.warehouse.repository.WaybillRepository
+import com.ajaxproject.warehouse.repository.MongoCustomerRepository
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CustomerServiceImpl(
-    val customerRepository: CustomerRepository,
-    val waybillRepository: WaybillRepository
+    val mongoCustomerRepository: MongoCustomerRepository
 ) : CustomerService {
 
-    override fun findAllCustomers(): List<CustomerDataLiteDto> {
-        return customerRepository.findAll()
-            .map { it.mapToLiteDto() }
-    }
+    override fun findAllCustomers(): List<CustomerDataLiteDto> =
+        mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
 
-    override fun findById(id: Int): CustomerDataDto {
-        return customerRepository.findById(id)
-            .orElseThrow { NotFoundException("Customer with id $id not found") }
-            .mapToDataDto()
+    override fun getById(id: String): CustomerDataDto {
+        val mongoCustomer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Customer with id $id not found")
+        return mongoCustomer.mapToDataDto()
     }
 
     override fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto {
-        val customer = customerRepository.save(createDto.mapToEntity())
+        val customer: MongoCustomer =
+            mongoCustomerRepository.createCustomer(createDto.mapToEntity())
         return customer.mapToDataDto()
     }
 
-    override fun updateCustomer(updateDto: CustomerUpdateDto, id: Int): CustomerDataDto {
-        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        val customer: Customer = customerRepository.findById(id)
-            .orElseThrow { NotFoundException("Customer with id $id not found") }
-        customer.setUpdatedData(updateDto)
-        customerRepository.save(customer)
-        return customer.mapToDataDto()
+    @Transactional
+    override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
+        val customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Customer with id $id not found")
+        val updatedCustomer = customer.setUpdatedData(updateDto)
+        return mongoCustomerRepository.save(updatedCustomer).mapToDataDto()
     }
 
-    override fun deleteById(id: Int) {
-        customerRepository.deleteById(id)
+    override fun deleteById(id: String) {
+        mongoCustomerRepository.deleteById(ObjectId(id))
     }
 
-    fun Customer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
-        id = id,
+    fun MongoCustomer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
+        id = id.toString(),
         firstName = firstName,
         surname = surname,
         patronymic = patronymic,
@@ -54,36 +53,40 @@ class CustomerServiceImpl(
         phoneNumber = phoneNumber
     )
 
-    fun Customer.mapToDataDto(): CustomerDataDto = CustomerDataDto(
-        id = id,
-        firstName = firstName,
-        surname = surname,
-        patronymic = patronymic,
-        email = email,
-        phoneNumber = phoneNumber,
-        birthday = birthday,
-        comment = comment,
-        waybills = waybillRepository.findByCustomer(this)
-    )
+    fun MongoCustomer.mapToDataDto(): CustomerDataDto {
+        val waybills: List<MongoWaybill> = mongoCustomerRepository.findCustomerWaybills(id as ObjectId)
+        return CustomerDataDto(
+            id = id.toString(),
+            firstName = firstName,
+            surname = surname,
+            patronymic = patronymic,
+            email = email,
+            phoneNumber = phoneNumber,
+            birthday = birthday,
+            comment = comment,
+            waybills = waybills
+        )
+    }
 
-    fun CustomerCreateDto.mapToEntity(): Customer = Customer(
-        id = null,
-        firstName = firstName,
-        surname = surname,
+    fun CustomerCreateDto.mapToEntity(): MongoCustomer = MongoCustomer(
+        firstName = firstName as String,
+        surname = surname as String,
         patronymic = patronymic,
-        email = email,
+        email = email as String,
         phoneNumber = phoneNumber,
         birthday = birthday,
         comment = comment
     )
 
-    private fun Customer.setUpdatedData(updateDto: CustomerUpdateDto) {
-        firstName = updateDto.firstName as String
-        surname = updateDto.surname as String
-        patronymic = updateDto.patronymic
-        email = updateDto.email as String
-        phoneNumber = updateDto.phoneNumber
-        birthday = updateDto.birthday
-        comment = updateDto.comment
+    fun MongoCustomer.setUpdatedData(updateDto: CustomerUpdateDto): MongoCustomer {
+        return this.copy(
+            firstName = updateDto.firstName as String,
+            surname = updateDto.surname as String,
+            patronymic = updateDto.patronymic,
+            email = updateDto.email as String,
+            phoneNumber = updateDto.phoneNumber,
+            birthday = updateDto.birthday,
+            comment = updateDto.comment
+        )
     }
 }

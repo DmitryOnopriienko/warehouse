@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull
 
 data class ProductCreateDto(
     @field:NotEmpty(message = "title must be provided")
-    val title: String,
+    val title: String?,
     @field:NotNull(message = "price must be provided")
     @field:DecimalMin(value = "0.01", message = "price must be more than 0.01")
-    val price: Double,
+    val price: Double?,
     @field:Min(0, message = "amount must be 0 or more")
     val amount: Int = 0,
     val about: String?

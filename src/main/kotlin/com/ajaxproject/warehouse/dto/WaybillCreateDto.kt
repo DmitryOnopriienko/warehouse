@@ -1,23 +1,21 @@
 package com.ajaxproject.warehouse.dto
 
 import jakarta.validation.Valid
-import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class WaybillCreateDto(
-    @field:NotNull(message = "customer id must be provided")
-    @field:Min(1, message = "id must be valid")
-    val customerId: Int?,
+    @field:NotEmpty(message = "customerId must be provided")
+    val customerId: String?,
     @field:NotNull(message = "date must be provided")
     val date: LocalDate?,
     @field:Valid
-    val products: List<WaybillProductCreateDto>? = null
+    val products: List<WaybillProductCreateDto> = emptyList()
 ) {
     data class WaybillProductCreateDto(
-        @field:NotNull(message = "product id must be provided")
-        @field:Min(1, message = "id must be valid")
-        val id: Int?,
+        @field:NotEmpty(message = "productId must be provided")
+        val productId: String?,
         @field:NotNull(message = "amount must be provided")
         val amount: Int?
     )

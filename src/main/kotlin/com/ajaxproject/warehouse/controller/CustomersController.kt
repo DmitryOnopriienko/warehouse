@@ -19,26 +19,30 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/customers")
-class CustomersController(val customerService: CustomerService) {
+class CustomersController(
+    val customerService: CustomerService
+) {
 
     @GetMapping
-    fun findAllCustomers(): List<CustomerDataLiteDto> = customerService.findAllCustomers()
+    fun findAll(): List<CustomerDataLiteDto> = customerService.findAllCustomers()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Int): CustomerDataDto = customerService.findById(id)
+    fun findById(@PathVariable id: String): CustomerDataDto =
+        customerService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomer(@RequestBody @Valid createDto: CustomerCreateDto): CustomerDataDto =
-        customerService.createCustomer(createDto)
+    fun createCustomer(
+        @RequestBody @Valid createDto: CustomerCreateDto
+    ): CustomerDataDto = customerService.createCustomer(createDto)
 
     @PutMapping("/{id}")
     fun updateCustomer(
-        @RequestBody @Valid updateDto: CustomerUpdateDto,
-        @PathVariable id: Int
+        @PathVariable id: String,
+        @RequestBody @Valid updateDto: CustomerUpdateDto
     ): CustomerDataDto = customerService.updateCustomer(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomer(@PathVariable id: Int): Unit = customerService.deleteById(id)
+    fun deleteCustomer(@PathVariable id: String): Unit = customerService.deleteById(id)
 }

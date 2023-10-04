@@ -1,73 +1,75 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.annotation.RateLimit
 import com.ajaxproject.warehouse.dto.ProductCreateDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductUpdateDto
-import com.ajaxproject.warehouse.entity.Product
+import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.ProductRepository
+import com.ajaxproject.warehouse.repository.MongoProductRepository
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ProductServiceImpl(val productRepository: ProductRepository) : ProductService {
-    override fun findAllProducts(): List<ProductDataLiteDto> {
-        return productRepository.findAll().map { it.mapToLiteDto() }
-    }
+class ProductServiceImpl(
+    val mongoProductRepository: MongoProductRepository
+) : ProductService {
 
-    @RateLimit
-    override fun findById(id: Int): ProductDataDto {
-        return productRepository.findById(id)
-            .orElseThrow { NotFoundException("Product with id $id not found") }
-            .mapToDataDto()
+    override fun findAllProducts(): List<ProductDataLiteDto> =
+        mongoProductRepository.findAll().map { it.mapToLiteDto() }
+
+    override fun getById(id: String): ProductDataDto {
+        val mongoProduct: MongoProduct = mongoProductRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Product with id $id not found")
+        return mongoProduct.mapToDataDto()
     }
 
     override fun createProduct(createDto: ProductCreateDto): ProductDataDto {
-        val product = productRepository.save(createDto.mapToEntity())
+        val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
 
-    override fun updateProduct(updateDto: ProductUpdateDto, id: Int): ProductDataDto {
-        require(id == updateDto.id) { "Mapping id is not equal to request body id" }
-        val product: Product = productRepository.findById(id)
-            .orElseThrow { NotFoundException("Product with id $id not found") }
-        product.setUpdatedData(updateDto)
-        productRepository.save(product)
-        return product.mapToDataDto()
+    @Transactional
+    override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
+        val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
+            ?: throw NotFoundException("Product with id $id not found")
+        val updatedProduct = product.setUpdatedData(updateDto)
+        return mongoProductRepository.save(updatedProduct).mapToDataDto()
     }
 
-    override fun deleteById(id: Int) {
-        productRepository.deleteById(id)
+    override fun deleteById(id: String) {
+        mongoProductRepository.deleteById(ObjectId(id))
     }
 
-    fun Product.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
-        id = id,
+    fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
+        id = id.toString(),
         title = title,
         price = price,
         amount = amount
     )
 
-    fun Product.mapToDataDto(): ProductDataDto = ProductDataDto(
-        id = id,
+    fun MongoProduct.mapToDataDto(): ProductDataDto = ProductDataDto(
+        id = id.toString(),
         title = title,
         price = price,
         amount = amount,
         about = about
     )
 
-    fun ProductCreateDto.mapToEntity(): Product = Product(
-        id = null,
-        title = title,
-        price = price,
+    fun ProductCreateDto.mapToEntity(): MongoProduct = MongoProduct(
+        title = title as String,
+        price = price as Double,
         amount = amount,
         about = about
     )
 
-    private fun Product.setUpdatedData(updateDto: ProductUpdateDto) {
-        title = updateDto.title as String
-        price = updateDto.price as Double
-        amount = updateDto.amount as Int
-        about = updateDto.about
+    fun MongoProduct.setUpdatedData(updateDto: ProductUpdateDto): MongoProduct {
+        return this.copy(
+            title = updateDto.title as String,
+            price = updateDto.price as Double,
+            amount = updateDto.amount as Int,
+            about = updateDto.about
+        )
     }
 }

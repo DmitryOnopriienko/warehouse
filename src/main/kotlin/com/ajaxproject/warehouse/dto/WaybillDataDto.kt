@@ -1,13 +1,18 @@
 package com.ajaxproject.warehouse.dto
 
-import com.ajaxproject.warehouse.entity.Customer
-import com.ajaxproject.warehouse.entity.WaybillProduct
 import java.time.LocalDate
 
 data class WaybillDataDto(
-    val id: Int?,
-    val customer: Customer,
-    val date: LocalDate?,
-    val productList: List<WaybillProduct>,
-    val totalPrice: Double
-)
+    val id: String,
+    val customer: CustomerDataLiteDto,
+    val date: LocalDate,
+    val totalPrice: Double,
+    val products: List<WaybillProductDataDto>
+) {
+    data class WaybillProductDataDto(
+        val id: String,
+        val title: String,
+        val price: Double,
+        val orderedAmount: Int
+    )
+}

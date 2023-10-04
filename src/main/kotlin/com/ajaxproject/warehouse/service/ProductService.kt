@@ -6,9 +6,14 @@ import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductUpdateDto
 
 interface ProductService {
-    fun findAllProducts() : List<ProductDataLiteDto>
-    fun findById(id: Int) : ProductDataDto
+
+    fun findAllProducts(): List<ProductDataLiteDto>
+
+    fun getById(id: String): ProductDataDto
+
     fun createProduct(createDto: ProductCreateDto): ProductDataDto
-    fun deleteById(id: Int)
-    fun updateProduct(updateDto: ProductUpdateDto, id: Int): ProductDataDto
+
+    fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto
+
+    fun deleteById(id: String)
 }

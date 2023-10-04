@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/products")
-class ProductsController(val productService: ProductService) {
+class ProductsController(
+    val productService: ProductService
+) {
 
     @GetMapping
     fun findAllProducts(): List<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Int): ProductDataDto = productService.findById(id)
+    fun findById(@PathVariable id: String): ProductDataDto =
+        productService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,10 +38,10 @@ class ProductsController(val productService: ProductService) {
     @PutMapping("/{id}")
     fun updateProduct(
         @RequestBody @Valid updateDto: ProductUpdateDto,
-        @PathVariable id: Int
+        @PathVariable id: String
     ): ProductDataDto = productService.updateProduct(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProduct(@PathVariable id: Int): Unit = productService.deleteById(id)
+    fun deleteProduct(@PathVariable id: String): Unit = productService.deleteById(id)
 }
