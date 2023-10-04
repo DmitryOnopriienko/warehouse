@@ -20,5 +20,5 @@ jobs:
           distribution: oracle
           java-version: '17'
 
-      - name: Run detekt
+      - name: Run build
         run: ./gradlew build
