@@ -1,4 +1,4 @@
-name: Detekt-Actions
+name: Checks
 
 on:
   push:
