@@ -55,7 +55,7 @@ class WaybillServiceImpl(
             .map { it.productId as String }
             .minus(validIdList.toSet())
             .map { "Product with id $it not found" }
-            .toList()
+            .toList()   // TODO add product amount in DB change
         return if (errorList.isNotEmpty()) {
             throw NotFoundException(errorList)
         } else {

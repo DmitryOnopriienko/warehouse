@@ -14,6 +14,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.nats:jnats:2.16.14")
+    implementation("com.google.protobuf:protobuf-java:3.24.3")
 
     implementation(project(":internal-api"))
 
