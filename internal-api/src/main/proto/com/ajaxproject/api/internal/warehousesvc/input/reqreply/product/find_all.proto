@@ -15,8 +15,12 @@ message FindAllProductsResponse {
     Failure failure = 2;
   }
 
+  message ProductList {
+    repeated commonmodels.product.Product product = 1;
+  }
+
   message Success {
-    repeated commonmodels.product.Product products = 1;
+    ProductList products = 1;
   }
 
   message Failure {

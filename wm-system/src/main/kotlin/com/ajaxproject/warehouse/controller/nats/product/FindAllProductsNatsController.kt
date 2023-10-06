@@ -28,7 +28,9 @@ class FindAllProductsNatsController(
 
     fun buildSuccessResponse(products: List<Product>): FindAllProductsResponse =
         FindAllProductsResponse.newBuilder().apply {
-            successBuilder.addAllProducts(products)
+            successBuilder
+                .productsBuilder
+                .addAllProduct(products)
         }.build()
 
     fun buildFailureResponse(exception: Throwable): FindAllProductsResponse =
