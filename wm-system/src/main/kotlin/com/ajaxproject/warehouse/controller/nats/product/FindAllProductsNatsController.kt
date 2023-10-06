@@ -19,10 +19,13 @@ class FindAllProductsNatsController(
     override val parser: Parser<FindAllProductsRequest> = FindAllProductsRequest.parser()
 
     override fun handle(request: FindAllProductsRequest): FindAllProductsResponse {
-        runCatching {
-            return buildSuccessResponse(productService.findAllProducts().map { it.mapToProto() })
+        return runCatching {
+            buildSuccessResponse(
+                productService
+                    .findAllProducts()
+                    .map { it.mapToProto() })
         }.getOrElse { exception ->
-            return buildFailureResponse(exception)
+            buildFailureResponse(exception)
         }
     }
 
