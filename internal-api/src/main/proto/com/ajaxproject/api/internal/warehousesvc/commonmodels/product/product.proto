@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.ajaxproject.api.internal.warehousesvc.commonmodels.product;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.ajaxproject.api.internal.warehousesvc.commonmodels.product";
+option java_multiple_files = true;
+
+message Product {
+  optional string id = 1;
+  string title = 2;
+  double price = 3;
+  int32 amount = 4;
+  optional string about = 5;
+}
