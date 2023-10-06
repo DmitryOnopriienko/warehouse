@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":internal-api"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
 }
 
 tasks.withType<Test> {
