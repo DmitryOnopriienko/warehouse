@@ -6,7 +6,6 @@ import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProdu
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.repository.MongoProductRepository
-import com.ajaxproject.warehouse.service.ProductService
 import io.nats.client.Connection
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertEquals
