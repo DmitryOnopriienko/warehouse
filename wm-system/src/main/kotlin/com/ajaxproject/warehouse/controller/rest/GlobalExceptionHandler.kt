@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.controller
+package com.ajaxproject.warehouse.controller.rest
 
 import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.MethodRateLimitExceededException

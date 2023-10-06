@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.controller
+package com.ajaxproject.warehouse.controller.rest
 
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.GetMapping

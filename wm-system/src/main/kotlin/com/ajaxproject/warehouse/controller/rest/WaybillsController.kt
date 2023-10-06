@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.controller
+package com.ajaxproject.warehouse.controller.rest
 
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
