@@ -1,8 +1,8 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoProductRepository
@@ -33,7 +33,7 @@ class ProductServiceImpl(
     }
 
     @Transactional
-    override fun updateProduct(updateDto: ProductSaveDto, id: String): ProductDataDto {
+    override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         val updatedProduct = product.setUpdatedData(updateDto)
