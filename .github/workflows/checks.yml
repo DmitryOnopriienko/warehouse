@@ -14,16 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Start MongoDB container
-        run: |
-          docker run -d --name mongo -p 27017:27017 \
-            -e MONGO_INITDB_ROOT_USERNAME=root \
-            -e MONGO_INITDB_ROOT_PASSWORD=toor \
-            -e MONGO_INITDB_DATABASE=warehouse \
-          mongo:latest
-
-      - name: Start NATS container
-        run: docker run -d --name nats -p 4222:4222 nats:latest
+      - name: Start NATS and MongoDB
+        run: docker-compose up mongo nats
 
       - name: Set up JDK
         uses: actions/setup-java@v3
