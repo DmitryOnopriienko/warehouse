@@ -22,21 +22,21 @@ class CreateProductNatsControllerTest {
     @Test
     fun testCreatesProductFromValidRequest() {
         // GIVEN
-        val createProductRequest = CreateProductRequest.newBuilder()
-            .setTitle("Test create product")
-            .setPrice(19.99)
-            .setAmount(200)
-            .setAbout("New test product")
-            .build()
+        val createProductRequest = CreateProductRequest.newBuilder().apply {
+            title = "Test create product"
+            price = 19.99
+            amount = 200
+            about = "New test product"
+        }.build()
 
         val expectedProduct = CreateProductResponse.newBuilder()
             .successBuilder
-                .productBuilder
-                .setTitle("Test create product")
-                .setPrice(19.99)
-                .setAmount(200)
-                .setAbout("New test product")
-                .build()
+            .productBuilder.apply {
+                title = "Test create product"
+                price = 19.99
+                amount = 200
+                about = "New test product"
+            }.build()
 
         // WHEN
         val completableFuture = connection.requestWithTimeout(
@@ -58,15 +58,16 @@ class CreateProductNatsControllerTest {
     @Test
     fun testReturnsFailureOnInvalidRequest() {
         // GIVEN
-        val createProductRequest = CreateProductRequest.newBuilder()
-            .setPrice(199.99)
-            .setAmount(200)
-            .setAbout("New test product")
-            .build()
+        val createProductRequest = CreateProductRequest.newBuilder().apply {
+            price = 199.99
+            amount = 200
+            about = "New test product"
+        }.build()
 
-        val expectedResponse = CreateProductResponse.newBuilder().apply {
-            failureBuilder.setMessage("Exception encountered: jakarta.validation.ConstraintViolationException: " +
-                    "createProduct.createDto.title: title must be provided")
+        val expectedResponse = CreateProductResponse.newBuilder()
+            .failureBuilder.apply {
+            message = "Exception encountered: jakarta.validation.ConstraintViolationException: " +
+                    "createProduct.createDto.title: title must be provided"
         }.build()
 
         // WHEN

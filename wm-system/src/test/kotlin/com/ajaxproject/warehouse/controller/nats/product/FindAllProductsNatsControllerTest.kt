@@ -26,9 +26,8 @@ class FindAllProductsNatsControllerTest {
     fun testReturnsAllProducts() {
         // GIVEN
         val expectedProtoProducts = productService.findAllProducts().map { it.mapToProto() }
-        val expectedProducts = FindAllProductsResponse.newBuilder().apply {
-            successBuilder
-                .productsBuilder
+        val expectedProducts = FindAllProductsResponse.newBuilder().successBuilder.apply {
+            productsBuilder
                 .addAllProduct(expectedProtoProducts)
         }.build()
 

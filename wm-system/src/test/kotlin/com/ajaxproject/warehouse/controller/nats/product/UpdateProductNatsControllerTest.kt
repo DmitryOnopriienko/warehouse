@@ -35,13 +35,13 @@ class UpdateProductNatsControllerTest {
         ))
 
         val expectedProduct = UpdateProductResponse.newBuilder().successBuilder
-            .productBuilder
-            .setId(originalProduct.id.toString())
-            .setTitle("Updated title")
-            .setPrice(9999.11)
-            .setAmount(111)
-            .setAbout("it is updated product")
-            .build()
+            .productBuilder.apply {
+                id = originalProduct.id.toString()
+                title = "Updated title"
+                price = 9999.11
+                amount = 111
+                about = "it is updated product"
+            }.build()
 
         val request = UpdateProductRequest.newBuilder().apply {
             id = originalProduct.id.toString()
@@ -77,12 +77,12 @@ class UpdateProductNatsControllerTest {
             about = "original product"
         ))
 
-        val updateProductRequest = UpdateProductRequest.newBuilder()
-            .setId(originalProduct.id.toString())
-            .setTitle("Test create product")
-            .setAmount(200)
-            .setAbout("New test product")
-            .build()
+        val updateProductRequest = UpdateProductRequest.newBuilder().apply {
+            id = originalProduct.id.toString()
+            title = "Test create product"
+            amount = 200
+            about = "New test product"
+        }.build()
 
         val expectedResponse = UpdateProductResponse.newBuilder().apply {
             failureBuilder.setMessage(
@@ -105,12 +105,12 @@ class UpdateProductNatsControllerTest {
     @Test
     fun testReturnsFailureOnRequestWithoutId() {
         // GIVEN
-        val updateProductRequest = UpdateProductRequest.newBuilder()
-            .setTitle("Test create product")
-            .setPrice(19.99)
-            .setAmount(200)
-            .setAbout("New test product")
-            .build()
+        val updateProductRequest = UpdateProductRequest.newBuilder().apply {
+            title = "Test create product"
+            price = 19.99
+            amount = 200
+            about = "New test product"
+        }.build()
 
         val expectedResponse = UpdateProductResponse.newBuilder().apply {
             failureBuilder.setMessage(

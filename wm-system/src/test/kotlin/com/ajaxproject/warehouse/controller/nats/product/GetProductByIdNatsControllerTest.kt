@@ -38,20 +38,22 @@ class GetProductByIdNatsControllerTest {
         )
         val expectedProduct = GetProductByIdResponse.newBuilder().apply {
             successBuilder.setProduct(
-                Product.newBuilder()
-                    .setId(savedProduct.id.toString())
-                    .setTitle(savedProduct.title)
-                    .setPrice(savedProduct.price)
-                    .setAmount(savedProduct.amount)
-                    .setAbout(savedProduct.about)
+                Product.newBuilder().apply {
+                    id = savedProduct.id.toString()
+                    title = savedProduct.title
+                    price = savedProduct.price
+                    amount = savedProduct.amount
+                    about = savedProduct.about
+                }
             )
         }.build()
 
         /// WHEN
         val completableFuture = connection.requestWithTimeout(
             GET_BY_ID,
-            GetProductByIdRequest.newBuilder()
-                .setId(savedProduct.id.toString())
+            GetProductByIdRequest.newBuilder().apply {
+                id = savedProduct.id.toString()
+            }
                 .build()
                 .toByteArray(),
             Duration.ofSeconds(10L)
@@ -85,8 +87,9 @@ class GetProductByIdNatsControllerTest {
         // WHEN
         val completableFuture = connection.requestWithTimeout(
             GET_BY_ID,
-            GetProductByIdRequest.newBuilder()
-                .setId(idOfDeleted)
+            GetProductByIdRequest.newBuilder().apply {
+                id = idOfDeleted
+            }
                 .build()
                 .toByteArray(),
             Duration.ofSeconds(10L)

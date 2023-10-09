@@ -44,8 +44,10 @@ class DeleteProductByIdNatsControllerTest {
         val completableFuture = connection.requestWithTimeout(
             DELETE,
             DeleteProductByIdRequest.newBuilder().apply {
-                setId(originalProduct.id.toString())
-            }.build().toByteArray(),
+                id = originalProduct.id.toString()
+            }
+                .build()
+                .toByteArray(),
             Duration.ofSeconds(10L)
         )
         val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
