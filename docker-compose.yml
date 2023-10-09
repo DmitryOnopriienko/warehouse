@@ -21,6 +21,7 @@ services:
 
   app:
     build:
+      context: .
       dockerfile: Dockerfile
     container_name: app
     ports:
