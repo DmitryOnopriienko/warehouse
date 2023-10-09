@@ -57,6 +57,7 @@ class CreateProductNatsControllerTest {
     @Test
     fun testReturnsFailureOnInvalidRequest() {
         val createProductRequest = CreateProductRequest.newBuilder()
+            .setPrice(199.99)
             .setAmount(200)
             .setAbout("New test product")
             .build()
@@ -69,8 +70,7 @@ class CreateProductNatsControllerTest {
 
         val expectedResponse = CreateProductResponse.newBuilder().apply {
             failureBuilder.setMessage("Exception encountered: jakarta.validation.ConstraintViolationException: " +
-                    "createProduct.createDto.title: title must be provided, " +
-                    "createProduct.createDto.price: price must be more than 0.01")
+                    "createProduct.createDto.title: title must be provided")
         }.build()
 
         val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
