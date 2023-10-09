@@ -38,6 +38,6 @@ class FindAllProductsNatsController(
 
     fun buildFailureResponse(exception: Throwable): FindAllProductsResponse =
         FindAllProductsResponse.newBuilder().apply {
-            failureBuilder.setMessage("Exception encountered: $exception")
+            failureBuilder.message = "Exception encountered: $exception"
         }.build()
 }

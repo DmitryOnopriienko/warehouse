@@ -31,11 +31,11 @@ class CreateProductNatsController(
 
     fun buildSuccessResponse(product: Product): CreateProductResponse =
         CreateProductResponse.newBuilder().apply {
-            successBuilder.setProduct(product)
+            successBuilder.product = product
         }.build()
 
     fun buildFailureResponse(exception: Throwable): CreateProductResponse =
         CreateProductResponse.newBuilder().apply {
-            failureBuilder.setMessage("Exception encountered: $exception")
+            failureBuilder.message = "Exception encountered: $exception"
         }.build()
 }

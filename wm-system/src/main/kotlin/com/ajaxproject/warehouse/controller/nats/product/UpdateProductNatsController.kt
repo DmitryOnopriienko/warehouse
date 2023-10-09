@@ -36,11 +36,11 @@ class UpdateProductNatsController(
 
     fun buildSuccessResponse(product: Product): UpdateProductResponse =
         UpdateProductResponse.newBuilder().apply {
-            successBuilder.setProduct(product)
+            successBuilder.product = product
         }.build()
 
     fun buildFailureResponse(exception: Throwable): UpdateProductResponse =
         UpdateProductResponse.newBuilder().apply {
-            failureBuilder.setMessage("Exception encountered: $exception")
+            failureBuilder.message = "Exception encountered: $exception"
         }.build()
 }

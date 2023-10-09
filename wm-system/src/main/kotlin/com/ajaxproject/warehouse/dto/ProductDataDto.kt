@@ -9,11 +9,11 @@ data class ProductDataDto(
     val amount: Int,
     val about: String?
 ) {
-    fun mapToProto(): Product = Product.newBuilder()
-        .setId(id)
-        .setTitle(title)
-        .setPrice(price)
-        .setAmount(amount)
-        .setAbout(about)
-        .build()
+    fun mapToProto(): Product = Product.newBuilder().also {
+        it.id = id
+        it.title = title
+        it.price = price
+        it.amount = amount
+        it.about = about
+    }.build()
 }

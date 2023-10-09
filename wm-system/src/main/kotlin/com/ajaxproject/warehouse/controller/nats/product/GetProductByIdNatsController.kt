@@ -32,11 +32,11 @@ class GetProductByIdNatsController(
 
     fun buildSuccessResponse(product: Product): GetProductByIdResponse =
         GetProductByIdResponse.newBuilder().apply {
-            successBuilder.setProduct(product)
+            successBuilder.product = product
         }.build()
 
     fun buildFailureResponse(exception: Throwable): GetProductByIdResponse =
         GetProductByIdResponse.newBuilder().apply {
-            failureBuilder.setMessage("Exception encountered: $exception")
+            failureBuilder.message = "Exception encountered: $exception"
         }.build()
 }
