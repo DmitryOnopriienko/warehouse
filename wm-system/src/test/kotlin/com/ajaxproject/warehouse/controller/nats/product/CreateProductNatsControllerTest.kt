@@ -64,9 +64,8 @@ class CreateProductNatsControllerTest {
             about = "New test product"
         }.build()
 
-        val expectedResponse = CreateProductResponse.newBuilder()
-            .failureBuilder.apply {
-            message = "Exception encountered: jakarta.validation.ConstraintViolationException: " +
+        val expectedResponse = CreateProductResponse.newBuilder().apply {
+            failureBuilder.message = "Exception encountered: jakarta.validation.ConstraintViolationException: " +
                     "createProduct.createDto.title: title must be provided"
         }.build()
 
