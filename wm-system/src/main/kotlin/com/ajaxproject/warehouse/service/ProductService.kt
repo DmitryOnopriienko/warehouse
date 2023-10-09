@@ -1,9 +1,8 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.dto.ProductCreateDto
+import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
-import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import jakarta.validation.Valid
 
 interface ProductService {
@@ -12,9 +11,9 @@ interface ProductService {
 
     fun getById(id: String): ProductDataDto
 
-    fun createProduct(@Valid createDto: ProductCreateDto): ProductDataDto
+    fun createProduct(@Valid createDto: ProductSaveDto): ProductDataDto
 
-    fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto
+    fun updateProduct(updateDto: ProductSaveDto, id: String): ProductDataDto
 
     fun deleteById(id: String)
 }

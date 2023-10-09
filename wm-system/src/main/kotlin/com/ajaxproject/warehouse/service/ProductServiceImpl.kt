@@ -1,9 +1,8 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.warehouse.dto.ProductCreateDto
+import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
-import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoProductRepository
@@ -28,13 +27,13 @@ class ProductServiceImpl(
         return mongoProduct.mapToDataDto()
     }
 
-    override fun createProduct(@Valid createDto: ProductCreateDto): ProductDataDto {
+    override fun createProduct(@Valid createDto: ProductSaveDto): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
 
     @Transactional
-    override fun updateProduct(updateDto: ProductUpdateDto, id: String): ProductDataDto {
+    override fun updateProduct(updateDto: ProductSaveDto, id: String): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         val updatedProduct = product.setUpdatedData(updateDto)
@@ -60,14 +59,14 @@ class ProductServiceImpl(
         about = about
     )
 
-    fun ProductCreateDto.mapToEntity(): MongoProduct = MongoProduct(
+    fun ProductSaveDto.mapToEntity(): MongoProduct = MongoProduct(
         title = title as String,
         price = price as Double,
-        amount = amount,
+        amount = amount as Int,
         about = about
     )
 
-    fun MongoProduct.setUpdatedData(updateDto: ProductUpdateDto): MongoProduct {
+    fun MongoProduct.setUpdatedData(updateDto: ProductSaveDto): MongoProduct {
         return this.copy(
             title = updateDto.title as String,
             price = updateDto.price as Double,

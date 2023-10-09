@@ -1,9 +1,8 @@
 package com.ajaxproject.warehouse.controller.rest
 
-import com.ajaxproject.warehouse.dto.ProductCreateDto
+import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
-import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -32,12 +31,12 @@ class ProductsController(
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProduct(@RequestBody @Valid createDto: ProductCreateDto): ProductDataDto =
+    fun createProduct(@RequestBody @Valid createDto: ProductSaveDto): ProductDataDto =
         productService.createProduct(createDto)
 
     @PutMapping("/{id}")
     fun updateProduct(
-        @RequestBody @Valid updateDto: ProductUpdateDto,
+        @RequestBody @Valid updateDto: ProductSaveDto,
         @PathVariable id: String
     ): ProductDataDto = productService.updateProduct(updateDto, id)
 

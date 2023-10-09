@@ -1,10 +1,11 @@
 package com.ajaxproject.warehouse.dto
 
+import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductRequest
 import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 
-data class ProductUpdateDto(
+data class ProductSaveDto(
     @field:NotEmpty(message = "title must be provided")
     val title: String?,
     @field:NotNull(message = "price must be provided")
@@ -13,4 +14,11 @@ data class ProductUpdateDto(
     @field:NotNull(message = "amount must be provided")
     val amount: Int?,
     val about: String?
+)
+
+fun CreateProductRequest.mapToDto(): ProductSaveDto = ProductSaveDto(
+    title = title,
+    price = price,
+    amount = amount,
+    about = about
 )
