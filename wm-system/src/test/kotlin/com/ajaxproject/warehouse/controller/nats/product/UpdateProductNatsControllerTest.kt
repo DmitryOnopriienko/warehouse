@@ -101,6 +101,7 @@ class UpdateProductNatsControllerTest {
 
     @Test
     fun testReturnsFailureOnRequestWithoutId() {
+        // GIVEN
         val updateProductRequest = UpdateProductRequest.newBuilder()
             .setTitle("Test create product")
             .setPrice(19.99)
@@ -113,12 +114,14 @@ class UpdateProductNatsControllerTest {
                 "Exception encountered: java.lang.IllegalArgumentException: id must be provided")
         }.build()
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             UPDATE,
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
 
+        // THEN
         val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
