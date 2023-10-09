@@ -7,11 +7,14 @@ import com.ajaxproject.warehouse.dto.ProductUpdateDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.MongoProductRepository
+import jakarta.validation.Valid
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.annotation.Validated
 
 @Service
+@Validated
 class ProductServiceImpl(
     val mongoProductRepository: MongoProductRepository
 ) : ProductService {
@@ -25,7 +28,7 @@ class ProductServiceImpl(
         return mongoProduct.mapToDataDto()
     }
 
-    override fun createProduct(createDto: ProductCreateDto): ProductDataDto {
+    override fun createProduct(@Valid createDto: ProductCreateDto): ProductDataDto {
         val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
