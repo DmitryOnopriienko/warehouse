@@ -24,13 +24,7 @@ class FindAllProductsNatsControllerTest {
 
     @Test
     fun testReturnsAllProducts() {
-        val response = connection.requestWithTimeout(
-            FIND_ALL,
-            FindAllProductsRequest.getDefaultInstance().toByteArray(),
-            Duration.ofSeconds(10L)
-        )
-        val actualProducts = FindAllProductsResponse.parseFrom(response.get().data)
-
+        // GIVEN
         val expectedProtoProducts = productService.findAllProducts().map { it.mapToProto() }
         val expectedProducts = FindAllProductsResponse.newBuilder().apply {
             successBuilder
@@ -38,6 +32,15 @@ class FindAllProductsNatsControllerTest {
                 .addAllProduct(expectedProtoProducts)
         }.build()
 
+        // WHEN
+        val response = connection.requestWithTimeout(
+            FIND_ALL,
+            FindAllProductsRequest.getDefaultInstance().toByteArray(),
+            Duration.ofSeconds(10L)
+        )
+        val actualProducts = FindAllProductsResponse.parseFrom(response.get().data)
+
+        // THEN
         assertEquals(expectedProducts, actualProducts)
     }
 }

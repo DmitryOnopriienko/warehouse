@@ -26,7 +26,7 @@ class UpdateProductNatsControllerTest {
 
     @Test
     fun testUpdateDataWithValidRequest() {
-
+        // GIVEN
         val originalProduct = productRepository.createProduct(MongoProduct(
             title = "Original",
             price = 11.99,
@@ -51,14 +51,15 @@ class UpdateProductNatsControllerTest {
             about = "it is updated product"
         }.build()
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             UPDATE,
             request.toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
+        // THEN
         assertTrue(actualResponse.hasSuccess())
 
         val actualProduct = actualResponse.success.product
@@ -68,6 +69,7 @@ class UpdateProductNatsControllerTest {
 
     @Test
     fun testReturnsFailureOnInvalidRequest() {
+        // GIVEN
         val originalProduct = productRepository.createProduct(MongoProduct(
             title = "Original",
             price = 11.99,
@@ -88,14 +90,15 @@ class UpdateProductNatsControllerTest {
                     "updateProduct.updateDto.price: price must be more than 0.01")
         }.build()
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             UPDATE,
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-
-
         val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
+
+        // THEN
         assertEquals(expectedResponse, actualResponse)
     }
 
@@ -120,9 +123,9 @@ class UpdateProductNatsControllerTest {
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
+        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
-        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 }

@@ -27,6 +27,7 @@ class GetProductByIdNatsControllerTest {
 
     @Test
     fun testGetByIdSuccessReturnsValid() {
+        // GIVEN
         val savedProduct = productRepository.createProduct(
             MongoProduct(
                 title = "Test Product",
@@ -46,6 +47,7 @@ class GetProductByIdNatsControllerTest {
             )
         }.build()
 
+        /// WHEN
         val completableFuture = connection.requestWithTimeout(
             GET_BY_ID,
             GetProductByIdRequest.newBuilder()
@@ -54,13 +56,15 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val actualProduct = GetProductByIdResponse.parseFrom(completableFuture.get().data)
+
+        // THEN
         assertEquals(expectedProduct, actualProduct)
     }
 
     @Test
     fun testGetByIdFailureReturnsException() {
+        // GIVEN
         val savedProduct = productRepository.createProduct(
             MongoProduct(
                 title = "Test Product",
@@ -78,6 +82,7 @@ class GetProductByIdNatsControllerTest {
                         "Product with id $idOfDeleted not found")
         }.build()
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             GET_BY_ID,
             GetProductByIdRequest.newBuilder()
@@ -86,9 +91,9 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val response = GetProductByIdResponse.parseFrom(completableFuture.get().data)
-        println(response)
+
+        // THEN
         assertEquals(expectedResponse, response)
     }
 }

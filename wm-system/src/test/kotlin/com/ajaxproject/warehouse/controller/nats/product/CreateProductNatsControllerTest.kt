@@ -21,6 +21,7 @@ class CreateProductNatsControllerTest {
 
     @Test
     fun testCreatesProductFromValidRequest() {
+        // GIVEN
         val createProductRequest = CreateProductRequest.newBuilder()
             .setTitle("Test create product")
             .setPrice(19.99)
@@ -37,15 +38,15 @@ class CreateProductNatsControllerTest {
                 .setAbout("New test product")
                 .build()
 
-
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             CREATE,
             createProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
 
+        // THEN
         assertTrue(actualResponse.hasSuccess())
         val actualProduct = actualResponse.success.product
         assertEquals(expectedProduct.title, actualProduct.title)
@@ -56,24 +57,27 @@ class CreateProductNatsControllerTest {
 
     @Test
     fun testReturnsFailureOnInvalidRequest() {
+        // GIVEN
         val createProductRequest = CreateProductRequest.newBuilder()
             .setPrice(199.99)
             .setAmount(200)
             .setAbout("New test product")
             .build()
 
-        val completableFuture = connection.requestWithTimeout(
-            CREATE,
-            createProductRequest.toByteArray(),
-            Duration.ofSeconds(10L)
-        )
-
         val expectedResponse = CreateProductResponse.newBuilder().apply {
             failureBuilder.setMessage("Exception encountered: jakarta.validation.ConstraintViolationException: " +
                     "createProduct.createDto.title: title must be provided")
         }.build()
 
+        // WHEN
+        val completableFuture = connection.requestWithTimeout(
+            CREATE,
+            createProductRequest.toByteArray(),
+            Duration.ofSeconds(10L)
+        )
         val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
+
+        // THEN
         assertEquals(expectedResponse, actualResponse)
     }
 }

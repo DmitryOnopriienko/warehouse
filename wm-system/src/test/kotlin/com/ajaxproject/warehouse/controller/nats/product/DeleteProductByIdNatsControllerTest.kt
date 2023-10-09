@@ -28,6 +28,7 @@ class DeleteProductByIdNatsControllerTest {
 
     @Test
     fun testDeleteWithValidId() {
+        // GIVEN
         val originalProduct = productRepository.createProduct(
             MongoProduct(
                 title = "Original",
@@ -39,6 +40,7 @@ class DeleteProductByIdNatsControllerTest {
 
         assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             DELETE,
             DeleteProductByIdRequest.newBuilder().apply {
@@ -46,15 +48,16 @@ class DeleteProductByIdNatsControllerTest {
             }.build().toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
+        // THEN
         assertTrue(actualResponse.hasSuccess())
         assertNull(productRepository.findById(originalProduct.id as ObjectId))
     }
 
     @Test
     fun testReturnsFailureWithInvalidId() {
+        // GIVEN
         val originalProduct = productRepository.createProduct(
             MongoProduct(
                 title = "Original",
@@ -66,14 +69,15 @@ class DeleteProductByIdNatsControllerTest {
 
         assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
 
+        // WHEN
         val completableFuture = connection.requestWithTimeout(
             DELETE,
             DeleteProductByIdRequest.getDefaultInstance().toByteArray(),
             Duration.ofSeconds(10L)
         )
-
         val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
+        // THEN
         assertTrue(actualResponse.hasFailure())
         assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
     }
