@@ -22,7 +22,7 @@ class CreateProductNatsController(
     override fun handle(request: CreateProductRequest): CreateProductResponse = runCatching {
         buildSuccessResponse(
             productService
-                .createProduct(request.mapToDto())  // TODO add validation
+                .createProduct(request.mapToDto()) // TODO validation (added on service layer, think about better impl)
                 .mapToProto()
         )
     }.getOrElse { exception ->
