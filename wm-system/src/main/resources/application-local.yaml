@@ -1,0 +1,7 @@
+# for local startup
+spring:
+  data.mongodb:
+    uri: mongodb://root:toor@localhost:27017/warehouse?authSource=admin
+
+nats:
+  url: nats://localhost:4222
