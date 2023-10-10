@@ -13,7 +13,6 @@ data class MongoWaybill(
     val date: LocalDate,
     val products: List<MongoWaybillProduct> = emptyList()
 ) {
-    @Document("products")
     data class MongoWaybillProduct(
         val productId: ObjectId,
         val amount: Int
