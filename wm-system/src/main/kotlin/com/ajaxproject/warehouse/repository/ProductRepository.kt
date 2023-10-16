@@ -3,7 +3,7 @@ package com.ajaxproject.warehouse.repository
 import com.ajaxproject.warehouse.entity.MongoProduct
 import org.bson.types.ObjectId
 
-interface MongoProductRepository {
+interface ProductRepository {
 
     fun findAll(): List<MongoProduct>
 

@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-class MongoWaybillRepositoryImpl(
+class WaybillRepositoryImpl(
     val mongoTemplate: MongoTemplate
-) : MongoWaybillRepository {
+) : WaybillRepository {
 
     override fun findAll(): List<MongoWaybill> =
         mongoTemplate.findAll<MongoWaybill>(MongoWaybill.COLLECTION_NAME)

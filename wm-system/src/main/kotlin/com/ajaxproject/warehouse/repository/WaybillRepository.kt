@@ -3,7 +3,7 @@ package com.ajaxproject.warehouse.repository
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import org.bson.types.ObjectId
 
-interface MongoWaybillRepository {
+interface WaybillRepository {
 
     fun findAll(): List<MongoWaybill>
 

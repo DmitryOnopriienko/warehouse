@@ -13,9 +13,9 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-class MongoCustomerRepositoryImpl(
+class CustomerRepositoryImpl(
     val mongoTemplate: MongoTemplate
-) : MongoCustomerRepository {
+) : CustomerRepository {
 
     override fun findAll(): List<MongoCustomer> = mongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
 

@@ -4,7 +4,7 @@ import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import org.bson.types.ObjectId
 
-interface MongoCustomerRepository {
+interface CustomerRepository {
 
     fun findAll(): List<MongoCustomer>
 

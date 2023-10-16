@@ -7,41 +7,41 @@ import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.MongoCustomerRepository
+import com.ajaxproject.warehouse.repository.CustomerRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CustomerServiceImpl(
-    val mongoCustomerRepository: MongoCustomerRepository
+    val customerRepository: CustomerRepository
 ) : CustomerService {
 
     override fun findAllCustomers(): List<CustomerDataLiteDto> =
-        mongoCustomerRepository.findAll().map { it.mapToLiteDto() }
+        customerRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): CustomerDataDto {
-        val mongoCustomer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
+        val mongoCustomer: MongoCustomer = customerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         return mongoCustomer.mapToDataDto()
     }
 
     override fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto {
         val customer: MongoCustomer =
-            mongoCustomerRepository.createCustomer(createDto.mapToEntity())
+            customerRepository.createCustomer(createDto.mapToEntity())
         return customer.mapToDataDto()
     }
 
     @Transactional
     override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto {
-        val customer: MongoCustomer = mongoCustomerRepository.findById(ObjectId(id))
+        val customer: MongoCustomer = customerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         val updatedCustomer = customer.setUpdatedData(updateDto)
-        return mongoCustomerRepository.save(updatedCustomer).mapToDataDto()
+        return customerRepository.save(updatedCustomer).mapToDataDto()
     }
 
     override fun deleteById(id: String) {
-        mongoCustomerRepository.deleteById(ObjectId(id))
+        customerRepository.deleteById(ObjectId(id))
     }
 
     fun MongoCustomer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
@@ -54,7 +54,7 @@ class CustomerServiceImpl(
     )
 
     fun MongoCustomer.mapToDataDto(): CustomerDataDto {
-        val waybills: List<MongoWaybill> = mongoCustomerRepository.findCustomerWaybills(id as ObjectId)
+        val waybills: List<MongoWaybill> = customerRepository.findCustomerWaybills(id as ObjectId)
         return CustomerDataDto(
             id = id.toString(),
             firstName = firstName,

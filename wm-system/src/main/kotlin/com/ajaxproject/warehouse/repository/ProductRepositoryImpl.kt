@@ -12,9 +12,9 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-class MongoProductRepositoryImpl(
+class ProductRepositoryImpl(
     val mongoTemplate: MongoTemplate
-) : MongoProductRepository {
+) : ProductRepository {
 
     override fun findAll(): List<MongoProduct> = mongoTemplate.findAll<MongoProduct>(MongoProduct.COLLECTION_NAME)
 

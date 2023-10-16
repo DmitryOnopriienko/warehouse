@@ -5,7 +5,7 @@ import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import jakarta.validation.Valid
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
@@ -15,33 +15,33 @@ import org.springframework.validation.annotation.Validated
 @Service
 @Validated
 class ProductServiceImpl(
-    val mongoProductRepository: MongoProductRepository
+    val productRepository: ProductRepository
 ) : ProductService {
 
     override fun findAllProducts(): List<ProductDataLiteDto> =
-        mongoProductRepository.findAll().map { it.mapToLiteDto() }
+        productRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): ProductDataDto {
-        val mongoProduct: MongoProduct = mongoProductRepository.findById(ObjectId(id))
+        val mongoProduct: MongoProduct = productRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         return mongoProduct.mapToDataDto()
     }
 
     override fun createProduct(@Valid createDto: ProductSaveDto): ProductDataDto {
-        val product: MongoProduct = mongoProductRepository.createProduct(createDto.mapToEntity())
+        val product: MongoProduct = productRepository.createProduct(createDto.mapToEntity())
         return product.mapToDataDto()
     }
 
     @Transactional
     override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): ProductDataDto {
-        val product: MongoProduct = mongoProductRepository.findById(ObjectId(id))
+        val product: MongoProduct = productRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Product with id $id not found")
         val updatedProduct = product.setUpdatedData(updateDto)
-        return mongoProductRepository.save(updatedProduct).mapToDataDto()
+        return productRepository.save(updatedProduct).mapToDataDto()
     }
 
     override fun deleteById(id: String) {
-        mongoProductRepository.deleteById(ObjectId(id))
+        productRepository.deleteById(ObjectId(id))
     }
 
     fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(

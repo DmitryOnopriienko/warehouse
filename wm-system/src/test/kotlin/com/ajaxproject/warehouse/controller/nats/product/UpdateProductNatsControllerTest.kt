@@ -4,7 +4,7 @@ import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.UPDATE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -22,7 +22,7 @@ class UpdateProductNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: MongoProductRepository
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun testUpdateDataWithValidRequest() {

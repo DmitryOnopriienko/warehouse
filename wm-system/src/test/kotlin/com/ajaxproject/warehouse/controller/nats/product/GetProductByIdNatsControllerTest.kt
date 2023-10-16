@@ -5,7 +5,7 @@ import com.ajaxproject.api.internal.warehousesvc.commonmodels.product.Product
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import io.nats.client.Connection
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,7 +23,7 @@ class GetProductByIdNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: MongoProductRepository
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun testGetByIdSuccessReturnsValid() {
