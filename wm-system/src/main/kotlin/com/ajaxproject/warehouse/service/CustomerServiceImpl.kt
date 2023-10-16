@@ -11,6 +11,9 @@ import com.ajaxproject.warehouse.repository.CustomerRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Service
 class CustomerServiceImpl(
@@ -20,16 +23,30 @@ class CustomerServiceImpl(
     override fun findAllCustomers(): List<CustomerDataLiteDto> =
         customerRepository.findAll().map { it.mapToLiteDto() }
 
+    override fun findAllCustomersR(): Flux<CustomerDataLiteDto> =
+        customerRepository.findAllR().map { it.mapToLiteDto() }
+
     override fun getById(id: String): CustomerDataDto {
         val mongoCustomer: MongoCustomer = customerRepository.findById(ObjectId(id))
             ?: throw NotFoundException("Customer with id $id not found")
         return mongoCustomer.mapToDataDto()
     }
 
+    override fun getByIdR(id: String): Mono<CustomerDataDto> {
+        val mongoCustomer: Mono<MongoCustomer> = customerRepository.findByIdR(ObjectId(id))
+            .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
+        return mongoCustomer.map { it.mapToDataDto() }
+    }
+
     override fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto {
         val customer: MongoCustomer =
             customerRepository.createCustomer(createDto.mapToEntity())
         return customer.mapToDataDto()
+    }
+
+    override fun createCustomerR(createDto: CustomerCreateDto): Mono<CustomerDataDto> {
+        val customer: Mono<MongoCustomer> = customerRepository.createCustomerR(createDto.mapToEntity())
+        return customer.map { it.mapToDataDto() }
     }
 
     @Transactional
@@ -40,8 +57,24 @@ class CustomerServiceImpl(
         return customerRepository.save(updatedCustomer).mapToDataDto()
     }
 
+    @Transactional
+    override fun updateCustomerR(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto> {
+        val customer = customerRepository.findByIdR(ObjectId(id))
+            .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
+        return customer
+            .map { it.setUpdatedData(updateDto) }
+            .flatMap {
+                customerRepository.saveR(it)
+            }
+            .map { it.mapToDataDto() }
+    }
+
     override fun deleteById(id: String) {
         customerRepository.deleteById(ObjectId(id))
+    }
+
+    override fun deleteByIdR(id: String) {
+        customerRepository.deleteByIdR(ObjectId(id))
     }
 
     fun MongoCustomer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(

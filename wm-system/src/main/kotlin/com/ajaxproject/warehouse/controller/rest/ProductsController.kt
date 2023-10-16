@@ -1,8 +1,8 @@
 package com.ajaxproject.warehouse.controller.rest
 
-import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.dto.ProductDataDto
 import com.ajaxproject.warehouse.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/products")
@@ -43,4 +45,26 @@ class ProductsController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProduct(@PathVariable id: String): Unit = productService.deleteById(id)
+
+    @GetMapping("/r/")
+    fun findAllProductsR(): Flux<ProductDataLiteDto> = productService.findAllProductsR()
+
+    @GetMapping("/r/{id}")
+    fun findByIdR(@PathVariable id: String): Mono<ProductDataDto> =
+        productService.getByIdR(id)
+
+    @PostMapping("/r/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createProductR(@RequestBody @Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
+        productService.createProductR(createDto)
+
+    @PutMapping("/r/{id}")
+    fun updateProductR(
+        @RequestBody @Valid updateDto: ProductSaveDto,
+        @PathVariable id: String
+    ): Mono<ProductDataDto> = productService.updateProductR(updateDto, id)
+
+    @DeleteMapping("/r/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteProductR(@PathVariable id: String): Unit = productService.deleteByIdR(id)
 }
