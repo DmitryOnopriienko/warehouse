@@ -16,6 +16,9 @@ import com.ajaxproject.warehouse.repository.WaybillRepository
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import java.time.LocalDate
 
 @Service
@@ -66,6 +69,71 @@ class WaybillServiceImpl(
 
     override fun deleteById(id: String) {
         waybillRepository.deleteById(ObjectId(id))
+    }
+
+    override fun findAllWaybillsR(): Flux<WaybillDataLiteDto> =
+        waybillRepository.findAllR().map { it.mapToLiteDto() }
+
+    override fun getByIdR(id: String): Mono<WaybillDataDto> {   // TODO make kotlin style
+        val waybill = waybillRepository.findByIdR(ObjectId(id))
+            .switchIfEmpty { Mono.error(NotFoundException("Waybill with id $id not found")) }
+        return waybill.map { it.mapToDataDto() }
+    }
+
+    @Transactional
+    override fun createWaybillR(createDto: WaybillCreateDto): Mono<WaybillDataDto> {
+        return customerRepository.findByIdR(ObjectId(createDto.customerId))
+            .switchIfEmpty { Mono.error(NotFoundException("Customer with id ${createDto.customerId} not found")) }
+            .flatMap {
+                val productIds = createDto.products.map { ObjectId(it.productId) }
+                validateProductsIds(productIds, createDto, it)
+            }.then(createWaybillAndMapToDto(createDto))
+    }
+
+    private fun validateProductsIds(
+        productIds: List<ObjectId>,
+        createDto: WaybillCreateDto,
+        it: MongoCustomer
+    ) = productRepository.getValidIdsR(productIds)
+        .collectList()
+        .handle<List<String>> { validIdList, sink ->
+            val notFoundIds = createDto.products
+                .asSequence()
+                .map { it.productId as String }
+                .filter { it !in validIdList }
+                .toList()
+            if (notFoundIds.isEmpty()) {
+                sink.complete()
+            } else {
+                val errorMessage = notFoundIds.map { "Product with id $it not found" }
+                sink.error(NotFoundException(errorMessage))
+            }
+        }.thenReturn(it)
+
+    private fun createWaybillAndMapToDto(createDto: WaybillCreateDto): Mono<WaybillDataDto> {
+        return waybillRepository
+            .createWaybillR(createDto.mapToEntity())
+            .map { it.mapToDataDto() }
+    }
+
+    override fun deleteByIdR(id: String) {
+        waybillRepository.deleteById(ObjectId(id))
+    }
+
+    @Transactional
+    override fun updateWaybillInfoR(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> {
+        return waybillRepository.findByIdR(ObjectId(id))
+            .switchIfEmpty { Mono.error(NotFoundException("Waybill with id $id not found")) }
+            .flatMap {
+                customerRepository.findByIdR(ObjectId(infoUpdateDto.customerId))
+                    .switchIfEmpty {
+                        Mono.error(NotFoundException("Customer with id ${infoUpdateDto.customerId} not found"))
+                    }.thenReturn(it)
+            }.flatMap { mongoWaybill ->
+                waybillRepository
+                    .saveR(mongoWaybill.setUpdatedData(infoUpdateDto))
+                    .map { it.mapToDataDto() }
+            }
     }
 
     fun MongoWaybill.mapToLiteDto(): WaybillDataLiteDto {

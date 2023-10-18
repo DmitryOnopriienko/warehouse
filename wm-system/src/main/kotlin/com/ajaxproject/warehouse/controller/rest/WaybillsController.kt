@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/waybills")
@@ -43,4 +45,25 @@ class WaybillsController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteWaybill(@PathVariable id: String): Unit  = waybillService.deleteById(id)
+
+    @GetMapping("/r/")  // TODO investigate about auto caching
+    fun findAllWaybillsR(): Flux<WaybillDataLiteDto> = waybillService.findAllWaybillsR()
+
+    @GetMapping("/r/{id}")
+    fun findByIdR(@PathVariable id: String): Mono<WaybillDataDto> = waybillService.getByIdR(id)
+
+    @PostMapping("/r/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createWaybillR(@RequestBody @Valid createDto: WaybillCreateDto): Mono<WaybillDataDto> =
+        waybillService.createWaybillR(createDto)
+
+    @PutMapping("/r/{id}")
+    fun updateWaybillInfoR(
+        @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
+        @PathVariable id: String
+    ): Mono<WaybillDataDto> = waybillService.updateWaybillInfoR(infoUpdateDto, id)
+
+    @DeleteMapping("/r/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteWaybillR(@PathVariable id: String): Unit  = waybillService.deleteByIdR(id)
 }
