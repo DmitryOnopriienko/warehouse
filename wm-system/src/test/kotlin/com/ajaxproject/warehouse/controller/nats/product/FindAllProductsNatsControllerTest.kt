@@ -23,7 +23,7 @@ class FindAllProductsNatsControllerTest {
     lateinit var productService: ProductService
 
     @Test
-    fun testReturnsAllProducts() {  // TODO: another DB in another profile
+    fun testReturnsAllProducts() { // TODO another DB in another profile
         // GIVEN
         val expectedProtoProducts = productService.findAllProducts()
             .collectList()

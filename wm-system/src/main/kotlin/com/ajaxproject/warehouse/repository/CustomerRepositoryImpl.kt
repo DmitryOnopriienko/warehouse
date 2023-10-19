@@ -19,7 +19,8 @@ class CustomerRepositoryImpl(
     val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : CustomerRepository {
 
-    override fun findAll(): Flux<MongoCustomer> = reactiveMongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
+    override fun findAll(): Flux<MongoCustomer> =
+        reactiveMongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
 
     override fun findById(id: ObjectId): Mono<MongoCustomer> =
         reactiveMongoTemplate.findById<MongoCustomer>(id, MongoCustomer.COLLECTION_NAME)
