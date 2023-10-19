@@ -10,9 +10,7 @@ interface CustomerRepository {
 
     fun findAll(): Flux<MongoCustomer>
 
-    fun findById(id: ObjectId): MongoCustomer?
-
-    fun findByIdReactive(id: ObjectId): Mono<MongoCustomer>
+    fun findById(id: ObjectId): Mono<MongoCustomer>
 
     fun createCustomer(mongoCustomer: MongoCustomer): Mono<MongoCustomer>
 
@@ -20,7 +18,5 @@ interface CustomerRepository {
 
     fun deleteById(id: ObjectId): Mono<Unit>
 
-    fun findCustomerWaybills(id: ObjectId): List<MongoWaybill>
-
-    fun findCustomerWaybillsReactive(id: ObjectId): Flux<MongoWaybill>
+    fun findCustomerWaybills(id: ObjectId): Flux<MongoWaybill>
 }

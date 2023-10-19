@@ -7,27 +7,15 @@ import reactor.core.publisher.Mono
 
 interface ProductRepository {
 
-    fun findAll(): List<MongoProduct>
+    fun findAll(): Flux<MongoProduct>
 
-    fun findAllR(): Flux<MongoProduct>
+    fun findById(id: ObjectId): Mono<MongoProduct>
 
-    fun findById(id: ObjectId): MongoProduct?
+    fun createProduct(mongoProduct: MongoProduct): Mono<MongoProduct>
 
-    fun findByIdR(id: ObjectId): Mono<MongoProduct>
+    fun save(mongoProduct: MongoProduct): Mono<MongoProduct>
 
-    fun createProduct(mongoProduct: MongoProduct): MongoProduct
+    fun deleteById(id: ObjectId): Mono<Unit>
 
-    fun createProductR(mongoProduct: MongoProduct): Mono<MongoProduct>
-
-    fun save(mongoProduct: MongoProduct): MongoProduct
-
-    fun saveR(mongoProduct: MongoProduct): Mono<MongoProduct>
-
-    fun deleteById(id: ObjectId)
-
-    fun deleteByIdR(id: ObjectId): Mono<Unit>
-
-    fun getValidIds(ids: List<ObjectId>): List<String>
-
-    fun getValidIdsR(ids: List<ObjectId>): Flux<String>
+    fun getValidIds(ids: List<ObjectId>): Flux<String>
 }

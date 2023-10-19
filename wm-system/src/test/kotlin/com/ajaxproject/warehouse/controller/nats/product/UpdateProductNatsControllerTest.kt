@@ -32,7 +32,7 @@ class UpdateProductNatsControllerTest {
             price = 11.99,
             amount = 100,
             about = "original product"
-        ))
+        )).block()!!
 
         val expectedProduct = UpdateProductResponse.newBuilder().successBuilder
             .productBuilder.apply {
@@ -75,7 +75,7 @@ class UpdateProductNatsControllerTest {
             price = 11.99,
             amount = 100,
             about = "original product"
-        ))
+        )).block()!!
 
         val updateProductRequest = UpdateProductRequest.newBuilder().apply {
             id = originalProduct.id.toString()

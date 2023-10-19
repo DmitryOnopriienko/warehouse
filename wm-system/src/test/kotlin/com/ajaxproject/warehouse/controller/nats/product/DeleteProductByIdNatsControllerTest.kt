@@ -36,9 +36,9 @@ class DeleteProductByIdNatsControllerTest {
                 amount = 100,
                 about = "original product"
             )
-        )
+        ).block()!!
 
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
 
         // WHEN
         val completableFuture = connection.requestWithTimeout(
@@ -54,7 +54,7 @@ class DeleteProductByIdNatsControllerTest {
         // THEN
         val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasSuccess())
-        assertNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNull(productRepository.findById(originalProduct.id as ObjectId).block())
     }
 
     @Test
@@ -67,9 +67,9 @@ class DeleteProductByIdNatsControllerTest {
                 amount = 100,
                 about = "original product"
             )
-        )
+        ).block()!!
 
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
 
         // WHEN
         val completableFuture = connection.requestWithTimeout(
@@ -81,6 +81,6 @@ class DeleteProductByIdNatsControllerTest {
         // THEN
         val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasFailure())
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
     }
 }

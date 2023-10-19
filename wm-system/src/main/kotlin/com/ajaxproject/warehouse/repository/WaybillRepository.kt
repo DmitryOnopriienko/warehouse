@@ -7,23 +7,13 @@ import reactor.core.publisher.Mono
 
 interface WaybillRepository {
 
-    fun findAll(): List<MongoWaybill>
+    fun findAll(): Flux<MongoWaybill>
 
-    fun findById(id: ObjectId): MongoWaybill?
+    fun findById(id: ObjectId): Mono<MongoWaybill>
 
-    fun createWaybill(mongoWaybill: MongoWaybill): MongoWaybill
+    fun createWaybill(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
 
-    fun deleteById(id: ObjectId)
+    fun deleteById(id: ObjectId): Mono<Unit>
 
-    fun save(mongoWaybill: MongoWaybill): MongoWaybill
-
-    fun findAllR(): Flux<MongoWaybill>
-
-    fun findByIdR(id: ObjectId): Mono<MongoWaybill>
-
-    fun createWaybillR(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
-
-    fun deleteByIdR(id: ObjectId): Mono<Unit>
-
-    fun saveR(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
+    fun save(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
 }

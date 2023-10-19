@@ -5,7 +5,6 @@ import com.ajaxproject.warehouse.dto.CustomerDataDto
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.CustomerUpdateDto
 import com.ajaxproject.warehouse.entity.MongoCustomer
-import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.CustomerRepository
 import org.bson.types.ObjectId
@@ -24,26 +23,26 @@ class CustomerServiceImpl(
         customerRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): Mono<CustomerDataDto> {
-        val mongoCustomer: Mono<MongoCustomer> = customerRepository.findByIdReactive(ObjectId(id))
+        val mongoCustomer: Mono<MongoCustomer> = customerRepository.findById(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
-        return mongoCustomer.map { it.mapToDataDto() }
+        return mongoCustomer.flatMap { it.mapToDataDto() }
     }
 
     override fun createCustomer(createDto: CustomerCreateDto): Mono<CustomerDataDto> {
         val customer: Mono<MongoCustomer> = customerRepository.createCustomer(createDto.mapToEntity())
-        return customer.map { it.mapToDataDto() }
+        return customer.flatMap { it.mapToDataDto() }
     }
 
     @Transactional
     override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto> {
-        val customer = customerRepository.findByIdReactive(ObjectId(id))
+        val customer = customerRepository.findById(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
         return customer
             .map { it.setUpdatedData(updateDto) }
             .flatMap {
                 customerRepository.save(it)
             }
-            .map { it.mapToDataDto() }
+            .flatMap { it.mapToDataDto() }
     }
 
     override fun deleteById(id: String): Mono<Unit> =
@@ -58,19 +57,22 @@ class CustomerServiceImpl(
         phoneNumber = phoneNumber
     )
 
-    fun MongoCustomer.mapToDataDto(): CustomerDataDto {
-        val waybills: List<MongoWaybill> = customerRepository.findCustomerWaybills(id as ObjectId)
-        return CustomerDataDto(
-            id = id.toString(),
-            firstName = firstName,
-            surname = surname,
-            patronymic = patronymic,
-            email = email,
-            phoneNumber = phoneNumber,
-            birthday = birthday,
-            comment = comment,
-            waybills = waybills
-        )
+    fun MongoCustomer.mapToDataDto(): Mono<CustomerDataDto> {
+        return customerRepository.findCustomerWaybills(id as ObjectId)
+            .collectList()
+            .map {
+                CustomerDataDto(
+                    id = id.toString(),
+                    firstName = firstName,
+                    surname = surname,
+                    patronymic = patronymic,
+                    email = email,
+                    phoneNumber = phoneNumber,
+                    birthday = birthday,
+                    comment = comment,
+                    waybills = it
+                )
+            }
     }
 
     fun CustomerCreateDto.mapToEntity(): MongoCustomer = MongoCustomer(

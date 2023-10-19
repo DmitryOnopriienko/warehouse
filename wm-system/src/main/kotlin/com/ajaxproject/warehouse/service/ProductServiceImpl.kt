@@ -21,33 +21,33 @@ class ProductServiceImpl(
 ) : ProductService {
 
     override fun findAllProducts(): Flux<ProductDataLiteDto> =
-        productRepository.findAllR().map { it.mapToLiteDto() }
+        productRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): Mono<ProductDataDto> {
-        val customer = productRepository.findByIdR(ObjectId(id))
+        val customer = productRepository.findById(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
         return customer.map { it.mapToDataDto() }
     }
 
     override fun createProduct(@Valid createDto: ProductSaveDto): Mono<ProductDataDto> {
-        val customer = productRepository.createProductR(createDto.mapToEntity())
+        val customer = productRepository.createProduct(createDto.mapToEntity())
         return customer.map { it.mapToDataDto() }
     }
 
     @Transactional
     override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): Mono<ProductDataDto> {
-        val product = productRepository.findByIdR(ObjectId(id))
+        val product = productRepository.findById(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
         return product
             .map { it.setUpdatedData(updateDto) }
             .flatMap {
-                productRepository.saveR(it)
+                productRepository.save(it)
             }
             .map { it.mapToDataDto() }
     }
 
     override fun deleteById(id: String): Mono<Unit> =
-        productRepository.deleteByIdR(ObjectId(id))
+        productRepository.deleteById(ObjectId(id))
 
     fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id.toString(),

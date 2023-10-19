@@ -35,7 +35,7 @@ class GetProductByIdNatsControllerTest {
                 amount = 10,
                 about = "Nothing to say"
             )
-        )
+        ).block()!!
         val expectedProduct = GetProductByIdResponse.newBuilder().apply {
             successBuilder.setProduct(
                 Product.newBuilder().apply {
@@ -74,9 +74,9 @@ class GetProductByIdNatsControllerTest {
                 amount = 10,
                 about = "Nothing to say"
             )
-        )
+        ).block()!!
         val idOfDeleted = savedProduct.id.toString()
-        productRepository.deleteById(ObjectId(idOfDeleted))
+        productRepository.deleteById(ObjectId(idOfDeleted)).block()
 
         val expectedResponse = GetProductByIdResponse.newBuilder().apply {
             failureBuilder
