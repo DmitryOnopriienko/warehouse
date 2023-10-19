@@ -96,9 +96,9 @@ class UpdateProductNatsControllerTest {
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 
@@ -123,9 +123,9 @@ class UpdateProductNatsControllerTest {
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 }

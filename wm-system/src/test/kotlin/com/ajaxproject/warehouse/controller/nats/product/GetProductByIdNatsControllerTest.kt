@@ -58,9 +58,9 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualProduct = GetProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualProduct = GetProductByIdResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedProduct, actualProduct)
     }
 
@@ -94,9 +94,9 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val response = GetProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val response = GetProductByIdResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, response)
     }
 }

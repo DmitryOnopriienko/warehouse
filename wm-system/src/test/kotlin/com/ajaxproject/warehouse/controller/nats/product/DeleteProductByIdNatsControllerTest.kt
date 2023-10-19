@@ -50,9 +50,9 @@ class DeleteProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasSuccess())
         assertNull(productRepository.findById(originalProduct.id as ObjectId))
     }
@@ -77,9 +77,9 @@ class DeleteProductByIdNatsControllerTest {
             DeleteProductByIdRequest.getDefaultInstance().toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasFailure())
         assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
     }

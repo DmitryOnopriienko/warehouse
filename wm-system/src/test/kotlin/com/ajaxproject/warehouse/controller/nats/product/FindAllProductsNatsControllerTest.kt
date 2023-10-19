@@ -23,7 +23,7 @@ class FindAllProductsNatsControllerTest {
     lateinit var productService: ProductService
 
     @Test
-    fun testReturnsAllProducts() {
+    fun testReturnsAllProducts() {  // TODO: another DB in another profile
         // GIVEN
         val expectedProtoProducts = productService.findAllProducts().map { it.mapToProto() }
         val expectedProducts = FindAllProductsResponse.newBuilder().apply {
@@ -37,9 +37,9 @@ class FindAllProductsNatsControllerTest {
             FindAllProductsRequest.getDefaultInstance().toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualProducts = FindAllProductsResponse.parseFrom(response.get().data)
 
         // THEN
+        val actualProducts = FindAllProductsResponse.parseFrom(response.get().data)
         assertEquals(expectedProducts, actualProducts)
     }
 }

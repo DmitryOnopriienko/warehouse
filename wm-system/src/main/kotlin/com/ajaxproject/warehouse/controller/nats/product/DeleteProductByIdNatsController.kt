@@ -7,6 +7,8 @@ import com.ajaxproject.warehouse.controller.nats.NatsController
 import com.ajaxproject.warehouse.service.ProductService
 import com.google.protobuf.Parser
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Component
 class DeleteProductByIdNatsController(
@@ -17,12 +19,13 @@ class DeleteProductByIdNatsController(
 
     override val parser: Parser<DeleteProductByIdRequest> = DeleteProductByIdRequest.parser()
 
-    override fun handle(request: DeleteProductByIdRequest): DeleteProductByIdResponse =
+    override fun handle(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
         runCatching {
-            productService.deleteById(request.id)
-            buildSuccessResponse()
+            productService.deleteByIdR(request.id)
+                .map { buildSuccessResponse() }
+                .onErrorResume { buildFailureResponse(it).toMono() }
         }.getOrElse { exception ->
-            buildFailureResponse(exception)
+            buildFailureResponse(exception).toMono()
         }
 
     fun buildSuccessResponse(): DeleteProductByIdResponse =

@@ -1,6 +1,6 @@
 package com.ajaxproject.warehouse.controller.nats.product
 
-import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.FIND_ALL
+import com.ajaxproject.api.internal.warehousesvc.NatsSubject
 import com.ajaxproject.api.internal.warehousesvc.commonmodels.product.Product
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsResponse
@@ -8,26 +8,27 @@ import com.ajaxproject.warehouse.controller.nats.NatsController
 import com.ajaxproject.warehouse.service.ProductService
 import com.google.protobuf.Parser
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Component
 class FindAllProductsNatsController(
     val productService: ProductService
 ) : NatsController<FindAllProductsRequest, FindAllProductsResponse> {
 
-    override val subject: String = FIND_ALL
+    override val subject: String = NatsSubject.Product.FIND_ALL
 
     override val parser: Parser<FindAllProductsRequest> = FindAllProductsRequest.parser()
 
-    override fun handle(request: FindAllProductsRequest): FindAllProductsResponse {
-        return runCatching {
-            buildSuccessResponse(
-                productService
-                    .findAllProducts()
-                    .map { it.mapToProto() })
+    override fun handle(request: FindAllProductsRequest): Mono<FindAllProductsResponse> =
+        runCatching {
+            productService.findAllProductsR()
+                .collectList()
+                .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
+                .onErrorResume { buildFailureResponse(it).toMono() }
         }.getOrElse { exception ->
-            buildFailureResponse(exception)
+            buildFailureResponse(exception).toMono()
         }
-    }
 
     fun buildSuccessResponse(products: List<Product>): FindAllProductsResponse =
         FindAllProductsResponse.newBuilder().apply {
