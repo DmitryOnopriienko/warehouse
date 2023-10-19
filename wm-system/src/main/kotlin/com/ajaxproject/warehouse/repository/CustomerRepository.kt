@@ -26,7 +26,7 @@ interface CustomerRepository {
 
     fun deleteById(id: ObjectId)
 
-    fun deleteByIdR(id: ObjectId)
+    fun deleteByIdR(id: ObjectId): Mono<Unit>
 
     fun findCustomerWaybills(id: ObjectId): List<MongoWaybill>
 

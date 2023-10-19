@@ -116,9 +116,8 @@ class WaybillServiceImpl(
             .map { it.mapToDataDto() }
     }
 
-    override fun deleteByIdR(id: String) {
-        waybillRepository.deleteById(ObjectId(id))
-    }
+    override fun deleteByIdR(id: String): Mono<Unit> =
+        waybillRepository.deleteByIdR(ObjectId(id))
 
     @Transactional
     override fun updateWaybillInfoR(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> {

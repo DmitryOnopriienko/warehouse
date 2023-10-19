@@ -65,5 +65,5 @@ class WaybillsController(
 
     @DeleteMapping("/r/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybillR(@PathVariable id: String): Unit  = waybillService.deleteByIdR(id)
+    fun deleteWaybillR(@PathVariable id: String): Mono<Unit> = waybillService.deleteByIdR(id)
 }

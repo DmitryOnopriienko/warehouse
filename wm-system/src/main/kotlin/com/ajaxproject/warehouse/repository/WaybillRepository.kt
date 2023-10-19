@@ -23,7 +23,7 @@ interface WaybillRepository {
 
     fun createWaybillR(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
 
-    fun deleteByIdR(id: ObjectId)
+    fun deleteByIdR(id: ObjectId): Mono<Unit>
 
     fun saveR(mongoWaybill: MongoWaybill): Mono<MongoWaybill>
 }

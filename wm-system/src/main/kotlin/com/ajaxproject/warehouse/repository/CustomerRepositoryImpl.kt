@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.findAndRemove
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.remove
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -43,12 +44,11 @@ class CustomerRepositoryImpl(
     override fun save(mongoCustomer: MongoCustomer): MongoCustomer =
         mongoTemplate.save(mongoCustomer, MongoCustomer.COLLECTION_NAME)
 
-    override fun deleteByIdR(id: ObjectId) {
-        reactiveMongoTemplate.findAndRemove<MongoCustomer>(
+    override fun deleteByIdR(id: ObjectId): Mono<Unit> =
+        reactiveMongoTemplate.remove<MongoCustomer>(
             Query(Criteria.where("_id").`is`(id)),
             MongoCustomer.COLLECTION_NAME
-        )
-    }
+        ).thenReturn(Unit)
 
     override fun deleteById(id: ObjectId) {
         mongoTemplate.findAndRemove<MongoCustomer>(

@@ -25,7 +25,7 @@ interface ProductRepository {
 
     fun deleteById(id: ObjectId)
 
-    fun deleteByIdR(id: ObjectId)
+    fun deleteByIdR(id: ObjectId): Mono<Unit>
 
     fun getValidIds(ids: List<ObjectId>): List<String>
 

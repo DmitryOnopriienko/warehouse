@@ -66,5 +66,5 @@ class ProductsController(
 
     @DeleteMapping("/r/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProductR(@PathVariable id: String): Unit = productService.deleteByIdR(id)
+    fun deleteProductR(@PathVariable id: String): Mono<Unit> = productService.deleteByIdR(id)
 }

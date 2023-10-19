@@ -72,9 +72,8 @@ class ProductServiceImpl(
             .map { it.mapToDataDto() }
     }
 
-    override fun deleteByIdR(id: String) {
+    override fun deleteByIdR(id: String): Mono<Unit> =
         productRepository.deleteByIdR(ObjectId(id))
-    }
 
     fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id.toString(),

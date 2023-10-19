@@ -19,7 +19,7 @@ interface CustomerService {
 
     fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto
 
-    fun deleteByIdR(id: String)
+    fun deleteByIdR(id: String): Mono<Unit>
 
     fun updateCustomerR(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto>
 

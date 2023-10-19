@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.findAndRemove
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.remove
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -57,12 +58,11 @@ class ProductRepositoryImpl(
     override fun saveR(mongoProduct: MongoProduct): Mono<MongoProduct> =
         reactiveMongoTemplate.save(mongoProduct, MongoProduct.COLLECTION_NAME)
 
-    override fun deleteByIdR(id: ObjectId) {
-        reactiveMongoTemplate.findAndRemove<MongoProduct>(
+    override fun deleteByIdR(id: ObjectId): Mono<Unit> =
+        reactiveMongoTemplate.remove<MongoProduct>(
             Query(Criteria.where("_id").`is`(id)),
             MongoProduct.COLLECTION_NAME
-        )
-    }
+        ).thenReturn(Unit)
 
     override fun getValidIdsR(ids: List<ObjectId>): Flux<String> =
         reactiveMongoTemplate.find<MongoProduct>(

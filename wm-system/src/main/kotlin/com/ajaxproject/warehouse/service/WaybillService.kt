@@ -25,7 +25,7 @@ interface WaybillService {
 
     fun createWaybillR(createDto: WaybillCreateDto): Mono<WaybillDataDto>
 
-    fun deleteByIdR(id: String)
+    fun deleteByIdR(id: String): Mono<Unit>
 
     fun updateWaybillInfoR(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto>
 }

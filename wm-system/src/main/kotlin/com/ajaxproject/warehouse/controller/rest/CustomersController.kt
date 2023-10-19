@@ -69,5 +69,5 @@ class CustomersController(
 
     @DeleteMapping("/r/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomerR(@PathVariable id: String): Unit = customerService.deleteByIdR(id)
+    fun deleteCustomerR(@PathVariable id: String): Mono<Unit> = customerService.deleteByIdR(id)
 }

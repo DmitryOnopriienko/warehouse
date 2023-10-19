@@ -27,5 +27,5 @@ interface ProductService {
 
     fun updateProductR(@Valid updateDto: ProductSaveDto, id: String): Mono<ProductDataDto>
 
-    fun deleteByIdR(id: String)
+    fun deleteByIdR(id: String): Mono<Unit>
 }

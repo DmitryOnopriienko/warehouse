@@ -73,9 +73,8 @@ class CustomerServiceImpl(
         customerRepository.deleteById(ObjectId(id))
     }
 
-    override fun deleteByIdR(id: String) {
+    override fun deleteByIdR(id: String): Mono<Unit> =
         customerRepository.deleteByIdR(ObjectId(id))
-    }
 
     fun MongoCustomer.mapToLiteDto(): CustomerDataLiteDto = CustomerDataLiteDto(
         id = id.toString(),

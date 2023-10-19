@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.findAndRemove
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.remove
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -49,12 +50,11 @@ class WaybillRepositoryImpl(
     override fun createWaybillR(mongoWaybill: MongoWaybill): Mono<MongoWaybill> =
         reactiveMongoTemplate.insert(mongoWaybill, MongoWaybill.COLLECTION_NAME)
 
-    override fun deleteByIdR(id: ObjectId) {
-        reactiveMongoTemplate.findAndRemove<MongoWaybill>(
+    override fun deleteByIdR(id: ObjectId): Mono<Unit> =
+        reactiveMongoTemplate.remove<MongoWaybill>(
             Query(Criteria.where("_id").`is`(id)),
             MongoWaybill.COLLECTION_NAME
-        )
-    }
+        ).thenReturn(Unit)
 
     override fun saveR(mongoWaybill: MongoWaybill): Mono<MongoWaybill> =
         reactiveMongoTemplate.save(mongoWaybill, MongoWaybill.COLLECTION_NAME)
