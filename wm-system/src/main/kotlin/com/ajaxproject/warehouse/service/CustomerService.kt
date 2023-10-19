@@ -9,23 +9,13 @@ import reactor.core.publisher.Mono
 
 interface CustomerService {
 
-    fun findAllCustomers(): List<CustomerDataLiteDto>
+    fun deleteById(id: String): Mono<Unit>
 
-    fun getById(id: String): CustomerDataDto
+    fun updateCustomer(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto>
 
-    fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto
+    fun createCustomer(createDto: CustomerCreateDto): Mono<CustomerDataDto>
 
-    fun deleteById(id: String)
+    fun getById(id: String): Mono<CustomerDataDto>
 
-    fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto
-
-    fun deleteByIdR(id: String): Mono<Unit>
-
-    fun updateCustomerR(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto>
-
-    fun createCustomerR(createDto: CustomerCreateDto): Mono<CustomerDataDto>
-
-    fun getByIdR(id: String): Mono<CustomerDataDto>
-
-    fun findAllCustomersR(): Flux<CustomerDataLiteDto>
+    fun findAllCustomers(): Flux<CustomerDataLiteDto>
 }

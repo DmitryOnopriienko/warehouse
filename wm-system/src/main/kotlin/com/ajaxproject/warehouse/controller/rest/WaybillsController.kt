@@ -25,45 +25,24 @@ class WaybillsController(
     val waybillService: WaybillService
 ) {
 
-    @GetMapping
-    fun findAllWaybills(): List<WaybillDataLiteDto> = waybillService.findAllWaybills()
+    @GetMapping  // TODO investigate about auto caching
+    fun findAllWaybillsR(): Flux<WaybillDataLiteDto> = waybillService.findAllWaybills()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: String): WaybillDataDto = waybillService.getById(id)
+    fun findByIdR(@PathVariable id: String): Mono<WaybillDataDto> = waybillService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto): WaybillDataDto =
+    fun createWaybillR(@RequestBody @Valid createDto: WaybillCreateDto): Mono<WaybillDataDto> =
         waybillService.createWaybill(createDto)
 
     @PutMapping("/{id}")
-    fun updateWaybillInfo(
-        @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
-        @PathVariable id: String
-    ): WaybillDataDto = waybillService.updateWaybillInfo(infoUpdateDto, id)
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybill(@PathVariable id: String): Unit  = waybillService.deleteById(id)
-
-    @GetMapping("/r/")  // TODO investigate about auto caching
-    fun findAllWaybillsR(): Flux<WaybillDataLiteDto> = waybillService.findAllWaybillsR()
-
-    @GetMapping("/r/{id}")
-    fun findByIdR(@PathVariable id: String): Mono<WaybillDataDto> = waybillService.getByIdR(id)
-
-    @PostMapping("/r/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createWaybillR(@RequestBody @Valid createDto: WaybillCreateDto): Mono<WaybillDataDto> =
-        waybillService.createWaybillR(createDto)
-
-    @PutMapping("/r/{id}")
     fun updateWaybillInfoR(
         @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
         @PathVariable id: String
-    ): Mono<WaybillDataDto> = waybillService.updateWaybillInfoR(infoUpdateDto, id)
+    ): Mono<WaybillDataDto> = waybillService.updateWaybillInfo(infoUpdateDto, id)
 
-    @DeleteMapping("/r/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybillR(@PathVariable id: String): Mono<Unit> = waybillService.deleteByIdR(id)
+    fun deleteWaybillR(@PathVariable id: String): Mono<Unit> = waybillService.deleteById(id)
 }

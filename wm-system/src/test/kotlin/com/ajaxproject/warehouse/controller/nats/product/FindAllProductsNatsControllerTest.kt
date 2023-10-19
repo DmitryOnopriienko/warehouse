@@ -25,7 +25,10 @@ class FindAllProductsNatsControllerTest {
     @Test
     fun testReturnsAllProducts() {  // TODO: another DB in another profile
         // GIVEN
-        val expectedProtoProducts = productService.findAllProducts().map { it.mapToProto() }
+        val expectedProtoProducts = productService.findAllProducts()
+            .collectList()
+            .block()!!
+            .map { it.mapToProto() }
         val expectedProducts = FindAllProductsResponse.newBuilder().apply {
             successBuilder.productsBuilder
                 .addAllProduct(expectedProtoProducts)

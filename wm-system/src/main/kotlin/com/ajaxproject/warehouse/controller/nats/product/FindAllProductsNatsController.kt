@@ -22,7 +22,7 @@ class FindAllProductsNatsController(
 
     override fun handle(request: FindAllProductsRequest): Mono<FindAllProductsResponse> =
         runCatching {
-            productService.findAllProductsR()
+            productService.findAllProducts()
                 .collectList()
                 .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
                 .onErrorResume { buildFailureResponse(it).toMono() }

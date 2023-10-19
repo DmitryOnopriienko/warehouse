@@ -26,48 +26,25 @@ class CustomersController(
 ) {
 
     @GetMapping
-    fun findAll(): List<CustomerDataLiteDto> = customerService.findAllCustomers()
-
-    @GetMapping("/r/")
-    fun findAllR(): Flux<CustomerDataLiteDto> = customerService.findAllCustomersR()
+    fun findAllR(): Flux<CustomerDataLiteDto> = customerService.findAllCustomers()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: String): CustomerDataDto =
-        customerService.getById(id)
-
-    @GetMapping("/r/{id}")
     fun findByIdR(@PathVariable id: String): Mono<CustomerDataDto> =
-        customerService.getByIdR(id)
+        customerService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomer(
-        @RequestBody @Valid createDto: CustomerCreateDto
-    ): CustomerDataDto = customerService.createCustomer(createDto)
-
-    @PostMapping("/r/create")
-    @ResponseStatus(HttpStatus.CREATED)
     fun createCustomerR(
         @RequestBody @Valid createDto: CustomerCreateDto
-    ): Mono<CustomerDataDto> = customerService.createCustomerR(createDto)
+    ): Mono<CustomerDataDto> = customerService.createCustomer(createDto)
 
     @PutMapping("/{id}")
-    fun updateCustomer(
-        @PathVariable id: String,
-        @RequestBody @Valid updateDto: CustomerUpdateDto
-    ): CustomerDataDto = customerService.updateCustomer(updateDto, id)
-
-    @PutMapping("/r/{id}")
     fun updateCustomerR(
         @PathVariable id: String,
         @RequestBody @Valid updateDto: CustomerUpdateDto
-    ): Mono<CustomerDataDto> = customerService.updateCustomerR(updateDto, id)
+    ): Mono<CustomerDataDto> = customerService.updateCustomer(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomer(@PathVariable id: String): Unit = customerService.deleteById(id)
-
-    @DeleteMapping("/r/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomerR(@PathVariable id: String): Mono<Unit> = customerService.deleteByIdR(id)
+    fun deleteCustomerR(@PathVariable id: String): Mono<Unit> = customerService.deleteById(id)
 }

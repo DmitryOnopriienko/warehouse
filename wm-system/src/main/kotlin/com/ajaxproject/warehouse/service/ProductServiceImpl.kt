@@ -20,48 +20,22 @@ class ProductServiceImpl(
     val productRepository: ProductRepository
 ) : ProductService {
 
-    override fun findAllProducts(): List<ProductDataLiteDto> =
-        productRepository.findAll().map { it.mapToLiteDto() }
-
-    override fun getById(id: String): ProductDataDto {
-        val mongoProduct: MongoProduct = productRepository.findById(ObjectId(id))
-            ?: throw NotFoundException("Product with id $id not found")
-        return mongoProduct.mapToDataDto()
-    }
-
-    override fun createProduct(@Valid createDto: ProductSaveDto): ProductDataDto {
-        val product: MongoProduct = productRepository.createProduct(createDto.mapToEntity())
-        return product.mapToDataDto()
-    }
-
-    @Transactional
-    override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): ProductDataDto {
-        val product: MongoProduct = productRepository.findById(ObjectId(id))
-            ?: throw NotFoundException("Product with id $id not found")
-        val updatedProduct = product.setUpdatedData(updateDto)
-        return productRepository.save(updatedProduct).mapToDataDto()
-    }
-
-    override fun deleteById(id: String) {
-        productRepository.deleteById(ObjectId(id))
-    }
-
-    override fun findAllProductsR(): Flux<ProductDataLiteDto> =
+    override fun findAllProducts(): Flux<ProductDataLiteDto> =
         productRepository.findAllR().map { it.mapToLiteDto() }
 
-    override fun getByIdR(id: String): Mono<ProductDataDto> {
+    override fun getById(id: String): Mono<ProductDataDto> {
         val customer = productRepository.findByIdR(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
         return customer.map { it.mapToDataDto() }
     }
 
-    override fun createProductR(@Valid createDto: ProductSaveDto): Mono<ProductDataDto> {
+    override fun createProduct(@Valid createDto: ProductSaveDto): Mono<ProductDataDto> {
         val customer = productRepository.createProductR(createDto.mapToEntity())
         return customer.map { it.mapToDataDto() }
     }
 
     @Transactional
-    override fun updateProductR(@Valid updateDto: ProductSaveDto, id: String): Mono<ProductDataDto> {
+    override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): Mono<ProductDataDto> {
         val product = productRepository.findByIdR(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
         return product
@@ -72,7 +46,7 @@ class ProductServiceImpl(
             .map { it.mapToDataDto() }
     }
 
-    override fun deleteByIdR(id: String): Mono<Unit> =
+    override fun deleteById(id: String): Mono<Unit> =
         productRepository.deleteByIdR(ObjectId(id))
 
     fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(

@@ -24,7 +24,7 @@ class UpdateProductNatsController(
     override fun handle(request: UpdateProductRequest): Mono<UpdateProductResponse> {
         if (!request.hasId()) return buildFailureResponse(IllegalArgumentException("id must be provided")).toMono()
         return runCatching {
-            productService.updateProductR(
+            productService.updateProduct(
                 request.mapToDto(),
                 request.id
             )

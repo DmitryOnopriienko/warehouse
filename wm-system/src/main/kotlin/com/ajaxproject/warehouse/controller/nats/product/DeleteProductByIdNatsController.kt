@@ -21,7 +21,7 @@ class DeleteProductByIdNatsController(
 
     override fun handle(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
         runCatching {
-            productService.deleteByIdR(request.id)
+            productService.deleteById(request.id)
                 .map { buildSuccessResponse() }
                 .onErrorResume { buildFailureResponse(it).toMono() }
         }.getOrElse { exception ->

@@ -9,23 +9,13 @@ import reactor.core.publisher.Mono
 
 interface WaybillService {
 
-    fun findAllWaybills(): List<WaybillDataLiteDto>
+    fun findAllWaybills(): Flux<WaybillDataLiteDto>
 
-    fun getById(id: String): WaybillDataDto
+    fun getById(id: String): Mono<WaybillDataDto>
 
-    fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto
+    fun createWaybill(createDto: WaybillCreateDto): Mono<WaybillDataDto>
 
-    fun deleteById(id: String)
+    fun deleteById(id: String): Mono<Unit>
 
-    fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto
-
-    fun findAllWaybillsR(): Flux<WaybillDataLiteDto>
-
-    fun getByIdR(id: String): Mono<WaybillDataDto>
-
-    fun createWaybillR(createDto: WaybillCreateDto): Mono<WaybillDataDto>
-
-    fun deleteByIdR(id: String): Mono<Unit>
-
-    fun updateWaybillInfoR(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto>
+    fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto>
 }

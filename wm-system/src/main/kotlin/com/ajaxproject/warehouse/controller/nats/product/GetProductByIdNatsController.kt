@@ -22,7 +22,7 @@ class GetProductByIdNatsController(
 
     override fun handle(request: GetProductByIdRequest): Mono<GetProductByIdResponse> =
         runCatching {
-            productService.getByIdR(request.id)
+            productService.getById(request.id)
                 .map { buildSuccessResponse(it.mapToProto()) }
                 .onErrorResume { buildFailureResponse(it).toMono() }
         }.getOrElse { exception ->

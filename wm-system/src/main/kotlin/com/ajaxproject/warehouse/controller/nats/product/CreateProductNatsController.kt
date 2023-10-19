@@ -24,7 +24,7 @@ class CreateProductNatsController(
     override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =   // TODO ask if this is ok
         runCatching {
             productService
-                .createProductR(request.mapToDto())
+                .createProduct(request.mapToDto())
                 .map { buildSuccessResponse(it.mapToProto()) }
                 .onErrorResume { buildFailureResponse(it).toMono() }
         }.getOrElse { exception ->

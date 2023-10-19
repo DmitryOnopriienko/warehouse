@@ -25,46 +25,24 @@ class ProductsController(
 ) {
 
     @GetMapping
-    fun findAllProducts(): List<ProductDataLiteDto> = productService.findAllProducts()
+    fun findAllProductsR(): Flux<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: String): ProductDataDto =
+    fun findByIdR(@PathVariable id: String): Mono<ProductDataDto> =
         productService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProduct(@RequestBody @Valid createDto: ProductSaveDto): ProductDataDto =
+    fun createProductR(@RequestBody @Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
         productService.createProduct(createDto)
 
     @PutMapping("/{id}")
-    fun updateProduct(
-        @RequestBody @Valid updateDto: ProductSaveDto,
-        @PathVariable id: String
-    ): ProductDataDto = productService.updateProduct(updateDto, id)
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProduct(@PathVariable id: String): Unit = productService.deleteById(id)
-
-    @GetMapping("/r/")
-    fun findAllProductsR(): Flux<ProductDataLiteDto> = productService.findAllProductsR()
-
-    @GetMapping("/r/{id}")
-    fun findByIdR(@PathVariable id: String): Mono<ProductDataDto> =
-        productService.getByIdR(id)
-
-    @PostMapping("/r/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createProductR(@RequestBody @Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
-        productService.createProductR(createDto)
-
-    @PutMapping("/r/{id}")
     fun updateProductR(
         @RequestBody @Valid updateDto: ProductSaveDto,
         @PathVariable id: String
-    ): Mono<ProductDataDto> = productService.updateProductR(updateDto, id)
+    ): Mono<ProductDataDto> = productService.updateProduct(updateDto, id)
 
-    @DeleteMapping("/r/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProductR(@PathVariable id: String): Mono<Unit> = productService.deleteByIdR(id)
+    fun deleteProductR(@PathVariable id: String): Mono<Unit> = productService.deleteById(id)
 }

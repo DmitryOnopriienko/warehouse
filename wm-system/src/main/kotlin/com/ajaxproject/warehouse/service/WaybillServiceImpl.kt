@@ -29,60 +29,18 @@ class WaybillServiceImpl(
     val customerRepository: CustomerRepository
 ) : WaybillService {
 
-    override fun findAllWaybills(): List<WaybillDataLiteDto> =
-        waybillRepository.findAll().map { it.mapToLiteDto() }
-
-    override fun getById(id: String): WaybillDataDto {
-        val waybill: MongoWaybill = waybillRepository.findById(ObjectId(id))
-            ?: throw NotFoundException("Waybill with id $id not found")
-        return waybill.mapToDataDto()
-    }
-
-    @Transactional
-    override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): WaybillDataDto {
-        val mongoWaybill: MongoWaybill = waybillRepository.findById(ObjectId(id))
-            ?: throw NotFoundException("Waybill with id $id not found")
-        customerRepository.findById(ObjectId(infoUpdateDto.customerId))
-            ?: throw NotFoundException("Customer with id ${infoUpdateDto.customerId} not found")
-        val updatedWaybill = mongoWaybill.setUpdatedData(infoUpdateDto)
-        return waybillRepository.save(updatedWaybill).mapToDataDto()
-    }
-
-    @Transactional
-    override fun createWaybill(createDto: WaybillCreateDto): WaybillDataDto {
-        customerRepository.findById(ObjectId(createDto.customerId))
-            ?: throw NotFoundException("Customer with id ${createDto.customerId} not found")
-
-        val validIdList = productRepository.getValidIds(createDto.products.map { ObjectId(it.productId) })
-        createDto.products.asSequence()
-            .map { it.productId as String }
-            .minus(validIdList.toSet())
-            .map { "Product with id $it not found" }
-            .toList()
-            .takeIf { it.isEmpty() }
-            ?.let { throw NotFoundException(it) }
-
-        return waybillRepository
-            .createWaybill(createDto.mapToEntity())
-            .mapToDataDto()
-    }
-
-    override fun deleteById(id: String) {
-        waybillRepository.deleteById(ObjectId(id))
-    }
-
-    override fun findAllWaybillsR(): Flux<WaybillDataLiteDto> =
+    override fun findAllWaybills(): Flux<WaybillDataLiteDto> =
         waybillRepository.findAllR().map { it.mapToLiteDto() }
 
-    override fun getByIdR(id: String): Mono<WaybillDataDto> {   // TODO make kotlin style
+    override fun getById(id: String): Mono<WaybillDataDto> {   // TODO make kotlin style
         val waybill = waybillRepository.findByIdR(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Waybill with id $id not found")) }
         return waybill.map { it.mapToDataDto() }
     }
 
     @Transactional
-    override fun createWaybillR(createDto: WaybillCreateDto): Mono<WaybillDataDto> {
-        return customerRepository.findByIdR(ObjectId(createDto.customerId))
+    override fun createWaybill(createDto: WaybillCreateDto): Mono<WaybillDataDto> {
+        return customerRepository.findByIdReactive(ObjectId(createDto.customerId))
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id ${createDto.customerId} not found")) }
             .flatMap {
                 val productIds = createDto.products.map { ObjectId(it.productId) }
@@ -116,15 +74,15 @@ class WaybillServiceImpl(
             .map { it.mapToDataDto() }
     }
 
-    override fun deleteByIdR(id: String): Mono<Unit> =
+    override fun deleteById(id: String): Mono<Unit> =
         waybillRepository.deleteByIdR(ObjectId(id))
 
     @Transactional
-    override fun updateWaybillInfoR(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> {
+    override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> {
         return waybillRepository.findByIdR(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Waybill with id $id not found")) }
             .flatMap {
-                customerRepository.findByIdR(ObjectId(infoUpdateDto.customerId))
+                customerRepository.findByIdReactive(ObjectId(infoUpdateDto.customerId))
                     .switchIfEmpty {
                         Mono.error(NotFoundException("Customer with id ${infoUpdateDto.customerId} not found"))
                     }.thenReturn(it)
