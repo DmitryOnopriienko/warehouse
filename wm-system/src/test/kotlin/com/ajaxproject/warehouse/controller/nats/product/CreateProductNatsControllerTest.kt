@@ -47,7 +47,6 @@ class CreateProductNatsControllerTest {
 
         // THEN
         val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
-        println("LOG: actualResponse = $actualResponse")
         assertTrue(actualResponse.hasSuccess())
         val actualProduct = actualResponse.success.product
         assertEquals(expectedProduct.title, actualProduct.title)

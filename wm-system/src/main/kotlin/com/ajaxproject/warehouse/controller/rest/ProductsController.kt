@@ -25,24 +25,24 @@ class ProductsController(
 ) {
 
     @GetMapping
-    fun findAllProductsR(): Flux<ProductDataLiteDto> = productService.findAllProducts()
+    fun findAllProducts(): Flux<ProductDataLiteDto> = productService.findAllProducts()
 
     @GetMapping("/{id}")
-    fun findByIdR(@PathVariable id: String): Mono<ProductDataDto> =
+    fun findById(@PathVariable id: String): Mono<ProductDataDto> =
         productService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProductR(@RequestBody @Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
+    fun createProduct(@RequestBody @Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
         productService.createProduct(createDto)
 
     @PutMapping("/{id}")
-    fun updateProductR(
+    fun updateProduct(
         @RequestBody @Valid updateDto: ProductSaveDto,
         @PathVariable id: String
     ): Mono<ProductDataDto> = productService.updateProduct(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProductR(@PathVariable id: String): Mono<Unit> = productService.deleteById(id)
+    fun deleteProduct(@PathVariable id: String): Mono<Unit> = productService.deleteById(id)
 }

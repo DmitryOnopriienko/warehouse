@@ -26,23 +26,23 @@ class WaybillsController(
 ) {
 
     @GetMapping  // TODO investigate about auto caching
-    fun findAllWaybillsR(): Flux<WaybillDataLiteDto> = waybillService.findAllWaybills()
+    fun findAllWaybills(): Flux<WaybillDataLiteDto> = waybillService.findAllWaybills()
 
     @GetMapping("/{id}")
-    fun findByIdR(@PathVariable id: String): Mono<WaybillDataDto> = waybillService.getById(id)
+    fun findById(@PathVariable id: String): Mono<WaybillDataDto> = waybillService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createWaybillR(@RequestBody @Valid createDto: WaybillCreateDto): Mono<WaybillDataDto> =
+    fun createWaybill(@RequestBody @Valid createDto: WaybillCreateDto): Mono<WaybillDataDto> =
         waybillService.createWaybill(createDto)
 
     @PutMapping("/{id}")
-    fun updateWaybillInfoR(
+    fun updateWaybillInfo(
         @RequestBody @Valid infoUpdateDto: WaybillInfoUpdateDto,
         @PathVariable id: String
     ): Mono<WaybillDataDto> = waybillService.updateWaybillInfo(infoUpdateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteWaybillR(@PathVariable id: String): Mono<Unit> = waybillService.deleteById(id)
+    fun deleteWaybill(@PathVariable id: String): Mono<Unit> = waybillService.deleteById(id)
 }

@@ -26,25 +26,25 @@ class CustomersController(
 ) {
 
     @GetMapping
-    fun findAllR(): Flux<CustomerDataLiteDto> = customerService.findAllCustomers()
+    fun findAll(): Flux<CustomerDataLiteDto> = customerService.findAllCustomers()
 
     @GetMapping("/{id}")
-    fun findByIdR(@PathVariable id: String): Mono<CustomerDataDto> =
+    fun findById(@PathVariable id: String): Mono<CustomerDataDto> =
         customerService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomerR(
+    fun createCustomer(
         @RequestBody @Valid createDto: CustomerCreateDto
     ): Mono<CustomerDataDto> = customerService.createCustomer(createDto)
 
     @PutMapping("/{id}")
-    fun updateCustomerR(
+    fun updateCustomer(
         @PathVariable id: String,
         @RequestBody @Valid updateDto: CustomerUpdateDto
     ): Mono<CustomerDataDto> = customerService.updateCustomer(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomerR(@PathVariable id: String): Mono<Unit> = customerService.deleteById(id)
+    fun deleteCustomer(@PathVariable id: String): Mono<Unit> = customerService.deleteById(id)
 }
