@@ -22,11 +22,10 @@ class CustomerServiceImpl(
     override fun findAllCustomers(): Flux<CustomerDataLiteDto> =
         customerRepository.findAll().map { it.mapToLiteDto() }
 
-    override fun getById(id: String): Mono<CustomerDataDto> {
-        val mongoCustomer: Mono<MongoCustomer> = customerRepository.findById(ObjectId(id))
+    override fun getById(id: String): Mono<CustomerDataDto> =
+        customerRepository.findById(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
-        return mongoCustomer.flatMap { it.mapToDataDto() }
-    }
+            .flatMap { it.mapToDataDto() }
 
     override fun createCustomer(createDto: CustomerCreateDto): Mono<CustomerDataDto> {
         val customer: Mono<MongoCustomer> = customerRepository.createCustomer(createDto.mapToEntity())
@@ -34,16 +33,14 @@ class CustomerServiceImpl(
     }
 
     @Transactional
-    override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto> {
-        val customer = customerRepository.findById(ObjectId(id))
+    override fun updateCustomer(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto> =
+        customerRepository.findById(ObjectId(id))
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id $id not found")) }
-        return customer
             .map { it.setUpdatedData(updateDto) }
             .flatMap {
                 customerRepository.save(it)
             }
             .flatMap { it.mapToDataDto() }
-    }
 
     override fun deleteById(id: String): Mono<Unit> =
         customerRepository.deleteById(ObjectId(id))
