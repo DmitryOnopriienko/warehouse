@@ -10,7 +10,6 @@ plugins {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux:3.1.4")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:3.1.4")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.1.4")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.2")
 
