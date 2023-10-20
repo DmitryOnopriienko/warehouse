@@ -21,20 +21,21 @@ class UpdateProductNatsController(
 
     override val parser: Parser<UpdateProductRequest> = UpdateProductRequest.parser()
 
-    override fun handle(request: UpdateProductRequest): Mono<UpdateProductResponse> {
-        if (!request.hasId()) return buildFailureResponse(IllegalArgumentException("id must be provided")).toMono()
-        return runCatching {
-            productService.updateProduct(
-                request.mapToDto(),
-                request.id
-            )
-                .map { buildSuccessResponse(it.mapToProto()) }
-                .onErrorResume { buildFailureResponse(it).toMono() }
-        }.getOrElse { exception ->
-            buildFailureResponse(exception).toMono()
+    override fun handle(request: UpdateProductRequest): Mono<UpdateProductResponse> =
+        Mono.fromSupplier {
+            if (!request.hasId()) {
+                throw IllegalArgumentException("id must be provided")
+            }
+            request
         }
-    }
-
+            .flatMap {
+                productService.updateProduct(
+                    request.mapToDto(),
+                    request.id
+                )
+                    .map { buildSuccessResponse(it.mapToProto()) }
+            }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): UpdateProductResponse =
         UpdateProductResponse.newBuilder().apply {
