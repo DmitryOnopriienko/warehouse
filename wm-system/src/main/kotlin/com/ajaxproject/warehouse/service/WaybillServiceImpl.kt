@@ -120,10 +120,12 @@ class WaybillServiceImpl(
 
     fun MongoWaybill.getListOfProducts(): Mono<List<WaybillDataDto.WaybillProductDataDto>> =
         products.asSequence()
-            .map {
-                productRepository.findById(it.productId)
-                    .map { it.mapToWaybillProductDataDto(it.amount) }
-                    .switchIfEmpty { Mono.error(NotFoundException("Product with id ${it.productId} not found")) }
+            .map { waybillProduct ->
+                productRepository.findById(waybillProduct.productId)
+                    .map { it.mapToWaybillProductDataDto(waybillProduct.amount) }
+                    .switchIfEmpty {
+                        Mono.error(NotFoundException("Product with id ${waybillProduct.productId} not found"))
+                    }
             }
             .toFlux()
             .flatMap { it }
