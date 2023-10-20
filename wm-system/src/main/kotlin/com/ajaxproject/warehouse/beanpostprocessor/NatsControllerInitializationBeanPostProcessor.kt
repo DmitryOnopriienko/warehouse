@@ -23,8 +23,8 @@ class NatsControllerInitializationBeanPostProcessor(val connection: Connection) 
         connection.createDispatcher { message: Message ->
             val parsedData = controller.parser.parseFrom(message.data)
             controller.handle(parsedData)
-                .subscribeOn(Schedulers.boundedElastic())
                 .map { it.toByteArray() }
+                .subscribeOn(Schedulers.boundedElastic())
                 .subscribe { connection.publish(message.replyTo, it) }
         }.apply { subscribe(controller.subject) }
     }
