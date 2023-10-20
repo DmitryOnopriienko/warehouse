@@ -59,9 +59,7 @@ class WaybillServiceImpl(
                 .map { it.productId as String }
                 .filter { it !in validIdList }
                 .toList()
-            if (notFoundIds.isEmpty()) {
-                sink.complete()
-            } else {
+            if (notFoundIds.isNotEmpty()) {
                 val errorMessage = notFoundIds.map { "Product with id $it not found" }
                 sink.error(NotFoundException(errorMessage))
             }
