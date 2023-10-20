@@ -18,20 +18,19 @@ class WaybillRepositoryImpl(
 ) : WaybillRepository {
 
     override fun findAll(): Flux<MongoWaybill> =
-        reactiveMongoTemplate.findAll<MongoWaybill>(MongoWaybill.COLLECTION_NAME)
+        reactiveMongoTemplate.findAll<MongoWaybill>()
 
     override fun findById(id: ObjectId): Mono<MongoWaybill> =
-        reactiveMongoTemplate.findById<MongoWaybill>(id, MongoWaybill.COLLECTION_NAME)
+        reactiveMongoTemplate.findById<MongoWaybill>(id)
 
     override fun createWaybill(mongoWaybill: MongoWaybill): Mono<MongoWaybill> =
-        reactiveMongoTemplate.insert(mongoWaybill, MongoWaybill.COLLECTION_NAME)
+        reactiveMongoTemplate.insert(mongoWaybill)
 
     override fun deleteById(id: ObjectId): Mono<Unit> =
         reactiveMongoTemplate.remove<MongoWaybill>(
-            Query(Criteria.where("_id").`is`(id)),
-            MongoWaybill.COLLECTION_NAME
+            Query(Criteria.where("_id").`is`(id))
         ).thenReturn(Unit)
 
     override fun save(mongoWaybill: MongoWaybill): Mono<MongoWaybill> =
-        reactiveMongoTemplate.save(mongoWaybill, MongoWaybill.COLLECTION_NAME)
+        reactiveMongoTemplate.save(mongoWaybill)
 }

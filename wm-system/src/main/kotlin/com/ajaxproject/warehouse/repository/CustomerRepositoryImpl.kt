@@ -20,26 +20,24 @@ class CustomerRepositoryImpl(
 ) : CustomerRepository {
 
     override fun findAll(): Flux<MongoCustomer> =
-        reactiveMongoTemplate.findAll<MongoCustomer>(MongoCustomer.COLLECTION_NAME)
+        reactiveMongoTemplate.findAll<MongoCustomer>()
 
     override fun findById(id: ObjectId): Mono<MongoCustomer> =
-        reactiveMongoTemplate.findById<MongoCustomer>(id, MongoCustomer.COLLECTION_NAME)
+        reactiveMongoTemplate.findById<MongoCustomer>(id)
 
     override fun createCustomer(mongoCustomer: MongoCustomer): Mono<MongoCustomer> =
-        reactiveMongoTemplate.insert(mongoCustomer, MongoCustomer.COLLECTION_NAME)
+        reactiveMongoTemplate.insert(mongoCustomer)
 
     override fun save(mongoCustomer: MongoCustomer): Mono<MongoCustomer> =
-        reactiveMongoTemplate.save(mongoCustomer, MongoCustomer.COLLECTION_NAME)
+        reactiveMongoTemplate.save(mongoCustomer)
 
     override fun deleteById(id: ObjectId): Mono<Unit> =
         reactiveMongoTemplate.remove<MongoCustomer>(
-            Query(Criteria.where("_id").`is`(id)),
-            MongoCustomer.COLLECTION_NAME
+            Query(Criteria.where("_id").`is`(id))
         ).thenReturn(Unit)
 
     override fun findCustomerWaybills(id: ObjectId): Flux<MongoWaybill> =
         reactiveMongoTemplate.find<MongoWaybill>(
-            Query(Criteria.where("customerId").`is`(id)),
-            MongoWaybill.COLLECTION_NAME
+            Query(Criteria.where("customerId").`is`(id))
         )
 }

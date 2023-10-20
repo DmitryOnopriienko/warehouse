@@ -19,26 +19,24 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
 
     override fun findAll(): Flux<MongoProduct> =
-        reactiveMongoTemplate.findAll<MongoProduct>(MongoProduct.COLLECTION_NAME)
+        reactiveMongoTemplate.findAll<MongoProduct>()
 
     override fun findById(id: ObjectId): Mono<MongoProduct> =
-        reactiveMongoTemplate.findById<MongoProduct>(id, MongoProduct.COLLECTION_NAME)
+        reactiveMongoTemplate.findById<MongoProduct>(id)
 
     override fun createProduct(mongoProduct: MongoProduct): Mono<MongoProduct> =
-        reactiveMongoTemplate.insert(mongoProduct, MongoProduct.COLLECTION_NAME)
+        reactiveMongoTemplate.insert(mongoProduct)
 
     override fun save(mongoProduct: MongoProduct): Mono<MongoProduct> =
-        reactiveMongoTemplate.save(mongoProduct, MongoProduct.COLLECTION_NAME)
+        reactiveMongoTemplate.save(mongoProduct)
 
     override fun deleteById(id: ObjectId): Mono<Unit> =
         reactiveMongoTemplate.remove<MongoProduct>(
-            Query(Criteria.where("_id").`is`(id)),
-            MongoProduct.COLLECTION_NAME
+            Query(Criteria.where("_id").`is`(id))
         ).thenReturn(Unit)
 
     override fun getValidIds(ids: List<ObjectId>): Flux<String> =
         reactiveMongoTemplate.find<MongoProduct>(
-            Query(Criteria.where("_id").`in`(ids)),
-            MongoProduct.COLLECTION_NAME
+            Query(Criteria.where("_id").`in`(ids))
         ).map { it.id.toString() }
 }
