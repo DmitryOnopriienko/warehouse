@@ -23,11 +23,8 @@ class CreateProductNatsController(
 
     override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =
         request.toMono()
-            .flatMap {
-                productService
-                    .createProduct(request.mapToDto())
-                    .map { buildSuccessResponse(it.mapToProto()) }
-            }
+            .flatMap { productService.createProduct(request.mapToDto()) }
+            .map { buildSuccessResponse(it.mapToProto()) }
             .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): CreateProductResponse =

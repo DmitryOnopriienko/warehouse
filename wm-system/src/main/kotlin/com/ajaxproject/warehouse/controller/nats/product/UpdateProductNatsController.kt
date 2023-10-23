@@ -26,13 +26,8 @@ class UpdateProductNatsController(
             require (request.hasId()) { "id must be provided" }
             request
         }
-            .flatMap {
-                productService.updateProduct(
-                    request.mapToDto(),
-                    request.id
-                )
-                    .map { buildSuccessResponse(it.mapToProto()) }
-            }
+            .flatMap { productService.updateProduct(request.mapToDto(), request.id) }
+            .map { buildSuccessResponse(it.mapToProto()) }
             .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): UpdateProductResponse =

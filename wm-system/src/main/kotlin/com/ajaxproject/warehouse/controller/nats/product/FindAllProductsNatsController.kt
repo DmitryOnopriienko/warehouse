@@ -22,11 +22,8 @@ class FindAllProductsNatsController(
 
     override fun handle(request: FindAllProductsRequest): Mono<FindAllProductsResponse> =
         request.toMono()
-            .flatMap {
-                productService.findAllProducts()
-                    .collectList()
-                    .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
-            }
+            .flatMap { productService.findAllProducts().collectList() }
+            .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
             .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(products: List<Product>): FindAllProductsResponse =

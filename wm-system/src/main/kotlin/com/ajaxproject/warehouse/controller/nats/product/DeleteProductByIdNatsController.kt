@@ -21,10 +21,8 @@ class DeleteProductByIdNatsController(
 
     override fun handle(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
         request.toMono()
-            .flatMap {
-                productService.deleteById(request.id)
-                    .map { buildSuccessResponse() }
-            }
+            .flatMap { productService.deleteById(request.id) }
+            .map { buildSuccessResponse() }
             .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(): DeleteProductByIdResponse =

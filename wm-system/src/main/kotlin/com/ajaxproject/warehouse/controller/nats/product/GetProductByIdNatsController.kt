@@ -22,10 +22,8 @@ class GetProductByIdNatsController(
 
     override fun handle(request: GetProductByIdRequest): Mono<GetProductByIdResponse> =
         request.toMono()
-            .flatMap {
-                productService.getById(request.id)
-                    .map { buildSuccessResponse(it.mapToProto()) }
-            }
+            .flatMap { productService.getById(request.id) }
+            .map { buildSuccessResponse(it.mapToProto()) }
             .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): GetProductByIdResponse =
