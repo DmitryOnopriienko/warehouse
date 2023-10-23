@@ -21,14 +21,13 @@ class FindAllProductsNatsController(
     override val parser: Parser<FindAllProductsRequest> = FindAllProductsRequest.parser()
 
     override fun handle(request: FindAllProductsRequest): Mono<FindAllProductsResponse> =
-        runCatching {
-            productService.findAllProducts()
-                .collectList()
-                .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
-                .onErrorResume { buildFailureResponse(it).toMono() }
-        }.getOrElse { exception ->
-            buildFailureResponse(exception).toMono()
-        }
+        request.toMono()
+            .flatMap {
+                productService.findAllProducts()
+                    .collectList()
+                    .map { products -> buildSuccessResponse(products.map { it.mapToProto() }) }
+            }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(products: List<Product>): FindAllProductsResponse =
         FindAllProductsResponse.newBuilder().apply {

@@ -22,10 +22,8 @@ class UpdateProductNatsController(
     override val parser: Parser<UpdateProductRequest> = UpdateProductRequest.parser()
 
     override fun handle(request: UpdateProductRequest): Mono<UpdateProductResponse> =
-        Mono.fromSupplier {
-            if (!request.hasId()) {
-                throw IllegalArgumentException("id must be provided")
-            }
+        Mono.fromCallable {
+            require (request.hasId()) { "id must be provided" }
             request
         }
             .flatMap {

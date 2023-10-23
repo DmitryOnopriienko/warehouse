@@ -21,15 +21,14 @@ class CreateProductNatsController(
 
     override val parser: Parser<CreateProductRequest> = CreateProductRequest.parser()
 
-    override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =   // TODO ask if this is ok
-        runCatching {
-            productService
-                .createProduct(request.mapToDto())
-                .map { buildSuccessResponse(it.mapToProto()) }
-                .onErrorResume { buildFailureResponse(it).toMono() }
-        }.getOrElse { exception ->
-            buildFailureResponse(exception).toMono()
-        }
+    override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =
+        request.toMono()
+            .flatMap {
+                productService
+                    .createProduct(request.mapToDto())
+                    .map { buildSuccessResponse(it.mapToProto()) }
+            }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): CreateProductResponse =
         CreateProductResponse.newBuilder().apply {

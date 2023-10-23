@@ -20,13 +20,12 @@ class DeleteProductByIdNatsController(
     override val parser: Parser<DeleteProductByIdRequest> = DeleteProductByIdRequest.parser()
 
     override fun handle(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
-        runCatching {
-            productService.deleteById(request.id)
-                .map { buildSuccessResponse() }
-                .onErrorResume { buildFailureResponse(it).toMono() }
-        }.getOrElse { exception ->
-            buildFailureResponse(exception).toMono()
-        }
+        request.toMono()
+            .flatMap {
+                productService.deleteById(request.id)
+                    .map { buildSuccessResponse() }
+            }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(): DeleteProductByIdResponse =
         DeleteProductByIdResponse.newBuilder().apply {

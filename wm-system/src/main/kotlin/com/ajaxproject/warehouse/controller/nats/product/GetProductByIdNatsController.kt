@@ -21,13 +21,12 @@ class GetProductByIdNatsController(
     override val parser: Parser<GetProductByIdRequest> = GetProductByIdRequest.parser()
 
     override fun handle(request: GetProductByIdRequest): Mono<GetProductByIdResponse> =
-        runCatching {
-            productService.getById(request.id)
-                .map { buildSuccessResponse(it.mapToProto()) }
-                .onErrorResume { buildFailureResponse(it).toMono() }
-        }.getOrElse { exception ->
-            buildFailureResponse(exception).toMono()
-        }
+        request.toMono()
+            .flatMap {
+                productService.getById(request.id)
+                    .map { buildSuccessResponse(it.mapToProto()) }
+            }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): GetProductByIdResponse =
         GetProductByIdResponse.newBuilder().apply {
