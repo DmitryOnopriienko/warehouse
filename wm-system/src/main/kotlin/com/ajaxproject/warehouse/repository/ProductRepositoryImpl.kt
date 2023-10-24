@@ -35,8 +35,8 @@ class ProductRepositoryImpl(
             Query(Criteria.where("_id").`is`(id))
         ).thenReturn(Unit)
 
-    override fun getValidIds(ids: List<ObjectId>): Flux<String> =
+    override fun findValidEntities(ids: List<ObjectId>): Flux<MongoProduct> =
         reactiveMongoTemplate.find<MongoProduct>(
             Query(Criteria.where("_id").`in`(ids))
-        ).map { it.id.toString() }
+        )
 }

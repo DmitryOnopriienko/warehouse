@@ -17,5 +17,5 @@ interface ProductRepository {
 
     fun deleteById(id: ObjectId): Mono<Unit>
 
-    fun getValidIds(ids: List<ObjectId>): Flux<String>
+    fun findValidEntities(ids: List<ObjectId>): Flux<MongoProduct>
 }

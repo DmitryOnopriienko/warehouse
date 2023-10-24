@@ -22,7 +22,7 @@ class CreateProductNatsController(
     override val parser: Parser<CreateProductRequest> = CreateProductRequest.parser()
 
     override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =
-        request.toMono()
+        request.toMono()    // TODO ask if wrapping in Mono is necessary
             .flatMap { productService.createProduct(request.mapToDto()) }
             .map { buildSuccessResponse(it.mapToProto()) }
             .onErrorResume { buildFailureResponse(it).toMono() }
