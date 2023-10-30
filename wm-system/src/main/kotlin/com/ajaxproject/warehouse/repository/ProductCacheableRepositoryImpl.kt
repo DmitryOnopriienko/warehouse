@@ -2,16 +2,20 @@ package com.ajaxproject.warehouse.repository
 
 import com.ajaxproject.warehouse.entity.MongoProduct
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
+import java.time.Duration
 
 @Repository
 class ProductCacheableRepositoryImpl(
     val productRepository: ProductRepository,
-    val redisTemplate: ReactiveRedisTemplate<String, MongoProduct>
+    val redisTemplate: ReactiveRedisTemplate<String, MongoProduct>,
+    @Value("\${redis.ttl}")
+    val ttl: Long
 ) : ProductCacheableRepository {
 
     override fun findById(id: ObjectId): Mono<MongoProduct> =
@@ -21,7 +25,7 @@ class ProductCacheableRepositoryImpl(
                 productRepository.findById(id)
                     .flatMap { product ->
                         redisTemplate.opsForValue()
-                            .set(id.toString(), product)
+                            .set(id.toString(), product, Duration.ofMinutes(ttl))
                             .thenReturn(product)
                     }
             }
@@ -30,7 +34,7 @@ class ProductCacheableRepositoryImpl(
         productRepository.createProduct(mongoProduct)
             .flatMap { product ->
                 redisTemplate.opsForValue()
-                    .set(product.id.toString(), product)
+                    .set(product.id.toString(), product, Duration.ofMinutes(ttl))
                     .thenReturn(product)
             }
 
@@ -38,7 +42,7 @@ class ProductCacheableRepositoryImpl(
         productRepository.save(mongoProduct)
             .flatMap { product ->
                 redisTemplate.opsForValue()
-                    .set(product.id.toString(), product)
+                    .set(product.id.toString(), product, Duration.ofMinutes(ttl))
                     .thenReturn(product)
             }
 

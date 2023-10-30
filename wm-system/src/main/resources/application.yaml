@@ -11,5 +11,7 @@ spring:
       repositories:
         enabled: false
 
+redis.ttl: 3
+
 nats:
   url: nats://nats:4222

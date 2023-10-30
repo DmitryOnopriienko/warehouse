@@ -11,5 +11,7 @@ spring:
       repositories:
         enabled: false
 
+redis.ttl: 3
+
 nats:
   url: nats://localhost:4222
