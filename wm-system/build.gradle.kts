@@ -11,6 +11,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux:3.1.4")
 
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.1.4")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive:3.1.5")
+
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.2")
 
     implementation("org.springframework.boot:spring-boot-starter-validation:3.1.3")

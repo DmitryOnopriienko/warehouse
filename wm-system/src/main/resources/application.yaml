@@ -1,7 +1,15 @@
 # for dockerized startup
 spring:
-  data.mongodb:
-    uri: mongodb://root:toor@mongo:27017/warehouse?authSource=admin
+  data:
+    mongodb:
+      uri: mongodb://root:toor@mongo:27017/warehouse?authSource=admin
+
+    redis:
+      host: redis
+      port: 6379
+      password: toor
+      repositories:
+        enabled: false
 
 nats:
   url: nats://nats:4222
