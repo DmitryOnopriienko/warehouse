@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.SynchronousSink
 import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDate
@@ -45,8 +44,9 @@ class WaybillServiceImpl(
             .switchIfEmpty { Mono.error(NotFoundException("Customer with id ${createDto.customerId} not found")) }
             .flatMap {
                 val productIds = createDto.products.map { ObjectId(it.productId) }
-                validateProductsIds(productIds, createDto)
-            }.then(createWaybillAndMapToDto(createDto))
+                findValidEntitiesOrError(productIds)
+            }
+            .then(createWaybillAndMapToDto(createDto))
 
     @Transactional
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> =
@@ -64,32 +64,8 @@ class WaybillServiceImpl(
     override fun deleteById(id: String): Mono<Unit> =
         waybillRepository.deleteById(ObjectId(id))
 
-    private fun validateProductsIds(
-        productIds: List<ObjectId>,
-        createDto: WaybillCreateDto,
-    ): Mono<Unit> = productRepository.findValidEntities(productIds).map { it.id.toString() }
-            .collectList()
-            .handle<List<String>> { validIdList, sink ->
-                filterInvalidProductIdsAndThrowErrorToSink(
-                    createDto.products.map { it.productId as String },
-                    validIdList,
-                    sink
-                )
-            }.thenReturn(Unit)
-
     private fun MongoWaybill.getListOfProducts(): Mono<List<WaybillDataDto.WaybillProductDataDto>> =
-        productRepository.findValidEntities(products.map { it.productId })
-            .collectList()
-            .handle<List<MongoProduct>> { validProducts, sink ->
-                val validProductIds = validProducts.map { it.id.toString() }
-
-                filterInvalidProductIdsAndThrowErrorToSink(
-                    products.map { it.productId.toString() },
-                    validProductIds,
-                    sink
-                )
-                sink.next(validProducts)
-            }
+        findValidEntitiesOrError(products.map { it.productId })
             .flatMap { validProducts ->
                 products.mapNotNull { waybillProduct ->
                     val validProduct = validProducts.find { it.id == waybillProduct.productId }
@@ -97,20 +73,22 @@ class WaybillServiceImpl(
                 }.toMono()
             }
 
-    private fun <T> filterInvalidProductIdsAndThrowErrorToSink(
-        waybillProductList: List<String>,
-        validProductIds: List<String>,
-        sink: SynchronousSink<T>
-    ) {
-        val notValidIds = waybillProductList.toMutableSet().apply {
-            removeAll(validProductIds.toSet())
-        }.toList()
-
-        if (notValidIds.isNotEmpty()) {
-            val errorList = notValidIds.map { "Product with id $it not found" }
-            sink.error(InternalEntityNotFoundException(errorList))
-        }
-    }
+    private fun findValidEntitiesOrError(productIds: List<ObjectId>): Mono<List<MongoProduct>> =
+        productRepository.findValidEntities(productIds)
+            .collectList()
+            .handle { validProducts, sink ->
+                val invalidIds: Collection<ObjectId> = productIds
+                    .toMutableSet()
+                    .apply {
+                        removeAll(validProducts.asSequence().mapNotNull { it.id }.toSet())
+                    }
+                if (invalidIds.isEmpty()) {
+                    sink.next(validProducts)
+                } else {
+                    val errorList: List<String> = invalidIds.map { "Product with id $it not found" }
+                    sink.error(InternalEntityNotFoundException(errorList))
+                }
+            }
 
     private fun createWaybillAndMapToDto(createDto: WaybillCreateDto): Mono<WaybillDataDto> =
         waybillRepository
