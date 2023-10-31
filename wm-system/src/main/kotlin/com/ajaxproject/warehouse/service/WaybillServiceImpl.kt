@@ -48,27 +48,6 @@ class WaybillServiceImpl(
                 validateProductsIds(productIds, createDto)
             }.then(createWaybillAndMapToDto(createDto))
 
-    private fun validateProductsIds(
-        productIds: List<ObjectId>,
-        createDto: WaybillCreateDto,
-    ): Mono<Unit> = productRepository.findValidEntities(productIds).map { it.id.toString() }
-            .collectList()
-            .handle<List<String>> { validIdList, sink ->
-                filterInvalidProductIdsAndThrow(
-                    createDto.products.map { it.productId as String },
-                    validIdList,
-                    sink
-                )
-            }.thenReturn(Unit)
-
-    private fun createWaybillAndMapToDto(createDto: WaybillCreateDto): Mono<WaybillDataDto> =
-        waybillRepository
-            .createWaybill(createDto.mapToEntity())
-            .flatMap { it.mapToDataDto() }
-
-    override fun deleteById(id: String): Mono<Unit> =
-        waybillRepository.deleteById(ObjectId(id))
-
     @Transactional
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> =
         waybillRepository.findById(ObjectId(id))
@@ -82,13 +61,29 @@ class WaybillServiceImpl(
             .flatMap { waybillRepository.save(it.setUpdatedData(infoUpdateDto)) }
             .flatMap { it.mapToDataDto() }
 
+    override fun deleteById(id: String): Mono<Unit> =
+        waybillRepository.deleteById(ObjectId(id))
+
+    private fun validateProductsIds(
+        productIds: List<ObjectId>,
+        createDto: WaybillCreateDto,
+    ): Mono<Unit> = productRepository.findValidEntities(productIds).map { it.id.toString() }
+            .collectList()
+            .handle<List<String>> { validIdList, sink ->
+                filterInvalidProductIdsAndThrowErrorToSink(
+                    createDto.products.map { it.productId as String },
+                    validIdList,
+                    sink
+                )
+            }.thenReturn(Unit)
+
     private fun MongoWaybill.getListOfProducts(): Mono<List<WaybillDataDto.WaybillProductDataDto>> =
         productRepository.findValidEntities(products.map { it.productId })
             .collectList()
             .handle<List<MongoProduct>> { validProducts, sink ->
                 val validProductIds = validProducts.map { it.id.toString() }
 
-                filterInvalidProductIdsAndThrow(
+                filterInvalidProductIdsAndThrowErrorToSink(
                     products.map { it.productId.toString() },
                     validProductIds,
                     sink
@@ -102,7 +97,7 @@ class WaybillServiceImpl(
                 }.toMono()
             }
 
-    private fun <T> filterInvalidProductIdsAndThrow(
+    private fun <T> filterInvalidProductIdsAndThrowErrorToSink(
         waybillProductList: List<String>,
         validProductIds: List<String>,
         sink: SynchronousSink<T>
@@ -116,6 +111,11 @@ class WaybillServiceImpl(
             sink.error(InternalEntityNotFoundException(errorList))
         }
     }
+
+    private fun createWaybillAndMapToDto(createDto: WaybillCreateDto): Mono<WaybillDataDto> =
+        waybillRepository
+            .createWaybill(createDto.mapToEntity())
+            .flatMap { it.mapToDataDto() }
 
     private fun MongoWaybill.mapToLiteDto(): Mono<WaybillDataLiteDto> =
         getListOfProducts()
