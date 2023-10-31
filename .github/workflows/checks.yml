@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Start NATS and MongoDB
-        run: docker-compose up -d --scale app=0
+        run: docker-compose up -d
 
       - name: Set up JDK
         uses: actions/setup-java@v3
