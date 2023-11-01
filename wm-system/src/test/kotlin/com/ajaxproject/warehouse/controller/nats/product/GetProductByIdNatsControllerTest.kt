@@ -5,7 +5,7 @@ import com.ajaxproject.api.internal.warehousesvc.commonmodels.product.Product
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import io.nats.client.Connection
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,7 +23,7 @@ class GetProductByIdNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: MongoProductRepository
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun testGetByIdSuccessReturnsValid() {
@@ -35,7 +35,7 @@ class GetProductByIdNatsControllerTest {
                 amount = 10,
                 about = "Nothing to say"
             )
-        )
+        ).block()!!
         val expectedProduct = GetProductByIdResponse.newBuilder().apply {
             successBuilder.setProduct(
                 Product.newBuilder().apply {
@@ -58,9 +58,9 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualProduct = GetProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualProduct = GetProductByIdResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedProduct, actualProduct)
     }
 
@@ -74,9 +74,9 @@ class GetProductByIdNatsControllerTest {
                 amount = 10,
                 about = "Nothing to say"
             )
-        )
+        ).block()!!
         val idOfDeleted = savedProduct.id.toString()
-        productRepository.deleteById(ObjectId(idOfDeleted))
+        productRepository.deleteById(ObjectId(idOfDeleted)).block()
 
         val expectedResponse = GetProductByIdResponse.newBuilder().apply {
             failureBuilder
@@ -94,9 +94,9 @@ class GetProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val response = GetProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val response = GetProductByIdResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, response)
     }
 }

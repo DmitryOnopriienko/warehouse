@@ -4,7 +4,7 @@ import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.UPDATE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -22,7 +22,7 @@ class UpdateProductNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: MongoProductRepository
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun testUpdateDataWithValidRequest() {
@@ -32,7 +32,7 @@ class UpdateProductNatsControllerTest {
             price = 11.99,
             amount = 100,
             about = "original product"
-        ))
+        )).block()!!
 
         val expectedProduct = UpdateProductResponse.newBuilder().successBuilder
             .productBuilder.apply {
@@ -75,7 +75,7 @@ class UpdateProductNatsControllerTest {
             price = 11.99,
             amount = 100,
             about = "original product"
-        ))
+        )).block()!!
 
         val updateProductRequest = UpdateProductRequest.newBuilder().apply {
             id = originalProduct.id.toString()
@@ -96,9 +96,9 @@ class UpdateProductNatsControllerTest {
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 
@@ -123,9 +123,9 @@ class UpdateProductNatsControllerTest {
             updateProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = UpdateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/customers")
@@ -24,25 +26,25 @@ class CustomersController(
 ) {
 
     @GetMapping
-    fun findAll(): List<CustomerDataLiteDto> = customerService.findAllCustomers()
+    fun findAll(): Flux<CustomerDataLiteDto> = customerService.findAllCustomers()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: String): CustomerDataDto =
+    fun findById(@PathVariable id: String): Mono<CustomerDataDto> =
         customerService.getById(id)
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(
         @RequestBody @Valid createDto: CustomerCreateDto
-    ): CustomerDataDto = customerService.createCustomer(createDto)
+    ): Mono<CustomerDataDto> = customerService.createCustomer(createDto)
 
     @PutMapping("/{id}")
     fun updateCustomer(
         @PathVariable id: String,
         @RequestBody @Valid updateDto: CustomerUpdateDto
-    ): CustomerDataDto = customerService.updateCustomer(updateDto, id)
+    ): Mono<CustomerDataDto> = customerService.updateCustomer(updateDto, id)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomer(@PathVariable id: String): Unit = customerService.deleteById(id)
+    fun deleteCustomer(@PathVariable id: String): Mono<Unit> = customerService.deleteById(id)
 }

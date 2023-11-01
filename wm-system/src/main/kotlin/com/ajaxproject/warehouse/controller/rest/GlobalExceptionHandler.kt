@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.lang.IllegalArgumentException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -68,7 +67,8 @@ class GlobalExceptionHandler {
         ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             message = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
-            error = e.message
+            error = e.message,
+            errorList = e.errorList
         )
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

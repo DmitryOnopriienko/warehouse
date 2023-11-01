@@ -44,9 +44,9 @@ class CreateProductNatsControllerTest {
             createProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasSuccess())
         val actualProduct = actualResponse.success.product
         assertEquals(expectedProduct.title, actualProduct.title)
@@ -55,7 +55,7 @@ class CreateProductNatsControllerTest {
         assertEquals(expectedProduct.about, actualProduct.about)
     }
 
-    @Test
+    @Test   // TODO add live templates
     fun testReturnsFailureOnInvalidRequest() {
         // GIVEN
         val createProductRequest = CreateProductRequest.newBuilder().apply {
@@ -75,9 +75,9 @@ class CreateProductNatsControllerTest {
             createProductRequest.toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = CreateProductResponse.parseFrom(completableFuture.get().data)
         assertEquals(expectedResponse, actualResponse)
     }
 }

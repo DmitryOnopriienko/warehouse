@@ -9,6 +9,8 @@ import com.ajaxproject.warehouse.dto.mapToDto
 import com.ajaxproject.warehouse.service.ProductService
 import com.google.protobuf.Parser
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Component
 class CreateProductNatsController(
@@ -19,15 +21,11 @@ class CreateProductNatsController(
 
     override val parser: Parser<CreateProductRequest> = CreateProductRequest.parser()
 
-    override fun handle(request: CreateProductRequest): CreateProductResponse = runCatching {
-        buildSuccessResponse(
-            productService
-                .createProduct(request.mapToDto()) // TODO validation (added on service layer, think about better impl)
-                .mapToProto()
-        )
-    }.getOrElse { exception ->
-        buildFailureResponse(exception)
-    }
+    override fun handle(request: CreateProductRequest): Mono<CreateProductResponse> =
+        request.toMono()
+            .flatMap { productService.createProduct(request.mapToDto()) }
+            .map { buildSuccessResponse(it.mapToProto()) }
+            .onErrorResume { buildFailureResponse(it).toMono() }
 
     fun buildSuccessResponse(product: Product): CreateProductResponse =
         CreateProductResponse.newBuilder().apply {

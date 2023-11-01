@@ -6,10 +6,10 @@ import io.nats.client.Connection
 import io.nats.client.Message
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.stereotype.Component
+import reactor.core.scheduler.Schedulers
 
 @Component
 class NatsControllerInitializationBeanPostProcessor(val connection: Connection) : BeanPostProcessor {
-
     override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any {
         if (bean is NatsController<*, *>) {
             initializeNatsController(bean)
@@ -22,8 +22,10 @@ class NatsControllerInitializationBeanPostProcessor(val connection: Connection) 
     ) {
         connection.createDispatcher { message: Message ->
             val parsedData = controller.parser.parseFrom(message.data)
-            val response = controller.handle(parsedData)
-            connection.publish(message.replyTo, response.toByteArray())
+            controller.handle(parsedData)
+                .map { it.toByteArray() }
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe { connection.publish(message.replyTo, it) }
         }.apply { subscribe(controller.subject) }
     }
 }

@@ -4,7 +4,7 @@ import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.DELETE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdResponse
 import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.MongoProductRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import io.nats.client.Connection
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,7 +24,7 @@ class DeleteProductByIdNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: MongoProductRepository
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun testDeleteWithValidId() {
@@ -36,9 +36,9 @@ class DeleteProductByIdNatsControllerTest {
                 amount = 100,
                 about = "original product"
             )
-        )
+        ).block()!!
 
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
 
         // WHEN
         val completableFuture = connection.requestWithTimeout(
@@ -50,11 +50,11 @@ class DeleteProductByIdNatsControllerTest {
                 .toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasSuccess())
-        assertNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNull(productRepository.findById(originalProduct.id as ObjectId).block())
     }
 
     @Test
@@ -67,9 +67,9 @@ class DeleteProductByIdNatsControllerTest {
                 amount = 100,
                 about = "original product"
             )
-        )
+        ).block()!!
 
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
 
         // WHEN
         val completableFuture = connection.requestWithTimeout(
@@ -77,10 +77,10 @@ class DeleteProductByIdNatsControllerTest {
             DeleteProductByIdRequest.getDefaultInstance().toByteArray(),
             Duration.ofSeconds(10L)
         )
-        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
 
         // THEN
+        val actualResponse = DeleteProductByIdResponse.parseFrom(completableFuture.get().data)
         assertTrue(actualResponse.hasFailure())
-        assertNotNull(productRepository.findById(originalProduct.id as ObjectId))
+        assertNotNull(productRepository.findById(originalProduct.id as ObjectId).block())
     }
 }

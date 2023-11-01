@@ -4,16 +4,18 @@ import com.ajaxproject.warehouse.dto.CustomerCreateDto
 import com.ajaxproject.warehouse.dto.CustomerDataDto
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.CustomerUpdateDto
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 interface CustomerService {
 
-    fun findAllCustomers(): List<CustomerDataLiteDto>
+    fun deleteById(id: String): Mono<Unit>
 
-    fun getById(id: String): CustomerDataDto
+    fun updateCustomer(updateDto: CustomerUpdateDto, id: String): Mono<CustomerDataDto>
 
-    fun createCustomer(createDto: CustomerCreateDto): CustomerDataDto
+    fun createCustomer(createDto: CustomerCreateDto): Mono<CustomerDataDto>
 
-    fun deleteById(id: String)
+    fun getById(id: String): Mono<CustomerDataDto>
 
-    fun updateCustomer(updateDto: CustomerUpdateDto, id: String): CustomerDataDto
+    fun findAllCustomers(): Flux<CustomerDataLiteDto>
 }
