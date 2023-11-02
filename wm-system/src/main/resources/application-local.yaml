@@ -1,7 +1,18 @@
 # for local startup
 spring:
-  data.mongodb:
-    uri: mongodb://root:toor@localhost:27017/warehouse?authSource=admin
+  data:
+    mongodb:
+      uri: mongodb://root:toor@localhost:27017/warehouse?authSource=admin
+
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer
+    registry:
+      url: http://localhost:8081
+
+redis.ttl: 3
 
 nats:
   url: nats://localhost:4222

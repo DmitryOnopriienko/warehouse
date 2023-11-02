@@ -1,5 +1,7 @@
 package com.ajaxproject.warehouse.service
 
+import com.ajaxproject.api.internal.warehousesvc.commonmodels.waybill.Waybill
+import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillCreatedEvent
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
@@ -13,6 +15,7 @@ import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.CustomerRepository
 import com.ajaxproject.warehouse.repository.ProductRepository
 import com.ajaxproject.warehouse.repository.WaybillRepository
+import com.google.protobuf.Timestamp
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,13 +24,15 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 @Service
 @Suppress("TooManyFunctions")
 class WaybillServiceImpl(
     val waybillRepository: WaybillRepository,
     val productRepository: ProductRepository,
-    val customerRepository: CustomerRepository
+    val customerRepository: CustomerRepository,
+    val kafkaProducerService: KafkaProducerService
 ) : WaybillService {
 
     override fun findAllWaybills(): Flux<WaybillDataLiteDto> =
@@ -47,6 +52,10 @@ class WaybillServiceImpl(
                 findValidEntitiesOrError(productIds)
             }
             .then(createWaybillAndMapToDto(createDto))
+            .flatMap {
+                kafkaProducerService.sendWaybillCreationEvent(it.mapToCreatedEventProto())
+                it.toMono()
+            }
 
     @Transactional
     override fun updateWaybillInfo(infoUpdateDto: WaybillInfoUpdateDto, id: String): Mono<WaybillDataDto> =
@@ -122,6 +131,22 @@ class WaybillServiceImpl(
                         )
                     }
             }
+
+    private fun WaybillDataDto.mapToCreatedEventProto(): WaybillCreatedEvent =
+        WaybillCreatedEvent.newBuilder().apply {
+            waybill = Waybill.newBuilder().apply {
+                id = this@mapToCreatedEventProto.id
+                customerId = this@mapToCreatedEventProto.customer.id
+                date = Timestamp.newBuilder()
+                    .setSeconds(
+                        this@mapToCreatedEventProto.date
+                            .atStartOfDay()
+                            .atOffset(ZoneOffset.UTC)
+                            .toEpochSecond()
+                    )
+                    .build()
+            }.build()
+        }.build()
 
     private fun MongoCustomer.mapToLiteDto() = CustomerDataLiteDto(
         id = id.toString(),

@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package com.ajaxproject.api.internal.warehousesvc.input.reqreply.product;
 
-import "com/ajaxproject/api/internal/warehousesvc/commonmodels/product/product.proto";
-
 option java_package = "com.ajaxproject.api.internal.warehousesvc.input.reqreply.product";
 option java_multiple_files = true;
 
