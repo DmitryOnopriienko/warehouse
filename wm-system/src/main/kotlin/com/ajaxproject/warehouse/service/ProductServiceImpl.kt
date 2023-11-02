@@ -5,9 +5,10 @@ import com.ajaxproject.warehouse.dto.ProductDataLiteDto
 import com.ajaxproject.warehouse.dto.ProductSaveDto
 import com.ajaxproject.warehouse.entity.MongoProduct
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.repository.ProductCacheableRepository
+import com.ajaxproject.warehouse.repository.ProductRepository
 import jakarta.validation.Valid
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono
 @Service
 @Validated
 class ProductServiceImpl(
-    val productCacheableRepository: ProductCacheableRepository
+    @Qualifier("productCacheableRepositoryImpl") val productCacheableRepository: ProductRepository
 ) : ProductService {
 
     override fun findAllProducts(): Flux<ProductDataLiteDto> =

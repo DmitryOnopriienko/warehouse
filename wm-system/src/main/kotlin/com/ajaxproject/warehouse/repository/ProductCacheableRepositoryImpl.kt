@@ -16,7 +16,7 @@ class ProductCacheableRepositoryImpl(
     val redisTemplate: ReactiveRedisTemplate<String, MongoProduct>,
     @Value("\${redis.ttl}")
     val ttl: Long
-) : ProductCacheableRepository {
+) : ProductRepository {
 
     override fun findById(id: ObjectId): Mono<MongoProduct> =
         redisTemplate.opsForValue()

@@ -2,6 +2,7 @@ package com.ajaxproject.warehouse.repository
 
 import com.ajaxproject.warehouse.entity.MongoProduct
 import org.bson.types.ObjectId
+import org.springframework.context.annotation.Primary
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.findAll
@@ -14,6 +15,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Repository
+@Primary
 class ProductRepositoryImpl(
     val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : ProductRepository {
