@@ -19,18 +19,13 @@ services:
       timeout: 1s
       retries: 10
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: app
+  redis:
+    image: redis:latest
+    container_name: redis
     ports:
-      - "8080:8080"
-    depends_on:
-      nats:
-        condition: service_started
-      mongo:
-        condition: service_healthy
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=toor
 
   nats:
     image: nats
