@@ -8,6 +8,7 @@ import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.ProductRepository
 import jakarta.validation.Valid
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
@@ -17,33 +18,33 @@ import reactor.core.publisher.Mono
 @Service
 @Validated
 class ProductServiceImpl(
-    val productRepository: ProductRepository
+    @Qualifier("productCacheableRepositoryImpl") val productCacheableRepository: ProductRepository
 ) : ProductService {
 
     override fun findAllProducts(): Flux<ProductDataLiteDto> =
-        productRepository.findAll().map { it.mapToLiteDto() }
+        productCacheableRepository.findAll().map { it.mapToLiteDto() }
 
     override fun getById(id: String): Mono<ProductDataDto> =
-        productRepository.findById(ObjectId(id))
+        productCacheableRepository.findById(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
             .map { it.mapToDataDto() }
 
     override fun createProduct(@Valid createDto: ProductSaveDto): Mono<ProductDataDto> =
-        productRepository.createProduct(createDto.mapToEntity())
+        productCacheableRepository.createProduct(createDto.mapToEntity())
             .map { it.mapToDataDto() }
 
     @Transactional
     override fun updateProduct(@Valid updateDto: ProductSaveDto, id: String): Mono<ProductDataDto> =
-        productRepository.findById(ObjectId(id))
+        productCacheableRepository.findById(ObjectId(id))
             .switchIfEmpty(Mono.error(NotFoundException("Product with id $id not found")))
             .map { it.setUpdatedData(updateDto) }
             .flatMap {
-                productRepository.save(it)
+                productCacheableRepository.save(it)
             }
             .map { it.mapToDataDto() }
 
     override fun deleteById(id: String): Mono<Unit> =
-        productRepository.deleteById(ObjectId(id))
+        productCacheableRepository.deleteById(ObjectId(id))
 
     fun MongoProduct.mapToLiteDto(): ProductDataLiteDto = ProductDataLiteDto(
         id = id.toString(),
