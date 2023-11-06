@@ -2,7 +2,7 @@ package com.ajaxproject.api.internal.warehousesvc
 
 object NatsSubject {
 
-    const val WAREHOUSE_PREFIX = "com.ajaxproject.warehouse_svc"
+    private const val WAREHOUSE_PREFIX = "com.ajaxproject.warehouse_svc"
 
     object Product {
 
