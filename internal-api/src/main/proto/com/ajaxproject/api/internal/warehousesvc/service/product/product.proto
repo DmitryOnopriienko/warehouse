@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package com.ajaxproject.api.internal.warehousesvc.service.product;
+
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/product/find_all.proto";
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/product/get_by_id.proto";
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/product/create.proto";
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/product/update.proto";
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/product/delete.proto";
+
+option java_package = "com.ajaxproject.api.internal.warehousesvc.service.product";
+option java_multiple_files = true;
+
+service Product {
+
+  rpc FindAllProducts(input.reqreply.product.FindAllProductsRequest)
+      returns (input.reqreply.product.FindAllProductsResponse);
+
+  rpc GetProductById(input.reqreply.product.GetProductByIdRequest)
+      returns (input.reqreply.product.GetProductByIdResponse);
+
+  rpc CreateProduct(input.reqreply.product.CreateProductRequest)
+      returns (input.reqreply.product.CreateProductResponse);
+
+  rpc UpdateProduct(input.reqreply.product.UpdateProductRequest)
+      returns (input.reqreply.product.UpdateProductResponse);
+
+  rpc DeleteProduct(input.reqreply.product.DeleteProductByIdRequest)
+      returns (input.reqreply.product.DeleteProductByIdResponse);
+}
