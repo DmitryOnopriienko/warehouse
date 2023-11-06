@@ -1,6 +1,6 @@
 package com.ajaxproject.warehouse.config
 
-import com.ajaxproject.api.internal.warehousesvc.KafkaTopic.Waybill.CREATION
+import com.ajaxproject.api.internal.warehousesvc.KafkaTopic.Waybill.CREATED
 import com.google.protobuf.GeneratedMessageV3
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -26,7 +26,7 @@ class KafkaConfig(
     @Bean
     fun waybillCreationTopic(): NewTopic =
         TopicBuilder
-            .name(CREATION)
+            .name(CREATED)
             .build()
 
     @Bean

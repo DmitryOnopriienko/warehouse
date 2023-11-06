@@ -1,13 +1,13 @@
 package com.ajaxproject.api.internal.warehousesvc
 
-import com.ajaxproject.api.internal.warehousesvc.NatsSubject.WAREHOUSE_PREFIX
-
 object KafkaTopic {
+
+    private const val WAREHOUSE_PREFIX = "com.ajaxproject.warehouse_svc"
 
     object Waybill {
 
         private const val WAYBILL_PREFIX = "${WAREHOUSE_PREFIX}.waybill"
 
-        const val CREATION = "$WAYBILL_PREFIX.creation"
+        const val CREATED = "$WAYBILL_PREFIX.created"
     }
 }

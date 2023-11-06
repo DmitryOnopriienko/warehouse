@@ -1,6 +1,5 @@
 package com.ajaxproject.warehouse.service
 
-import com.ajaxproject.api.internal.warehousesvc.commonmodels.waybill.Waybill
 import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillCreatedEvent
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
@@ -15,7 +14,6 @@ import com.ajaxproject.warehouse.exception.NotFoundException
 import com.ajaxproject.warehouse.repository.CustomerRepository
 import com.ajaxproject.warehouse.repository.ProductRepository
 import com.ajaxproject.warehouse.repository.WaybillRepository
-import com.google.protobuf.Timestamp
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,9 +50,9 @@ class WaybillServiceImpl(
                 findValidEntitiesOrError(productIds)
             }
             .then(createWaybillAndMapToDto(createDto))
-            .flatMap {
-                kafkaProducerService.sendWaybillCreationEvent(it.mapToCreatedEventProto())
-                it.toMono()
+            .flatMap { waybillDto ->
+                kafkaProducerService.sendWaybillCreationEvent(waybillDto.mapToCreatedEventProto())
+                    .thenReturn(waybillDto)
             }
 
     @Transactional
@@ -133,19 +131,12 @@ class WaybillServiceImpl(
             }
 
     private fun WaybillDataDto.mapToCreatedEventProto(): WaybillCreatedEvent =
-        WaybillCreatedEvent.newBuilder().apply {
-            waybill = Waybill.newBuilder().apply {
-                id = this@mapToCreatedEventProto.id
-                customerId = this@mapToCreatedEventProto.customer.id
-                date = Timestamp.newBuilder()
-                    .setSeconds(
-                        this@mapToCreatedEventProto.date
-                            .atStartOfDay()
-                            .atOffset(ZoneOffset.UTC)
-                            .toEpochSecond()
-                    )
-                    .build()
-            }.build()
+        WaybillCreatedEvent.newBuilder().also { event ->
+            event.waybillBuilder.also { waybill ->
+                waybill.id = id
+                waybill.customerId = customer.id
+                waybill.dateBuilder.seconds = date.atStartOfDay().atOffset(ZoneOffset.UTC).toEpochSecond()
+            }
         }.build()
 
     private fun MongoCustomer.mapToLiteDto() = CustomerDataLiteDto(
