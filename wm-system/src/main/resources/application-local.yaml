@@ -11,6 +11,14 @@ spring:
       repositories:
         enabled: false
 
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer
+    registry:
+      url: http://localhost:8081
+
 redis.ttl: 3
 
 nats:

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.ajaxproject.api.internal.warehousesvc.commonmodels.waybill;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.ajaxproject.api.internal.warehousesvc.commonmodels.waybill";
+option java_multiple_files = true;
+
+message Waybill {
+    string id = 1;
+    string customerId = 2;
+    google.protobuf.Timestamp date = 3;
+}
