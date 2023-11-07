@@ -13,18 +13,18 @@ option java_multiple_files = true;
 
 service Product {
 
-  rpc FindAllProducts(input.reqreply.product.FindAllProductsRequest)
+  rpc findAllProducts(input.reqreply.product.FindAllProductsRequest)
       returns (input.reqreply.product.FindAllProductsResponse);
 
-  rpc GetProductById(input.reqreply.product.GetProductByIdRequest)
+  rpc getProductById(input.reqreply.product.GetProductByIdRequest)
       returns (input.reqreply.product.GetProductByIdResponse);
 
-  rpc CreateProduct(input.reqreply.product.CreateProductRequest)
+  rpc createProduct(input.reqreply.product.CreateProductRequest)
       returns (input.reqreply.product.CreateProductResponse);
 
-  rpc UpdateProduct(input.reqreply.product.UpdateProductRequest)
+  rpc updateProduct(input.reqreply.product.UpdateProductRequest)
       returns (input.reqreply.product.UpdateProductResponse);
 
-  rpc DeleteProduct(input.reqreply.product.DeleteProductByIdRequest)
+  rpc deleteProduct(input.reqreply.product.DeleteProductByIdRequest)
       returns (input.reqreply.product.DeleteProductByIdResponse);
 }
