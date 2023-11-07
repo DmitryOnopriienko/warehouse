@@ -57,7 +57,7 @@ class KafkaConfig(
     }
 
     @Bean
-    fun <T: GeneratedMessageV3> receiverOptions(customerProps: Map<String, Any> = mapOf()): ReceiverOptions<String, T> {
+    fun <T: GeneratedMessageV3> receiverOptions(customProps: Map<String, Any> = mapOf()): ReceiverOptions<String, T> {
         val props: MutableMap<String, Any> = mutableMapOf(
             ConsumerConfig.GROUP_ID_CONFIG to "warehouse",
             ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
@@ -65,7 +65,7 @@ class KafkaConfig(
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to valueDeserializer,
             "schema.registry.url" to registryUrl
         )
-        props.putAll(customerProps)
+        props.putAll(customProps)
         return ReceiverOptions.create<String, T>(props).subscription(setOf(UPDATED))
     }
 
