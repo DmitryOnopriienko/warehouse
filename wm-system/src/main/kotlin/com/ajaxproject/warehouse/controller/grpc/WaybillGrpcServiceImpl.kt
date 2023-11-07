@@ -26,10 +26,11 @@ class WaybillGrpcServiceImpl(
                 }.build()
             }
             .concatWith(
-                waybillUpdatedNatsService.subscribeToEvents(request.id, UPDATED_EVENT).map { waybillUpdatedEvent ->
-                    GetWaybillUpdatesByIdResponse.newBuilder().apply {
-                        waybill = waybillUpdatedEvent.waybill
-                    }.build()
-                }
+                waybillUpdatedNatsService.subscribeToEvents(request.id, UPDATED_EVENT)
+                    .map { waybillUpdatedEvent ->
+                        GetWaybillUpdatesByIdResponse.newBuilder().apply {
+                            waybill = waybillUpdatedEvent.waybill
+                        }.build()
+                    }
             )
 }
