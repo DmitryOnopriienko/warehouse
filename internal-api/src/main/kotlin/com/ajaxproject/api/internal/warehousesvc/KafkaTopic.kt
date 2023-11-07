@@ -9,5 +9,7 @@ object KafkaTopic {
         private const val WAYBILL_PREFIX = "${WAREHOUSE_PREFIX}.waybill"
 
         const val CREATED = "$WAYBILL_PREFIX.created"
+
+        const val UPDATED = "$WAYBILL_PREFIX.updated"
     }
 }

@@ -1,6 +1,7 @@
 package com.ajaxproject.warehouse.service
 
 import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillCreatedEvent
+import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillUpdatedEvent
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
@@ -66,7 +67,15 @@ class WaybillServiceImpl(
                     }.thenReturn(waybill)
             }
             .flatMap { waybillRepository.save(it.setUpdatedData(infoUpdateDto)) }
-            .flatMap { it.mapToDataDto() }
+            .flatMap { mongoWaybill ->
+                mongoWaybill.mapToDataDto().flatMap { waybillDataDto ->
+                    kafkaProducerService.sendWaybillUpdatedEvent(
+                        WaybillUpdatedEvent.newBuilder().also { event ->
+                            event.waybill = waybillDataDto.mapToProto()
+                        }.build()
+                    ).thenReturn(waybillDataDto)
+                }
+            }
 
     override fun deleteById(id: String): Mono<Unit> =
         waybillRepository.deleteById(ObjectId(id))
