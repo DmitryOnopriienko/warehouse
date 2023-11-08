@@ -17,7 +17,7 @@ class WaybillGrpcServiceImpl(
 ) : ReactorWaybillGrpc.WaybillImplBase() {
 
     override fun getWaybillUpdatesById(request: GetWaybillUpdatesByIdRequest): Flux<GetWaybillUpdatesByIdResponse> =
-        request.toMono()
+        request.toMono()    // TODO add failure handling
             .flatMap { waybillService.getById(it.id) }
             .map {
                 GetWaybillUpdatesByIdResponse.newBuilder().apply {
