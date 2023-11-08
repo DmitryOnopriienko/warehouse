@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill;
+
+import "com/ajaxproject/api/internal/warehousesvc/commonmodels/waybill/waybill.proto";
+
+option java_package = "com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill";
+option java_multiple_files = true;
+
+message WaybillUpdatedEvent {
+  commonmodels.waybill.Waybill waybill = 1;
+}

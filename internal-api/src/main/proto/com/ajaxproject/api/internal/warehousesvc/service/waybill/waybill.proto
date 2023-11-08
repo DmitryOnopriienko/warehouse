@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.ajaxproject.api.internal.warehousesvc.service.waybill;
+
+import "com/ajaxproject/api/internal/warehousesvc/input/reqreply/waybill/get_updates_by_id.proto";
+
+option java_package = "com.ajaxproject.api.internal.warehousesvc.service.product";
+option java_multiple_files = true;
+
+service Waybill {
+  rpc getWaybillUpdatesById (input.reqreply.waybill.GetWaybillUpdatesByIdRequest)
+      returns (stream input.reqreply.waybill.GetWaybillUpdatesByIdResponse);
+}

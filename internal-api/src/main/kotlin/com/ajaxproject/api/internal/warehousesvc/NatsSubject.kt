@@ -19,4 +19,14 @@ object NatsSubject {
         const val DELETE = "$PRODUCT_PREFIX.delete"
     }
 
+    object Waybill {
+
+        private const val WAYBILL_PREFIX = "$WAREHOUSE_PREFIX.waybill"
+
+        const val UPDATED_EVENT = "updated"
+
+        fun createWaybillEventSubject(waybillId: String, eventType: String): String =
+            "$WAYBILL_PREFIX.$waybillId.$eventType"
+    }
+
 }
