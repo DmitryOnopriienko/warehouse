@@ -19,10 +19,9 @@ class WaybillGrpcServiceImpl(
     override fun getWaybillUpdatesById(request: GetWaybillUpdatesByIdRequest): Flux<GetWaybillUpdatesByIdResponse> =
         request.toMono()
             .flatMap { waybillService.getById(it.id) }
-            .map { it.mapToProto() }
             .map {
                 GetWaybillUpdatesByIdResponse.newBuilder().apply {
-                    waybill = it
+                    waybill = it.mapToProto()
                 }.build()
             }
             .concatWith(
