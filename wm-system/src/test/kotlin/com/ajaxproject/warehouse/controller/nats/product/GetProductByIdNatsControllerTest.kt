@@ -4,10 +4,10 @@ import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.GET_BY_ID
 import com.ajaxproject.api.internal.warehousesvc.commonmodels.product.Product
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
-import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.ProductRepository
+import com.ajaxproject.warehouse.application.port.ProductServiceInPort
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
+import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
 import io.nats.client.Connection
-import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +23,7 @@ class GetProductByIdNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: ProductRepository
+    lateinit var productRepository: ProductServiceInPort
 
     @Test
     fun testGetByIdSuccessReturnsValid() {
@@ -34,7 +34,7 @@ class GetProductByIdNatsControllerTest {
                 price = 1.99,
                 amount = 10,
                 about = "Nothing to say"
-            )
+            ).mapToDomain()
         ).block()!!
         val expectedProduct = GetProductByIdResponse.newBuilder().apply {
             successBuilder.setProduct(
@@ -73,10 +73,10 @@ class GetProductByIdNatsControllerTest {
                 price = 1.99,
                 amount = 10,
                 about = "Nothing to say"
-            )
+            ).mapToDomain()
         ).block()!!
         val idOfDeleted = savedProduct.id.toString()
-        productRepository.deleteById(ObjectId(idOfDeleted)).block()
+        productRepository.deleteById(idOfDeleted).block()
 
         val expectedResponse = GetProductByIdResponse.newBuilder().apply {
             failureBuilder

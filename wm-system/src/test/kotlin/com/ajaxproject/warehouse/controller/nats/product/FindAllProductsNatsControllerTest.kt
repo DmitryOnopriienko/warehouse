@@ -3,7 +3,8 @@ package com.ajaxproject.warehouse.controller.nats.product
 import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.FIND_ALL
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsResponse
-import com.ajaxproject.warehouse.service.ProductService
+import com.ajaxproject.warehouse.application.port.ProductServiceInPort
+import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -20,7 +21,7 @@ class FindAllProductsNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productService: ProductService
+    lateinit var productService: ProductServiceInPort
 
     @Test
     fun testReturnsAllProducts() { // TODO another DB in another profile
