@@ -2,6 +2,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductResponse
+import com.ajaxproject.warehouse.application.port.CreateProductApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
@@ -13,8 +14,8 @@ import reactor.kotlin.core.publisher.toMono
 @Service
 class CreateProductApiService(
     private val productServiceInPort: ProductServiceInPort
-) {
-    fun createProduct(productRequest: CreateProductRequest): Mono<CreateProductResponse> =
+) : CreateProductApiInPort {
+    override fun createProduct(productRequest: CreateProductRequest): Mono<CreateProductResponse> =
         productRequest.toMono()
             .flatMap { productServiceInPort.createProduct(productRequest.mapToDomain()) }
             .map { buildSuccessResponse(it) }

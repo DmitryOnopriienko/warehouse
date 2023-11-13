@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
+import com.ajaxproject.warehouse.application.port.UpdateProductApiInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto
@@ -13,8 +14,8 @@ import reactor.kotlin.core.publisher.toMono
 @Service
 class UpdateProductApiService(
     private val productServiceInPort: ProductServiceInPort
-) {
-    fun updateProduct(productRequest: UpdateProductRequest): Mono<UpdateProductResponse> =
+) : UpdateProductApiInPort {
+    override fun updateProduct(productRequest: UpdateProductRequest): Mono<UpdateProductResponse> =
         productRequest.toMono()
             .flatMap {
                 require(productRequest.hasId()) { "Product ID cannot be empty" }

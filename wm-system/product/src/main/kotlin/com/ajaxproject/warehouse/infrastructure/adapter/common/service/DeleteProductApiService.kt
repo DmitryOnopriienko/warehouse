@@ -2,15 +2,17 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdResponse
+import com.ajaxproject.warehouse.application.port.DeleteProductApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
 @Service
 class DeleteProductApiService(
     private val productServiceInPort: ProductServiceInPort
-) {
-    fun deleteProduct(request: DeleteProductByIdRequest) =
+) : DeleteProductApiInPort {
+    override fun deleteProduct(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
         request.toMono()
             .flatMap { productServiceInPort.deleteById(request.id) }
             .map { buildSuccessResponse() }

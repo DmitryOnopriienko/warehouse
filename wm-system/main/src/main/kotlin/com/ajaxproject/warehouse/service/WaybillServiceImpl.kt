@@ -3,6 +3,7 @@ package com.ajaxproject.warehouse.service
 import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillCreatedEvent
 import com.ajaxproject.api.internal.warehousesvc.output.pubsub.waybill.WaybillUpdatedEvent
 import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
+import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.dto.CustomerDataLiteDto
 import com.ajaxproject.warehouse.dto.WaybillCreateDto
 import com.ajaxproject.warehouse.dto.WaybillDataDto
@@ -12,8 +13,6 @@ import com.ajaxproject.warehouse.entity.MongoCustomer
 import com.ajaxproject.warehouse.entity.MongoWaybill
 import com.ajaxproject.warehouse.exception.InternalEntityNotFoundException
 import com.ajaxproject.warehouse.exception.NotFoundException
-import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToMongo
 import com.ajaxproject.warehouse.repository.CustomerRepository
 import com.ajaxproject.warehouse.repository.WaybillRepository
 import org.bson.types.ObjectId
@@ -85,17 +84,17 @@ class WaybillServiceImpl(
         findValidEntitiesOrError(products.map { it.productId })
             .flatMap { validProducts ->
                 products.mapNotNull { waybillProduct ->
-                    val validProduct = validProducts.find { it.id == waybillProduct.productId }
+                    val validProduct = validProducts.find { it.id == waybillProduct.productId.toString() }
                     validProduct?.mapToWaybillProductDataDto(waybillProduct.amount)
                 }.toMono()
             }
 
-    private fun findValidEntitiesOrError(productIds: List<ObjectId>): Mono<List<MongoProduct>> =
+    private fun findValidEntitiesOrError(productIds: List<ObjectId>): Mono<List<Product>> =
         productRepository.findValidEntities(productIds.map { it.toString() })
             .collectList()
-            .map { it.map { product -> product.mapToMongo() } }
             .handle { validProducts, sink ->
-                val invalidIds: Collection<ObjectId> = productIds
+                val invalidIds: Collection<String> = productIds
+                    .map { it.toString() }
                     .toMutableSet()
                     .apply {
                         removeAll(validProducts.asSequence().mapNotNull { it.id }.toSet())
@@ -165,7 +164,7 @@ class WaybillServiceImpl(
             date = infoUpdateDto.date as LocalDate
         )
 
-    private fun MongoProduct.mapToWaybillProductDataDto(amount: Int) =
+    private fun Product.mapToWaybillProductDataDto(amount: Int) =
         WaybillDataDto.WaybillProductDataDto(
             id = id.toString(),
             title = title,

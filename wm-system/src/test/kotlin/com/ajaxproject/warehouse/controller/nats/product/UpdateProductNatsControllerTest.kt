@@ -3,7 +3,7 @@ package com.ajaxproject.warehouse.controller.nats.product
 import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.UPDATE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
-import com.ajaxproject.warehouse.application.port.ProductServiceInPort
+import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
 import io.nats.client.Connection
@@ -23,7 +23,7 @@ class UpdateProductNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: ProductServiceInPort
+    lateinit var productRepository: ProductRepositoryOutPort
 
     @Test
     fun testUpdateDataWithValidRequest() {

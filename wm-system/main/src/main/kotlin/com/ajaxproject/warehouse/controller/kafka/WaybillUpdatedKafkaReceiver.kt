@@ -16,7 +16,6 @@ class WaybillUpdatedKafkaReceiver(
     fun init() {
         kafkaReceiver.receiveAutoAck()
             .flatMap { fluxRecord ->
-                println("fluxRecord = $fluxRecord")
                 fluxRecord.map { waybillUpdatedNatsService.publishEvent(it.value()) }
             }
             .subscribeOn(Schedulers.boundedElastic())

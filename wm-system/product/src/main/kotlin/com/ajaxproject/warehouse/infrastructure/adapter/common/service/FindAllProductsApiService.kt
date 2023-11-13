@@ -1,6 +1,7 @@
 package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsResponse
+import com.ajaxproject.warehouse.application.port.FindAllProductsApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto
@@ -11,8 +12,8 @@ import reactor.kotlin.core.publisher.toMono
 @Service
 class FindAllProductsApiService(
     private val productServiceInPort: ProductServiceInPort
-) {
-    fun findAll(): Mono<FindAllProductsResponse> =
+) : FindAllProductsApiInPort {
+    override fun findAll(): Mono<FindAllProductsResponse> =
         productServiceInPort.findAllProducts()
             .collectList()
             .map { buildSuccessResponse(it) }
