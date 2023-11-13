@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.infrastructure.adapter.common.dto
+package com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.dto
 
 import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.NotEmpty

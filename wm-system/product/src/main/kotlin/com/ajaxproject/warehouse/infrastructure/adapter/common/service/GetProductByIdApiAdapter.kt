@@ -1,19 +1,18 @@
 package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
-import com.ajaxproject.warehouse.application.port.api.GetProductByIdApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
-@Service
-class GetProductByIdApiService(
+@Component
+class GetProductByIdApiAdapter(
     private val productServiceInPort: ProductServiceInPort
-) : GetProductByIdApiInPort {
-    override fun getById(id: String): Mono<GetProductByIdResponse> =
+) {
+    fun getById(id: String): Mono<GetProductByIdResponse> =
         id.toMono()
             .flatMap { productServiceInPort.getById(id) }
             .map { buildSuccessResponse(it) }

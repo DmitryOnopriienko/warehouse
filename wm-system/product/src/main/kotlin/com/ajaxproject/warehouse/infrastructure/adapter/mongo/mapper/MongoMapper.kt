@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.infrastructure.mapper
+package com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper
 
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct

@@ -6,7 +6,7 @@ import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProdu
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProductByIdResponse
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToDomain
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -3,19 +3,18 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
-import com.ajaxproject.warehouse.application.port.api.UpdateProductApiInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 
-@Service
-class UpdateProductApiService(
+@Component
+class UpdateProductApiAdapter(
     private val productServiceInPort: ProductServiceInPort
-) : UpdateProductApiInPort {
-    override fun updateProduct(productRequest: UpdateProductRequest): Mono<UpdateProductResponse> =
+) {
+    fun updateProduct(productRequest: UpdateProductRequest): Mono<UpdateProductResponse> =
         productRequest.toMono()
             .flatMap {
                 require(productRequest.hasId()) { "Product ID cannot be empty" }

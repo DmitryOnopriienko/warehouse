@@ -1,12 +1,12 @@
 package com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller
 
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
-import com.ajaxproject.warehouse.infrastructure.adapter.common.dto.ProductDataDto
-import com.ajaxproject.warehouse.infrastructure.adapter.common.dto.ProductDataLiteDto
-import com.ajaxproject.warehouse.infrastructure.adapter.common.dto.ProductSaveDto
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToDataDto
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToLiteDto
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.dto.ProductDataDto
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.dto.ProductDataLiteDto
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.dto.ProductSaveDto
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.mapper.mapToDataDto
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.mapper.mapToDomain
+import com.ajaxproject.warehouse.infrastructure.adapter.webflux.controller.mapper.mapToLiteDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping

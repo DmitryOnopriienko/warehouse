@@ -2,7 +2,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.redis.repository
 
 import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.domain.Product
-import com.ajaxproject.warehouse.infrastructure.adapter.mongo.repository.MongoProductRepository
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.MongoProductRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Repository

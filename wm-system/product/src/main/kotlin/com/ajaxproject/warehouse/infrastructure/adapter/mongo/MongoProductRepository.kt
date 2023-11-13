@@ -1,10 +1,10 @@
-package com.ajaxproject.warehouse.infrastructure.adapter.mongo.repository
+package com.ajaxproject.warehouse.infrastructure.adapter.mongo
 
 import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToMongo
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToDomain
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToMongo
 import org.springframework.context.annotation.Primary
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.find

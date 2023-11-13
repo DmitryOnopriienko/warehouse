@@ -11,35 +11,35 @@ import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProdu
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.api.internal.warehousesvc.service.product.ReactorProductGrpc
-import com.ajaxproject.warehouse.application.port.api.CreateProductApiInPort
-import com.ajaxproject.warehouse.application.port.api.DeleteProductApiInPort
-import com.ajaxproject.warehouse.application.port.api.FindAllProductsApiInPort
-import com.ajaxproject.warehouse.application.port.api.GetProductByIdApiInPort
-import com.ajaxproject.warehouse.application.port.api.UpdateProductApiInPort
+import com.ajaxproject.warehouse.infrastructure.adapter.common.service.CreateProductApiAdapter
+import com.ajaxproject.warehouse.infrastructure.adapter.common.service.DeleteProductApiAdapter
+import com.ajaxproject.warehouse.infrastructure.adapter.common.service.FindAllProductsApiAdapter
+import com.ajaxproject.warehouse.infrastructure.adapter.common.service.GetProductByIdApiAdapter
+import com.ajaxproject.warehouse.infrastructure.adapter.common.service.UpdateProductApiAdapter
 import net.devh.boot.grpc.server.service.GrpcService
 import reactor.core.publisher.Mono
 
 @GrpcService
 class ProductGrpcServiceImpl(
-    private val findAllProductsApiInPort: FindAllProductsApiInPort,
-    private val getProductByIdApiInPort: GetProductByIdApiInPort,
-    private val createProductApiInPort: CreateProductApiInPort,
-    private val updateProductApiInPort: UpdateProductApiInPort,
-    private val deleteProductApiInPort: DeleteProductApiInPort,
+    private val findAllProductsApiAdapter: FindAllProductsApiAdapter,
+    private val getProductByIdApiAdapter: GetProductByIdApiAdapter,
+    private val createProductApiAdapter: CreateProductApiAdapter,
+    private val updateProductApiAdapter: UpdateProductApiAdapter,
+    private val deleteProductApiAdapter: DeleteProductApiAdapter,
 ) : ReactorProductGrpc.ProductImplBase() {
 
     override fun findAllProducts(request: FindAllProductsRequest): Mono<FindAllProductsResponse> =
-        findAllProductsApiInPort.findAll()
+        findAllProductsApiAdapter.findAll()
 
     override fun getProductById(request: GetProductByIdRequest): Mono<GetProductByIdResponse> =
-        getProductByIdApiInPort.getById(request.id)
+        getProductByIdApiAdapter.getById(request.id)
 
     override fun createProduct(request: CreateProductRequest): Mono<CreateProductResponse> =
-        createProductApiInPort.createProduct(request)
+        createProductApiAdapter.createProduct(request)
 
     override fun updateProduct(request: UpdateProductRequest): Mono<UpdateProductResponse> =
-        updateProductApiInPort.updateProduct(request)
+        updateProductApiAdapter.updateProduct(request)
 
     override fun deleteProduct(request: DeleteProductByIdRequest): Mono<DeleteProductByIdResponse> =
-        deleteProductApiInPort.deleteProduct(request)
+        deleteProductApiAdapter.deleteProduct(request)
 }

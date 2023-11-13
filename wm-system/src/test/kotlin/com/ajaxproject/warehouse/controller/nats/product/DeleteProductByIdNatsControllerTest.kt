@@ -5,7 +5,7 @@ import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeletePr
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdResponse
 import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
-import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToDomain
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
