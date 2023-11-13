@@ -2,7 +2,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdResponse
-import com.ajaxproject.warehouse.application.port.DeleteProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.DeleteProductApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono

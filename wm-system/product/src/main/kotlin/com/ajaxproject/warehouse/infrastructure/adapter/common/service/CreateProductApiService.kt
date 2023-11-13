@@ -2,7 +2,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductResponse
-import com.ajaxproject.warehouse.application.port.CreateProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.CreateProductApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToDomain

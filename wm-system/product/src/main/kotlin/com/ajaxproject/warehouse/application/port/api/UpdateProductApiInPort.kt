@@ -1,4 +1,4 @@
-package com.ajaxproject.warehouse.application.port
+package com.ajaxproject.warehouse.application.port.api
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse

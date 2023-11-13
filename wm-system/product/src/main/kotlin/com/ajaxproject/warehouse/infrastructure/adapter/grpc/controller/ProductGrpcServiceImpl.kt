@@ -11,11 +11,11 @@ import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.GetProdu
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
 import com.ajaxproject.api.internal.warehousesvc.service.product.ReactorProductGrpc
-import com.ajaxproject.warehouse.application.port.CreateProductApiInPort
-import com.ajaxproject.warehouse.application.port.DeleteProductApiInPort
-import com.ajaxproject.warehouse.application.port.FindAllProductsApiInPort
-import com.ajaxproject.warehouse.application.port.GetProductByIdApiInPort
-import com.ajaxproject.warehouse.application.port.UpdateProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.CreateProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.DeleteProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.FindAllProductsApiInPort
+import com.ajaxproject.warehouse.application.port.api.GetProductByIdApiInPort
+import com.ajaxproject.warehouse.application.port.api.UpdateProductApiInPort
 import net.devh.boot.grpc.server.service.GrpcService
 import reactor.core.publisher.Mono
 

@@ -3,7 +3,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.nats.controller
 import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.DELETE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.DeleteProductByIdResponse
-import com.ajaxproject.warehouse.application.port.DeleteProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.DeleteProductApiInPort
 import com.ajaxproject.warehouse.nats.NatsController
 import com.google.protobuf.Parser
 import org.springframework.stereotype.Component

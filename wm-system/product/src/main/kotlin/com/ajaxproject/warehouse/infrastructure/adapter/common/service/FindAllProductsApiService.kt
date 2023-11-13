@@ -1,7 +1,7 @@
 package com.ajaxproject.warehouse.infrastructure.adapter.common.service
 
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.FindAllProductsResponse
-import com.ajaxproject.warehouse.application.port.FindAllProductsApiInPort
+import com.ajaxproject.warehouse.application.port.api.FindAllProductsApiInPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.mapper.mapToProto

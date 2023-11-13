@@ -3,7 +3,7 @@ package com.ajaxproject.warehouse.infrastructure.adapter.nats.controller
 import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.CREATE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.CreateProductResponse
-import com.ajaxproject.warehouse.application.port.CreateProductApiInPort
+import com.ajaxproject.warehouse.application.port.api.CreateProductApiInPort
 import com.ajaxproject.warehouse.nats.NatsController
 import com.google.protobuf.Parser
 import org.springframework.stereotype.Component
