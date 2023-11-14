@@ -65,8 +65,7 @@ class CreateProductNatsControllerTest {
         }.build()
 
         val expectedResponse = CreateProductResponse.newBuilder().apply {
-            failureBuilder.message = "Exception encountered: jakarta.validation.ConstraintViolationException: " +
-                    "createProduct.createDto.title: title must be provided"
+            failureBuilder.message = "Exception encountered: java.lang.IllegalArgumentException: title must be provided"
         }.build()
 
         // WHEN

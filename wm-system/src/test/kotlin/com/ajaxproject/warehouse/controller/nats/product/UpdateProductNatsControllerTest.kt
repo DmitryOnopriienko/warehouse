@@ -3,8 +3,9 @@ package com.ajaxproject.warehouse.controller.nats.product
 import com.ajaxproject.api.internal.warehousesvc.NatsSubject.Product.UPDATE
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductRequest
 import com.ajaxproject.api.internal.warehousesvc.input.reqreply.product.UpdateProductResponse
-import com.ajaxproject.warehouse.entity.MongoProduct
-import com.ajaxproject.warehouse.repository.ProductRepository
+import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
+import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToDomain
 import io.nats.client.Connection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -22,17 +23,19 @@ class UpdateProductNatsControllerTest {
     lateinit var connection: Connection
 
     @Autowired
-    lateinit var productRepository: ProductRepository
+    lateinit var productRepository: ProductRepositoryOutPort
 
     @Test
     fun testUpdateDataWithValidRequest() {
         // GIVEN
-        val originalProduct = productRepository.createProduct(MongoProduct(
-            title = "Original",
-            price = 11.99,
-            amount = 100,
-            about = "original product"
-        )).block()!!
+        val originalProduct = productRepository.createProduct(
+            MongoProduct(
+                title = "Original",
+                price = 11.99,
+                amount = 100,
+                about = "original product"
+            ).mapToDomain()
+        ).block()!!
 
         val expectedProduct = UpdateProductResponse.newBuilder().successBuilder
             .productBuilder.apply {
@@ -70,12 +73,14 @@ class UpdateProductNatsControllerTest {
     @Test
     fun testReturnsFailureOnInvalidRequest() {
         // GIVEN
-        val originalProduct = productRepository.createProduct(MongoProduct(
-            title = "Original",
-            price = 11.99,
-            amount = 100,
-            about = "original product"
-        )).block()!!
+        val originalProduct = productRepository.createProduct(
+            MongoProduct(
+                title = "Original",
+                price = 11.99,
+                amount = 100,
+                about = "original product"
+            ).mapToDomain()
+        ).block()!!
 
         val updateProductRequest = UpdateProductRequest.newBuilder().apply {
             id = originalProduct.id.toString()
@@ -86,8 +91,8 @@ class UpdateProductNatsControllerTest {
 
         val expectedResponse = UpdateProductResponse.newBuilder().apply {
             failureBuilder.setMessage(
-                "Exception encountered: jakarta.validation.ConstraintViolationException: " +
-                    "updateProduct.updateDto.price: price must be more than 0.01")
+                "Exception encountered: java.lang.IllegalArgumentException: price must be provided"
+            )
         }.build()
 
         // WHEN
@@ -114,7 +119,8 @@ class UpdateProductNatsControllerTest {
 
         val expectedResponse = UpdateProductResponse.newBuilder().apply {
             failureBuilder.setMessage(
-                "Exception encountered: java.lang.IllegalArgumentException: id must be provided")
+                "Exception encountered: java.lang.IllegalArgumentException: Product ID cannot be empty"
+            )
         }.build()
 
         // WHEN
