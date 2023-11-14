@@ -4,14 +4,13 @@ import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.application.port.ProductServiceInPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.exception.NotFoundException
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Service
 class ProductService(
-    @Qualifier("redisProductRepository") private val productRepositoryOutPort: ProductRepositoryOutPort
+    private val productRepositoryOutPort: ProductRepositoryOutPort
 ) : ProductServiceInPort {
 
     override fun findAllProducts(): Flux<Product> =

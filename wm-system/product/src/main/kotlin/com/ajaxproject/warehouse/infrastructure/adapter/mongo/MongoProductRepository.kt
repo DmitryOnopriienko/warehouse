@@ -5,7 +5,6 @@ import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.entity.MongoProduct
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToDomain
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.mapper.mapToMongo
-import org.springframework.context.annotation.Primary
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.findAll
@@ -18,7 +17,6 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Repository
-@Primary
 class MongoProductRepository(
     private val reactiveMongoTemplate: ReactiveMongoTemplate
 ) : ProductRepositoryOutPort {

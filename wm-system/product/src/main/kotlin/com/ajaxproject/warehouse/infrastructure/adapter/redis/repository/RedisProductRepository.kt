@@ -4,6 +4,7 @@ import com.ajaxproject.warehouse.application.port.ProductRepositoryOutPort
 import com.ajaxproject.warehouse.domain.Product
 import com.ajaxproject.warehouse.infrastructure.adapter.mongo.MongoProductRepository
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Mono
@@ -11,6 +12,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 import java.time.Duration
 
 @Repository
+@Primary
 class RedisProductRepository(
     private val mongoProductRepository: MongoProductRepository,
     private val redisTemplate: ReactiveRedisTemplate<String, Product>,
